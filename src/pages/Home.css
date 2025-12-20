@@ -42,11 +42,37 @@
   text-decoration: none;
   color: #333;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .puzzle-links a:hover {
   background: #e0e0e0;
   border-color: #ccc;
+}
+
+.puzzle-links a.completed {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.puzzle-links a.completed:hover {
+  background: #c3e6cb;
+}
+
+.puzzle-links a .check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #28a745;
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-links {
@@ -67,4 +93,4 @@
 
 .page-links a:hover {
   background-color: #0056b3;
-} 
+}

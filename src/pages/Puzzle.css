@@ -1,3 +1,60 @@
+/* Puzzle header with navigation */
+.puzzle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.puzzle-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.puzzle-nav h2 {
+  margin: 0;
+  min-width: 200px;
+  text-align: center;
+}
+
+.category-label {
+  font-size: 0.8em;
+  color: #666;
+  font-weight: normal;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background: #0056b3;
+  color: white;
+}
+
+.nav-button.disabled {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  padding: 0.25rem 0.75rem;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
 /* Main puzzle container */
 .puzzle {
   display: flex;
@@ -20,11 +77,39 @@
   margin-bottom: 1rem;
 }
 
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.action-buttons button:hover:not(:disabled) {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.action-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Puzzle grid table */
 table.puzzle-grid {
   border-collapse: collapse;
   margin: 0 auto;
   background-color: transparent;
+  user-select: none;
 }
 
 /* Table cells */
@@ -200,4 +285,32 @@ table.puzzle-grid tbody tr td:last-child {
 
 .shake {
   animation: shake 0.2s ease-in-out;
-} 
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .timer {
+    background: #333;
+    color: #fff;
+  }
+  
+  .category-label {
+    color: #999;
+  }
+  
+  .nav-button.disabled {
+    background: #444;
+    color: #888;
+  }
+  
+  .action-buttons button {
+    background: #333;
+    border-color: #555;
+    color: #fff;
+  }
+  
+  .action-buttons button:hover:not(:disabled) {
+    background: #444;
+    border-color: #666;
+  }
+}

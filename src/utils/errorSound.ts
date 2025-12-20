@@ -34,7 +34,7 @@ class ErrorSound {
     oscillator3.connect(gainNode);
     gainNode.connect(context.destination);
 
-    // Set frequencies for a dissonant chord
+    // Set frequencies for a quick error tone (C major chord)
     oscillator1.frequency.value = 261.63; // C4
     oscillator2.frequency.value = 329.63; // E4
     oscillator3.frequency.value = 392.00; // G4

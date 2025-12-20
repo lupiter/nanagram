@@ -43,16 +43,12 @@ export function checkHints(
     
     // Find the corresponding sequence in the answer for this hint
     const answerSequence = answerSequences[hintIndex];
+    if (!answerSequence) continue;
     
     // Find a matching sequence in the current state
-    const matchingSequence = currentSequences.find(seq => 
-      seq.length === hint.hint && 
-      seq.start === answerSequence.start
+    hint.used = currentSequences.some(seq => 
+      seq.start === answerSequence.start && seq.length === hint.hint
     );
-    
-    if (matchingSequence) {
-      hint.used = true;
-    }
   }
 
   return newHints;

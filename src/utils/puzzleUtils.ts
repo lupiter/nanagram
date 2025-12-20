@@ -216,11 +216,11 @@ export function isRowOrColumnComplete(
   const solutionLine = isRow ? solution[index] : solution.map(row => row[index]);
 
   for (let i = 0; i < line.length; i++) {
-    if (
-      (line[i] === CellState.CROSSED_OUT && solutionLine[i] === CellState.FILLED) ||
-      (line[i] === CellState.FILLED && solutionLine[i] === CellState.EMPTY) ||
-      (line[i] === CellState.EMPTY && solutionLine[i] === CellState.FILLED)
-    ) {
+    // For a line to be complete, cells must match exactly
+    const currentCell = line[i];
+    const solutionCell = solutionLine[i];
+    
+    if (currentCell === CellState.EMPTY && solutionCell === CellState.FILLED) {
       return false;
     }
   }
