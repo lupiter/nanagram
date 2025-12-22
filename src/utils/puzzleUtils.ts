@@ -5,6 +5,7 @@ import {
   CellState,
   Cell,
 } from "../types/nonogram";
+import { NonogramSolver } from "./nonogramSolver";
 
 /**
  * Creates an empty game state for a puzzle of given dimensions
@@ -137,73 +138,67 @@ export function generatePossibleDataForHints(
   hints: Hint[],
   size: number
 ): Cell[][] {
-  const solutions: Cell[][] = [];
-  const hintWidth = hints.reduce((acc, hint) => acc + hint.hint, 0) + hints.length - 1;
-    
-  for (let i = 0; i < size - hintWidth; i++) {
-    const solution: Cell[] = Array.from({ length: i }, () => CellState.CROSSED_OUT);
-    hints.forEach((hint, hintIndex) => {
-      solution.push(...Array.from({ length: hint.hint }, () => CellState.FILLED));
-      if (hintIndex < hints.length - 1) {
-        solution.push(CellState.CROSSED_OUT);
-      }
-    });
-    solution.push(...Array.from({ length: size - hintWidth - i }, () => CellState.CROSSED_OUT));
-    solutions.push(solution);
+  if (hints.length === 0) {
+    // No hints = all empty
+    return [Array(size).fill(CellState.EMPTY)];
   }
+
+  const solutions: Cell[][] = [];
+  
+  // Recursive function to place hints
+  function placeHints(
+    hintIndex: number,
+    startPos: number,
+    currentSolution: Cell[]
+  ): void {
+    if (hintIndex >= hints.length) {
+      // All hints placed, fill remaining with EMPTY
+      const solution = [...currentSolution];
+      while (solution.length < size) {
+        solution.push(CellState.EMPTY);
+      }
+      solutions.push(solution);
+      return;
+    }
+
+    const hint = hints[hintIndex];
+    const remainingHints = hints.slice(hintIndex + 1);
+    const minSpaceNeeded = remainingHints.reduce((acc, h) => acc + h.hint + 1, 0);
+    const maxStartPos = size - hint.hint - minSpaceNeeded;
+
+    for (let pos = startPos; pos <= maxStartPos; pos++) {
+      // Build solution up to this point
+      const solution = [...currentSolution];
+      
+      // Add EMPTY cells before this hint
+      while (solution.length < pos) {
+        solution.push(CellState.EMPTY);
+      }
+      
+      // Add FILLED cells for this hint
+      for (let i = 0; i < hint.hint; i++) {
+        solution.push(CellState.FILLED);
+      }
+      
+      // Recurse for next hint (must have at least 1 gap)
+      placeHints(hintIndex + 1, solution.length + 1, solution);
+    }
+  }
+
+  placeHints(0, 0, []);
   return solutions;
 }
 
 export function checkPuzzleHasUniqueSolution(
   solution: PuzzleSolutionData
 ): boolean {
-  const width = solution[0].length;
-  const height = solution.length;
-  const rowHints = deriveRowHints(solution);
-  const columnHints = deriveColumnHints(solution);
-  const gameState = createEmptyGameState(width, height);
-  const possibleSolutionsForRows = rowHints.map((row) =>
-    generatePossibleDataForHints(row, width)
-  );
-  const possibleSolutionsForColumns = columnHints.map((column) =>
-    generatePossibleDataForHints(column, height)
-  );
-  let progressedSolution = false;
+  const rowHints = deriveRowHints(solution).map((row) => row.map((hint) => hint.hint));
+  const columnHints = deriveColumnHints(solution).map((column) => column.map((hint) => hint.hint));
 
-  do {
-    progressedSolution = false;
-    possibleSolutionsForRows.forEach((solutionSet, rowIndex) => {
-      if (solutionSet.length === 0) {
-        return;
-      }
-      for (let i = 0; i < width; i++) {
-        const allSolutionsAgree = solutionSet.every(
-          (solution) => solution[i] === solutionSet[0][i]
-        );
-        if (allSolutionsAgree) {
-          gameState[rowIndex][i] = solutionSet[0][i];
-          progressedSolution = true;
-        }
-      }
-    });
-
-    possibleSolutionsForColumns.forEach((solutionSet, colIndex) => {
-      if (solutionSet.length === 0) {
-        return;
-      }
-      for (let i = 0; i < height; i++) {
-        const allSolutionsAgree = solutionSet.every(
-          (solution) => solution[i] === solutionSet[0][i]
-        );
-        if (allSolutionsAgree) {
-          gameState[i][colIndex] = solutionSet[0][i];
-          progressedSolution = true;
-        }
-      }
-    });
-  } while (progressedSolution);
-
-  return checkSolution(solution, gameState);
+  const solver = new NonogramSolver(rowHints, columnHints);
+  solver.solve();
+  
+  return checkSolution(solution, solver.board);
 }
 
 export function isRowOrColumnComplete(

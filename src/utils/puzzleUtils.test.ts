@@ -120,7 +120,7 @@ describe('Puzzle Utilities', () => {
     });
   });
 
-  describe.skip('generatePossibleDataForHints', () => {
+  describe('generatePossibleDataForHints', () => {
     it('should generate possible data for hints: 1 and 1', () => {
       const hints = [{ hint: 1, used: false }, { hint: 1, used: false }];
       const size = 3;
@@ -158,7 +158,7 @@ describe('Puzzle Utilities', () => {
     });
   });
 
-  describe.skip('checkPuzzleHasUniqueSolution', () => {
+  describe('checkPuzzleHasUniqueSolution', () => {
     it('should identify a simple solvable puzzle', () => {
       const puzzle: PuzzleSolutionData = [
         [1, 1, 1, 1, 0],

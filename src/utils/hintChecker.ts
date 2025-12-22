@@ -1,37 +1,37 @@
 import { CellState, Hint } from "../types/nonogram";
 
+// Find all sequences of filled cells in both the answer and current state
+const findSequences = (cells: CellState[]) => {
+  const sequences: { start: number; length: number }[] = [];
+  let currentSequenceStart = -1;
+  let currentSequenceLength = 0;
+  
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i] === CellState.FILLED) {
+      if (currentSequenceStart === -1) {
+        currentSequenceStart = i;
+      }
+      currentSequenceLength++;
+    } else if (currentSequenceStart !== -1) {
+      sequences.push({ start: currentSequenceStart, length: currentSequenceLength });
+      currentSequenceStart = -1;
+      currentSequenceLength = 0;
+    }
+  }
+  
+  if (currentSequenceStart !== -1) {
+    sequences.push({ start: currentSequenceStart, length: currentSequenceLength });
+  }
+  
+  return sequences;
+};
+
 export function checkHints(
   cells: CellState[],
   hints: Hint[],
   answerCells: CellState[]
 ): Hint[] {
   const newHints = [...hints];
-  
-  // Find all sequences of filled cells in both the answer and current state
-  const findSequences = (cells: CellState[]) => {
-    const sequences: { start: number; length: number }[] = [];
-    let currentSequenceStart = -1;
-    let currentSequenceLength = 0;
-    
-    for (let i = 0; i < cells.length; i++) {
-      if (cells[i] === CellState.FILLED) {
-        if (currentSequenceStart === -1) {
-          currentSequenceStart = i;
-        }
-        currentSequenceLength++;
-      } else if (currentSequenceStart !== -1) {
-        sequences.push({ start: currentSequenceStart, length: currentSequenceLength });
-        currentSequenceStart = -1;
-        currentSequenceLength = 0;
-      }
-    }
-    
-    if (currentSequenceStart !== -1) {
-      sequences.push({ start: currentSequenceStart, length: currentSequenceLength });
-    }
-    
-    return sequences;
-  };
   
   const answerSequences = findSequences(answerCells);
   const currentSequences = findSequences(cells);
@@ -47,7 +47,7 @@ export function checkHints(
     
     // Find a matching sequence in the current state
     hint.used = currentSequences.some(seq => 
-      seq.start === answerSequence.start && seq.length === hint.hint
+      seq.start === answerSequence.start && seq.length === answerSequence.length
     );
   }
 
