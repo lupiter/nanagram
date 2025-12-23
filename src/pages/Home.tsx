@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Home.css';
 import { puzzleMap, getCompletedPuzzles } from '../utils/puzzleLoader';
+import SolutionPreview from '../components/SolutionPreview';
 
 export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(new Set());
@@ -22,17 +23,26 @@ export default function Home() {
           <div key={category} className="puzzle-category">
             <h2>{category}</h2>
             <div className="puzzle-links">
-              {puzzles.map((_, index) => (
-                <Link 
-                  key={index} 
-                  to={`/puzzle/${category}/${String(index + 1)}`}
-                  className={isPuzzleCompleted(category, index) ? 'completed' : ''}
-                  title={isPuzzleCompleted(category, index) ? 'Completed' : ''}
-                >
-                  {isPuzzleCompleted(category, index) && <span className="check">✓</span>}
-                  {index + 1}
-                </Link>
-              ))}
+              {puzzles.map((puzzle, index) => {
+                const completed = isPuzzleCompleted(category, index);
+                return (
+                  <Link 
+                    key={index} 
+                    to={`/puzzle/${category}/${String(index + 1)}`}
+                    className={completed ? 'completed' : ''}
+                    title={completed ? puzzle.name : `Puzzle ${index + 1}`}
+                  >
+                    {completed ? (
+                      <>
+                        <SolutionPreview solution={puzzle.solution} maxSize={44} />
+                        <span className="puzzle-name">{puzzle.name}</span>
+                      </>
+                    ) : (
+                      index + 1
+                    )}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         ))}

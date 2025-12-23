@@ -74,11 +74,14 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
   // Global mouse up handler for drag
   useEffect(() => {
     const handleGlobalMouseUp = () => {
-      setState(s => {
-        if (s.isDragging) {
-          return controller.endDrag(s);
-        }
-        return s;
+      // Use requestAnimationFrame to delay endDrag until after onChange fires
+      requestAnimationFrame(() => {
+        setState(s => {
+          if (s.isDragging) {
+            return controller.endDrag(s);
+          }
+          return s;
+        });
       });
     };
     window.addEventListener("mouseup", handleGlobalMouseUp);

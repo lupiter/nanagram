@@ -3,18 +3,19 @@ import "./SolutionPreview.css";
 
 interface SolutionPreviewProps {
   solution: PuzzleSolutionData;
+  maxSize?: number; // Maximum total size in pixels (default 200)
 }
 
-export default function SolutionPreview({ solution }: SolutionPreviewProps) {
-  const size = solution.length;
-  const cellSize = Math.min(20, Math.floor(200 / size));
+export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPreviewProps) {
+  const gridSize = solution.length;
+  const cellSize = Math.max(2, Math.floor(maxSize / gridSize));
 
   return (
     <div 
       className="solution-preview"
       style={{
-        gridTemplateColumns: `repeat(${size}, ${cellSize}px)`,
-        gridTemplateRows: `repeat(${size}, ${cellSize}px)`,
+        gridTemplateColumns: `repeat(${gridSize}, ${cellSize}px)`,
+        gridTemplateRows: `repeat(${gridSize}, ${cellSize}px)`,
       }}
     >
       {solution.flatMap((row, rowIndex) =>

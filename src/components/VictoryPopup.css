@@ -14,7 +14,7 @@
 
 .victory-dialog {
   background: var(--color-bg-dialog);
-  padding: var(--space-8);
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
   border: none;
   box-shadow: var(--shadow-dialog);
@@ -26,18 +26,32 @@
   background: var(--color-overlay);
 }
 
+.victory-dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-direction: row;
+}
+
 .victory-content {
   text-align: center;
 }
 
 .victory-content h2 {
-  margin: 0 0 var(--space-4) 0;
+  margin: var(--space-2) 0;
   color: var(--color-victory-title);
 }
 
 .victory-content p {
   margin: 0 0 var(--space-4) 0;
   color: var(--color-victory-text);
+}
+
+.victory-content .solution-preview-container {
+  margin: var(--space-4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .victory-content .puzzle-name {
@@ -53,8 +67,9 @@
 
 .victory-buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--space-2);
+  justify-content: space-between;
 }
 
 .victory-content button {
@@ -88,6 +103,14 @@
 
 .victory-content button.secondary:hover {
   background: var(--color-gray-200);
+}
+
+.victory-content button.close-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
 @keyframes fadeIn {

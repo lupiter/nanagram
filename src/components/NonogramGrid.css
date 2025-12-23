@@ -43,7 +43,6 @@ table.nonogram-grid thead tr th:first-child {
 table.nonogram-grid th {
   min-width: var(--size-hint-area);
   min-height: calc(var(--size-cell) + var(--border-width) * 2);
-  padding: calc(var(--base-size) * 0.5);
   text-align: right;
   vertical-align: middle;
   font-size: var(--text-sm);
@@ -54,10 +53,17 @@ table.nonogram-grid th span {
   margin: 0 calc(var(--base-size) * 0.5);
 }
 
+table.nonogram-grid th[role="columnheader"] {
+  padding: var(--base-size) 0;
+}
+
+table.nonogram-grid th[role="rowheader"] {
+  padding: 0 var(--base-size);
+}
+
 table.nonogram-grid thead th {
   min-width: calc(var(--size-cell) + var(--border-width) * 2);
   min-height: calc(var(--size-cell) + var(--border-width) * 2);
-  padding: calc(var(--base-size) * 0.5);
   text-align: center;
   vertical-align: bottom;
 }
@@ -74,7 +80,6 @@ table.nonogram-grid input[type="checkbox"] {
   background-color: var(--color-cell-empty);
   cursor: pointer;
   position: relative;
-  display: block;
   transition: background-color 0.2s;
 }
 

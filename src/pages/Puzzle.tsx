@@ -22,7 +22,13 @@ export default function Puzzle() {
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
-      setState(s => controller.updateCell(s, row, col));
+      // Skip if already handled by drag start
+      setState(s => {
+        if (s.isDragging && s.draggedCells.has(`${row}-${col}`)) {
+          return s;
+        }
+        return controller.updateCell(s, row, col);
+      });
     },
     [controller, setState]
   );

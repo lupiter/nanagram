@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PuzzleSolutionData } from '../types/nonogram';
-import SolutionPreview from './SolutionPreview';
-import './VictoryPopup.css';
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { PuzzleSolutionData } from "../types/nonogram";
+import SolutionPreview from "./SolutionPreview";
+import "./VictoryPopup.css";
 
 interface VictoryPopupProps {
   onClose: () => void;
@@ -11,7 +11,12 @@ interface VictoryPopupProps {
   solution: PuzzleSolutionData;
 }
 
-export default function VictoryPopup({ onClose, nextPuzzle, puzzleName, solution }: VictoryPopupProps) {
+export default function VictoryPopup({
+  onClose,
+  nextPuzzle,
+  puzzleName,
+  solution,
+}: VictoryPopupProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const navigate = useNavigate();
 
@@ -30,45 +35,39 @@ export default function VictoryPopup({ onClose, nextPuzzle, puzzleName, solution
   };
 
   const handleGoHome = () => {
-    navigate('/');
+    navigate("/");
     onClose();
   };
 
   return (
-    <dialog 
+    <dialog
       ref={dialogRef}
       className="victory-dialog"
       aria-labelledby="victory-title"
       aria-describedby="victory-description"
     >
-        <div className="victory-content">
-          <h2 id="victory-title">🎉 Congratulations! 🎉</h2>
-          <p id="victory-description">You've solved the puzzle!</p>
+      <div className="victory-content">
+        <button onClick={onClose} className="secondary close-button" aria-label="Close">
+          ✕
+        </button>
+        <h2 id="victory-title">Congratulations</h2>
+        <div className="solution-preview-container">
           <SolutionPreview solution={solution} />
-          <p className="puzzle-name">{puzzleName}</p>
-          <div className="victory-buttons">
+        </div>
+        <p className="puzzle-name">{puzzleName}</p>
+        <div className="victory-buttons">
+          <button onClick={handleGoHome} aria-label="Go to home page">
+            Home
+          </button>
           {nextPuzzle && (
-            <button 
-              onClick={handleNextPuzzle} 
+            <button
+              onClick={handleNextPuzzle}
               className="primary"
               aria-label="Go to next puzzle"
             >
               Next Puzzle →
             </button>
           )}
-          <button 
-            onClick={handleGoHome}
-            aria-label="Go to home page"
-          >
-            Home
-          </button>
-          <button 
-            onClick={onClose} 
-            className="secondary"
-            aria-label="Close victory message"
-          >
-            Close
-          </button>
         </div>
       </div>
     </dialog>

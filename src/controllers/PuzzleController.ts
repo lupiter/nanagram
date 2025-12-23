@@ -169,12 +169,17 @@ export class PuzzleController {
   startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
     const newDraggedCells = new Set<string>();
     newDraggedCells.add(`${row}-${col}`);
-    return {
+    
+    // Set drag state first
+    const stateWithDrag: PuzzleState = {
       ...state,
       isDragging: true,
       dragTool: state.tool,
       draggedCells: newDraggedCells,
     };
+    
+    // Update the first cell
+    return this.updateCell(stateWithDrag, row, col, state.tool);
   }
 
   continueDrag(state: PuzzleState, row: number, col: number): PuzzleState {

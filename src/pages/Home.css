@@ -33,8 +33,11 @@
 }
 
 .puzzle-links a {
-  display: block;
-  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  min-height: var(--size-touch-target);
   background: var(--color-bg-input);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -42,7 +45,7 @@
   text-decoration: none;
   color: var(--color-text-primary);
   transition: all 0.2s ease;
-  position: relative;
+  font-weight: 500;
 }
 
 .puzzle-links a:hover {
@@ -51,27 +54,28 @@
 }
 
 .puzzle-links a.completed {
-  background: var(--color-success-bg);
-  border-color: var(--color-success);
-  color: var(--color-success-text);
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 0;
+  min-height: auto;
 }
 
 .puzzle-links a.completed:hover {
-  background: var(--color-success-bg-hover);
+  background: var(--color-gray-200);
 }
 
-.puzzle-links a .check {
-  position: absolute;
-  top: calc(var(--base-size) * -1);
-  right: calc(var(--base-size) * -1);
-  background: var(--color-success);
-  color: white;
-  width: var(--size-badge);
-  height: var(--size-badge);
-  border-radius: 50%;
+/* Override solution preview styles for home page thumbnails */
+.puzzle-links .solution-preview {
+  margin: 0;
+}
+
+.puzzle-links .puzzle-name {
   font-size: var(--text-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
