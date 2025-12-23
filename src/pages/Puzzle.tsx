@@ -1,26 +1,27 @@
 import { useParams, Link } from "react-router-dom";
 import { 
-  puzzle as loadPuzzle, 
   getNextPuzzle, 
   getPreviousPuzzle,
   markPuzzleCompleted,
   saveProgress,
   loadProgress,
-  clearProgress
+  clearProgress,
+  puzzleDefinition
 } from "../utils/puzzleLoader";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { WorkingGrid, GameMode } from "../types/puzzle";
 import { CellState as NonogramCellState, Hint } from "../types/nonogram";
 import {
   deriveRowHints,
   deriveColumnHints,
   checkSolution,
+  createEmptyGameState,
 } from "../utils/puzzleUtils";
 import { errorSound } from "../utils/errorSound";
 import { updateCell } from "../utils/updateCell";
 import ToggleGroup from "../components/ToggleGroup";
 import VictoryPopup from "../components/VictoryPopup";
-import HintDisplay from "../components/HintDisplay";
+import NonogramGrid from "../components/NonogramGrid";
 import "./Puzzle.css";
 
 interface HistoryState {
@@ -31,33 +32,20 @@ interface HistoryState {
 
 export default function Puzzle() {
   const { category, id } = useParams() as { category: string, id: string };
-  const puzzle = loadPuzzle(category, id);
+  const puzzle = puzzleDefinition(category, id);
+  const puzzleName = puzzle.name;
 
-  const createEmptyGrid = useCallback(() => 
-    puzzle.map((row) => row.map(() => NonogramCellState.EMPTY)),
-    [puzzle]
-  );
-
-  const [grid, setGrid] = useState<WorkingGrid>(() => {
-    const saved = loadProgress(category, id);
-    if (saved) {
-      return saved as WorkingGrid;
-    }
-    return createEmptyGrid();
-  });
+  const [grid, setGrid] = useState<WorkingGrid>(createEmptyGameState(puzzle.solution[0].length, puzzle.solution.length));
   const [tool, setTool] = useState<NonogramCellState>(NonogramCellState.FILLED);
   const [mode, setMode] = useState<GameMode>(() => {
     const savedMode = localStorage.getItem('gameMode');
     return savedMode ? (savedMode as GameMode) : GameMode.Assisted;
   });
   const [isSolved, setIsSolved] = useState(false);
+  const [showVictory, setShowVictory] = useState(false);
   const [errorCell, setErrorCell] = useState<[number, number] | null>(null);
   const [rowHints, setRowHints] = useState<Hint[][]>([]);
   const [columnHints, setColumnHints] = useState<Hint[][]>([]);
-  
-  // Timer state
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Undo/Redo state
   const [history, setHistory] = useState<HistoryState[]>([]);
@@ -73,27 +61,6 @@ export default function Puzzle() {
   const nextPuzzle = getNextPuzzle(category, id);
   const prevPuzzle = getPreviousPuzzle(category, id);
 
-  // Start timer
-  useEffect(() => {
-    if (!isSolved) {
-      timerRef.current = setInterval(() => {
-        setElapsedTime(prev => prev + 1);
-      }, 1000);
-    }
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [isSolved]);
-
-  // Format time display
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  };
-
   // Cleanup audio context on unmount
   useEffect(() => {
     return () => {
@@ -107,27 +74,28 @@ export default function Puzzle() {
     if (saved) {
       setGrid(saved as WorkingGrid);
     } else {
-      setGrid(createEmptyGrid());
+      setGrid(createEmptyGameState(puzzle.solution[0].length, puzzle.solution.length));
     }
-    setRowHints(deriveRowHints(puzzle));
-    setColumnHints(deriveColumnHints(puzzle));
+    setRowHints(deriveRowHints(puzzle.solution));
+    setColumnHints(deriveColumnHints(puzzle.solution));
     setIsSolved(false);
-    setElapsedTime(0);
+    setShowVictory(false);
     setHistory([]);
     setHistoryIndex(-1);
-  }, [category, id, puzzle, createEmptyGrid]);
+  }, [category, id, puzzle]);
 
   // Initialize hints when puzzle loads
   useEffect(() => {
-    setRowHints(deriveRowHints(puzzle));
-    setColumnHints(deriveColumnHints(puzzle));
+    setRowHints(deriveRowHints(puzzle.solution));
+    setColumnHints(deriveColumnHints(puzzle.solution));
   }, [puzzle]);
 
   // Check solution and save progress
   useEffect(() => {
-    const solved = checkSolution(puzzle, grid);
+    const solved = checkSolution(puzzle.solution, grid);
     if (solved && !isSolved) {
       setIsSolved(true);
+      setShowVictory(true);
       markPuzzleCompleted(category, id);
       clearProgress(category, id);
       if (timerRef.current) {
@@ -174,7 +142,7 @@ export default function Puzzle() {
   const handleCellChange = async (row: number, col: number, toolOverride?: NonogramCellState) => {
     const result = await updateCell({
       grid,
-      puzzle,
+      puzzle: puzzle.solution,
       row,
       col,
       toolToUse: toolOverride ?? tool,
@@ -192,7 +160,7 @@ export default function Puzzle() {
   const handleRightClick = async (
     row: number,
     col: number,
-    event: React.MouseEvent<HTMLInputElement>
+    event: React.MouseEvent<Element, MouseEvent>
   ) => {
     event.preventDefault();
     const oppositeTool =
@@ -202,7 +170,7 @@ export default function Puzzle() {
     
     const result = await updateCell({
       grid,
-      puzzle,
+      puzzle: puzzle.solution,
       row,
       col,
       toolToUse: oppositeTool,
@@ -218,7 +186,7 @@ export default function Puzzle() {
   };
 
   // Drag handlers
-  const handleMouseDown = (row: number, col: number, event: React.MouseEvent<HTMLInputElement>) => {
+  const handleMouseDown = (row: number, col: number, event: React.MouseEvent<Element, MouseEvent>) => {
     if (event.button === 2) return; // Ignore right-click for drag
     setIsDragging(true);
     setDragTool(tool);
@@ -259,10 +227,11 @@ export default function Puzzle() {
   };
 
   const handleReset = () => {
-    setGrid(createEmptyGrid());
-    setRowHints(deriveRowHints(puzzle));
-    setColumnHints(deriveColumnHints(puzzle));
+    setGrid(createEmptyGameState(puzzle.solution[0].length, puzzle.solution.length));
+    setRowHints(deriveRowHints(puzzle.solution));
+    setColumnHints(deriveColumnHints(puzzle.solution));
     setIsSolved(false);
+    setShowVictory(false);
     setElapsedTime(0);
     setHistory([]);
     setHistoryIndex(-1);
@@ -280,9 +249,9 @@ export default function Puzzle() {
     } else if (historyIndex === 0) {
       // Undo to empty state
       isUndoRedoAction.current = true;
-      setGrid(createEmptyGrid());
-      setRowHints(deriveRowHints(puzzle));
-      setColumnHints(deriveColumnHints(puzzle));
+      setGrid(createEmptyGameState(puzzle.solution[0].length, puzzle.solution.length));
+      setRowHints(deriveRowHints(puzzle.solution));
+      setColumnHints(deriveColumnHints(puzzle.solution));
       setHistoryIndex(-1);
     }
   };
@@ -354,66 +323,28 @@ export default function Puzzle() {
             title="Game Mode"
           />
         </div>
-        <table className="puzzle-grid" role="grid">
-          <thead>
-            <tr>
-              <th></th>
-              {columnHints.map((hints, colIndex) => (
-                <th key={colIndex} role="columnheader">
-                  <HintDisplay hints={hints} isVertical={true} />
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {grid.map((row, rowIndex) => (
-              <tr key={rowIndex} role="row">
-                <th role="rowheader">
-                  <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
-                </th>
-                {row.map((cell, colIndex) => (
-                  <td key={`${String(rowIndex)}-${String(colIndex)}`} role="gridcell">
-                    <input
-                      type="checkbox"
-                      id={`cell-${String(rowIndex)}-${String(colIndex)}`}
-                      checked={cell === NonogramCellState.FILLED}
-                      onChange={() => {
-                        handleCellChange(rowIndex, colIndex).catch((error: unknown) => {
-                          console.error('Error updating cell:', error);
-                        });
-                      }}
-                      onContextMenu={(e) => {
-                        handleRightClick(rowIndex, colIndex, e).catch((error: unknown) => {
-                          console.error('Error handling right click:', error);
-                        });
-                      }}
-                      onMouseDown={(e) => handleMouseDown(rowIndex, colIndex, e)}
-                      onMouseEnter={() => {
-                        handleMouseEnter(rowIndex, colIndex).catch((error: unknown) => {
-                          console.error('Error during drag:', error);
-                        });
-                      }}
-                      ref={(input) => {
-                        if (input) {
-                          input.indeterminate =
-                            cell === NonogramCellState.EMPTY;
-                        }
-                      }}
-                      className={
-                        errorCell &&
-                        errorCell[0] === rowIndex &&
-                        errorCell[1] === colIndex
-                          ? "shake"
-                          : ""
-                      }
-                      aria-label={`Cell at row ${String(rowIndex + 1)}, column ${String(colIndex + 1)}`}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <NonogramGrid
+          grid={grid}
+          rowHints={rowHints}
+          columnHints={columnHints}
+          onCellClick={(row, col) => {
+            handleCellChange(row, col).catch((error: unknown) => {
+              console.error('Error updating cell:', error);
+            });
+          }}
+          onCellRightClick={(row, col, e) => {
+            handleRightClick(row, col, e).catch((error: unknown) => {
+              console.error('Error handling right click:', error);
+            });
+          }}
+          onCellMouseDown={handleMouseDown}
+          onCellMouseEnter={(row, col) => {
+            handleMouseEnter(row, col).catch((error: unknown) => {
+              console.error('Error during drag:', error);
+            });
+          }}
+          errorCell={errorCell}
+        />
         <div className="controls">
           <ToggleGroup
             value={tool}
@@ -455,10 +386,11 @@ export default function Puzzle() {
             🔄 Reset
           </button>
         </div>
-        {isSolved && (
+        {showVictory && (
           <VictoryPopup 
-            onClose={() => setIsSolved(false)} 
+            onClose={() => setShowVictory(false)} 
             nextPuzzle={nextPuzzle}
+            puzzleName={puzzleName}
           />
         )}
       </div>

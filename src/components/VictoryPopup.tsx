@@ -5,9 +5,10 @@ import './VictoryPopup.css';
 interface VictoryPopupProps {
   onClose: () => void;
   nextPuzzle: { category: string; id: string } | null;
+  puzzleName: string;
 }
 
-export default function VictoryPopup({ onClose, nextPuzzle }: VictoryPopupProps) {
+export default function VictoryPopup({ onClose, nextPuzzle, puzzleName }: VictoryPopupProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const navigate = useNavigate();
 
@@ -37,9 +38,10 @@ export default function VictoryPopup({ onClose, nextPuzzle }: VictoryPopupProps)
       aria-labelledby="victory-title"
       aria-describedby="victory-description"
     >
-      <div className="victory-content">
-        <h2 id="victory-title">🎉 Congratulations! 🎉</h2>
-        <p id="victory-description">You've solved the puzzle!</p>
+        <div className="victory-content">
+          <h2 id="victory-title">🎉 Congratulations! 🎉</h2>
+          <p id="victory-description">You've solved the puzzle!</p>
+          <p className="puzzle-name">{puzzleName}</p>
         <div className="victory-buttons">
           {nextPuzzle && (
             <button 

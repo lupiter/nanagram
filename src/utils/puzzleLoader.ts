@@ -1,4 +1,4 @@
-import { PuzzleSolutionData } from '../types/nonogram';
+import { PuzzleDefinition } from '../types/nonogram';
 import puzzles5x5 from '../puzzles/5x5';
 import puzzles10x10 from '../puzzles/10x10';
 import puzzles15x15 from '../puzzles/15x15';
@@ -13,12 +13,12 @@ export const puzzleMap = {
 
 export type PuzzleCategory = keyof typeof puzzleMap;
 
-export function puzzle(category: string, id: string): PuzzleSolutionData {
+export function puzzleDefinition(category: string, id: string): PuzzleDefinition {
   const puzzles = puzzleMap[category as PuzzleCategory];
   return puzzles[parseInt(id) - 1];
 }
 
-export function puzzlesByCategory(category: string): PuzzleSolutionData[] {
+export function puzzlesByCategory(category: string): PuzzleDefinition[] {
   return puzzleMap[category as PuzzleCategory];
 }
 

@@ -20,6 +20,12 @@ export interface Hint {
 // Represents the raw puzzle data
 export type PuzzleSolutionData = SolutionCell[][];
 
+// Represents a puzzle definition with metadata
+export interface PuzzleDefinition {
+  name: string;
+  solution: PuzzleSolutionData;
+}
+
 // Represents the current state of the game
 export type GameState = Cell[][];
 

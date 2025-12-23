@@ -19,7 +19,7 @@
 }
 
 /* Override table styles */
-table.puzzle-grid th .hint-numbers.horizontal {
+table.nonogram-grid th .hint-numbers.horizontal {
   flex-direction: row;
   justify-content: flex-end;
   min-width: 100px;

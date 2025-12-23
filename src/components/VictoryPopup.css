@@ -36,8 +36,18 @@
 }
 
 .victory-content p {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
   color: #34495e;
+}
+
+.victory-content .puzzle-name {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.victory-content .puzzle-name strong {
+  color: #3498db;
+  font-size: 1.4rem;
 }
 
 .victory-buttons {
