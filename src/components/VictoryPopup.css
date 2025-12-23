@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,17 +13,17 @@
 }
 
 .victory-dialog {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  background: var(--color-bg-dialog);
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
   border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-dialog);
   max-width: 90%;
-  width: 400px;
+  width: var(--size-dialog);
 }
 
 .victory-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
 }
 
 .victory-content {
@@ -31,62 +31,63 @@
 }
 
 .victory-content h2 {
-  margin: 0 0 1rem 0;
-  color: #2c3e50;
+  margin: 0 0 var(--space-4) 0;
+  color: var(--color-victory-title);
 }
 
 .victory-content p {
-  margin: 0 0 1rem 0;
-  color: #34495e;
+  margin: 0 0 var(--space-4) 0;
+  color: var(--color-victory-text);
 }
 
 .victory-content .puzzle-name {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-6);
+  color: var(--color-text-primary);
 }
 
 .victory-content .puzzle-name strong {
-  color: #3498db;
-  font-size: 1.4rem;
+  color: var(--color-victory-accent);
+  font-size: var(--text-2xl);
 }
 
 .victory-buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .victory-content button {
-  padding: 0.5rem 1.5rem;
-  background: #e0e0e0;
-  color: #333;
+  padding: var(--space-2) var(--space-6);
+  background: var(--color-bg-button);
+  color: var(--color-text-primary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: var(--text-base);
   transition: background-color 0.2s;
 }
 
 .victory-content button:hover {
-  background: #d0d0d0;
+  background: var(--color-bg-button-hover);
 }
 
 .victory-content button.primary {
-  background: #3498db;
+  background: var(--color-primary-light);
   color: white;
 }
 
 .victory-content button.primary:hover {
-  background: #2980b9;
+  background: var(--color-primary-light-hover);
 }
 
 .victory-content button.secondary {
   background: transparent;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .victory-content button.secondary:hover {
-  background: #f0f0f0;
+  background: var(--color-gray-200);
 }
 
 @keyframes fadeIn {

@@ -1,0 +1,139 @@
+/* Base sizing unit - all sizes derived from this */
+:root {
+  --base-size: 0.25rem; /* 4px at default 16px font size */
+  --border-width: 1px;
+
+  /* Spacing scale (multiples of base-size) */
+  --space-0: 0;
+  --space-1: calc(var(--base-size) * 1);  /* 4px */
+  --space-2: calc(var(--base-size) * 2);  /* 8px */
+  --space-3: calc(var(--base-size) * 3);  /* 12px */
+  --space-4: calc(var(--base-size) * 4);  /* 16px */
+  --space-5: calc(var(--base-size) * 5);  /* 20px */
+  --space-6: calc(var(--base-size) * 6);  /* 24px */
+  --space-8: calc(var(--base-size) * 8);  /* 32px */
+  --space-10: calc(var(--base-size) * 10); /* 40px */
+  --space-12: calc(var(--base-size) * 12); /* 48px */
+
+  /* Font sizes */
+  --text-xs: calc(var(--base-size) * 2.5);   /* 10px */
+  --text-sm: calc(var(--base-size) * 3.5);   /* 14px */
+  --text-base: calc(var(--base-size) * 4);   /* 16px */
+  --text-lg: calc(var(--base-size) * 4.5);   /* 18px */
+  --text-xl: calc(var(--base-size) * 5);     /* 20px */
+  --text-2xl: calc(var(--base-size) * 7);    /* 28px */
+  --text-3xl: calc(var(--base-size) * 8);    /* 32px */
+  --text-4xl: calc(var(--base-size) * 12.8); /* 51.2px ~3.2em */
+
+  /* Border radius */
+  --radius-sm: calc(var(--base-size) * 1);  /* 4px */
+  --radius-md: calc(var(--base-size) * 1.5); /* 6px */
+  --radius-lg: calc(var(--base-size) * 2);  /* 8px */
+
+  /* Fixed sizes (component-specific) */
+  --size-cell: calc(var(--base-size) * 7.5);      /* 30px - grid cell */
+  --size-hint-area: calc(var(--base-size) * 25);  /* 100px - hint min-width */
+  --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
+  --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
+  --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */
+  --size-dialog: calc(var(--base-size) * 100);    /* 400px - dialog width */
+  --size-touch-target: calc(var(--base-size) * 11); /* 44px - min touch target */
+  --size-badge: calc(var(--base-size) * 4);       /* 16px - badge size */
+  --size-container-sm: calc(var(--base-size) * 80);  /* 320px - min body width */
+  --size-container-lg: calc(var(--base-size) * 300); /* 1200px - home max-width */
+  --size-container-xl: calc(var(--base-size) * 320); /* 1280px - root max-width */
+
+  /* Logo/decorative sizes */
+  --size-logo: calc(var(--base-size) * 24); /* 96px / 6em */
+}
+
+/* Color Variables - Light Theme (default) */
+:root {
+  /* Primary */
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-primary-light: #3498db;
+  --color-primary-light-hover: #2980b9;
+  --color-primary-focus-ring: rgba(0, 123, 255, 0.15);
+
+  /* Danger / Error */
+  --color-danger: #dc3545;
+  --color-danger-hover: #c82333;
+  --color-danger-bg: #f8d7da;
+  --color-danger-text: #721c24;
+
+  /* Success */
+  --color-success: #28a745;
+  --color-success-bg: #d4edda;
+  --color-success-bg-hover: #c3e6cb;
+  --color-success-text: #155724;
+
+  /* Warning */
+  --color-warning-bg: #fff3cd;
+  --color-warning-text: #856404;
+
+  /* Neutral / Gray */
+  --color-gray-50: #f9f9f9;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #f0f0f0;
+  --color-gray-300: #e9ecef;
+  --color-gray-400: #e0e0e0;
+  --color-gray-500: #d0d0d0;
+  --color-gray-600: #ccc;
+  --color-gray-700: #aaa;
+  --color-gray-800: #999;
+  --color-gray-900: #888;
+
+  /* Text */
+  --color-text-primary: #333;
+  --color-text-secondary: #555;
+  --color-text-muted: #666;
+  --color-text-hint: #6c757d;
+  --color-text-disabled: #666;
+
+  /* Backgrounds */
+  --color-bg-page: #ffffff;
+  --color-bg-card: #f5f5f5;
+  --color-bg-input: white;
+  --color-bg-dialog: white;
+  --color-bg-button: #e0e0e0;
+  --color-bg-button-hover: #d0d0d0;
+
+  /* Borders */
+  --color-border: #ddd;
+  --color-border-dark: #808080;
+  --color-border-input: #ddd;
+
+  /* Grid */
+  --color-cell-empty: white;
+  --color-cell-filled: #000;
+  --color-cell-cross: #ccc;
+  --color-grid-border: #ccc;
+
+  /* Solution Preview */
+  --color-preview-empty: #f5f5f5;
+  --color-preview-filled: #2c3e50;
+
+  /* Victory Dialog */
+  --color-victory-title: #2c3e50;
+  --color-victory-text: #34495e;
+  --color-victory-accent: #3498db;
+
+  /* Links */
+  --color-link: #646cff;
+  --color-link-hover: #535bf2;
+
+  /* Gradients (for toggle buttons) */
+  --gradient-button: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+  --gradient-button-hover: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
+  --gradient-button-pressed: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
+
+  /* Shadows */
+  --shadow-button: 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.2);
+  --shadow-dialog: 0 var(--space-1) var(--space-2) rgba(0, 0, 0, 0.1);
+  --shadow-pressed: inset 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 var(--space-1) var(--color-primary-focus-ring);
+
+  /* Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+}

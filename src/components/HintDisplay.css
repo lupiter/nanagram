@@ -1,20 +1,20 @@
 .hint-numbers {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: calc(var(--base-size) * 0.5);
 }
 
 .hint-numbers.vertical {
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 100px;
+  min-height: var(--size-hint-area);
   text-align: center;
 }
 
 .hint-numbers.horizontal {
   flex-direction: row;
   justify-content: flex-end;
-  min-width: 100px;
+  min-width: var(--size-hint-area);
   text-align: right;
 }
 
@@ -22,18 +22,18 @@
 table.nonogram-grid th .hint-numbers.horizontal {
   flex-direction: row;
   justify-content: flex-end;
-  min-width: 100px;
+  min-width: var(--size-hint-area);
   text-align: right;
   min-height: auto;
 }
 
 .hint-numbers span {
   margin: 0;
-  color: #666;
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
 .hint-numbers span.used {
-  color: #999;
+  color: var(--color-gray-800);
   text-decoration: line-through;
-} 
+}

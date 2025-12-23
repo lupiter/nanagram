@@ -16,10 +16,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <h1>Nonogram 🧩</h1>
-      <div className="page-links">
-        <Link to="/designer">🎨 Puzzle Designer</Link>
-      </div>
+      <h1>Nanna Gram 👵📔</h1>
       <div className="puzzle-categories">
         {Object.entries(puzzleMap).map(([category, puzzles]) => (
           <div key={category} className="puzzle-category">

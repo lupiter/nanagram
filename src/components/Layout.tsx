@@ -6,6 +6,7 @@ export default function Layout() {
     <div className="layout">
       <nav>
         <Link to="/">Home</Link>
+        <Link to="/designer">Designer</Link>
       </nav>
       <main>
         <Outlet />

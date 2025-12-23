@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PuzzleSolutionData } from '../types/nonogram';
+import SolutionPreview from './SolutionPreview';
 import './VictoryPopup.css';
 
 interface VictoryPopupProps {
   onClose: () => void;
   nextPuzzle: { category: string; id: string } | null;
   puzzleName: string;
+  solution: PuzzleSolutionData;
 }
 
-export default function VictoryPopup({ onClose, nextPuzzle, puzzleName }: VictoryPopupProps) {
+export default function VictoryPopup({ onClose, nextPuzzle, puzzleName, solution }: VictoryPopupProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const navigate = useNavigate();
 
@@ -41,8 +44,9 @@ export default function VictoryPopup({ onClose, nextPuzzle, puzzleName }: Victor
         <div className="victory-content">
           <h2 id="victory-title">🎉 Congratulations! 🎉</h2>
           <p id="victory-description">You've solved the puzzle!</p>
+          <SolutionPreview solution={solution} />
           <p className="puzzle-name">{puzzleName}</p>
-        <div className="victory-buttons">
+          <div className="victory-buttons">
           {nextPuzzle && (
             <button 
               onClick={handleNextPuzzle} 

@@ -1,168 +1,74 @@
-import { useState, useEffect, useMemo } from "react";
-import { CellState, PuzzleSolutionData } from "../types/nonogram";
-import {
-  deriveRowHints,
-  deriveColumnHints,
-  checkPuzzleHasUniqueSolution,
-} from "../utils/puzzleUtils";
+import { useCallback } from "react";
+import { useDesigner } from "../hooks/useDesigner";
 import NonogramGrid from "../components/NonogramGrid";
+import DesignerControls from "../components/DesignerControls";
+import SolutionStatus from "../components/SolutionStatus";
+import DesignerInfo from "../components/DesignerInfo";
 import "./Designer.css";
 
-const AVAILABLE_SIZES = [5, 10, 15, 20] as const;
-
 export default function Designer() {
-  const [size, setSize] = useState<number>(5);
-  const [grid, setGrid] = useState<PuzzleSolutionData>(() => createEmptyGrid(5));
-  const [isChecking, setIsChecking] = useState(false);
-  const [hasUniqueSolution, setHasUniqueSolution] = useState<boolean | null>(null);
-  const [puzzleName, setPuzzleName] = useState<string>("");
+  const { state, setState, controller } = useDesigner();
 
-  function createEmptyGrid(gridSize: number): PuzzleSolutionData {
-    return Array.from({ length: gridSize }, () =>
-      Array.from({ length: gridSize }, () => CellState.EMPTY)
-    );
-  }
-
-  // Update grid when size changes
-  useEffect(() => {
-    setGrid(createEmptyGrid(size));
-    setHasUniqueSolution(null);
-  }, [size]);
-
-  // Derive hints from current grid
-  const rowHints: Hint[][] = useMemo(() => deriveRowHints(grid), [grid]);
-  const columnHints: Hint[][] = useMemo(() => deriveColumnHints(grid), [grid]);
-
-  // Check if puzzle has any filled cells
-  const hasFilledCells = useMemo(() => 
-    grid.some(row => row.some(cell => cell === CellState.FILLED)),
-    [grid]
+  const handleCellClick = useCallback(
+    (row: number, col: number) => {
+      setState(s => controller.toggleCell(s, row, col));
+    },
+    [controller, setState]
   );
 
-  // Check solution uniqueness with debounce
-  useEffect(() => {
-    if (!hasFilledCells) {
-      setHasUniqueSolution(null);
-      return;
-    }
+  const handleNameChange = useCallback(
+    (name: string) => {
+      setState(s => controller.setPuzzleName(s, name));
+    },
+    [controller, setState]
+  );
 
-    setIsChecking(true);
-    const timer = setTimeout(() => {
-      const result = checkPuzzleHasUniqueSolution(grid);
-      setHasUniqueSolution(result);
-      setIsChecking(false);
-    }, 300);
+  const handleSizeChange = useCallback(
+    (size: number) => {
+      setState(s => controller.setSize(s, size));
+    },
+    [controller, setState]
+  );
 
-    return () => clearTimeout(timer);
-  }, [grid, hasFilledCells]);
+  const handleClear = useCallback(() => {
+    setState(s => controller.clear(s));
+  }, [controller, setState]);
 
-  const handleCellClick = (row: number, col: number) => {
-    setGrid(prev => {
-      const newGrid = prev.map(r => [...r]);
-      newGrid[row][col] = newGrid[row][col] === CellState.FILLED 
-        ? CellState.EMPTY 
-        : CellState.FILLED;
-      return newGrid;
+  const handleExport = useCallback(() => {
+    const json = controller.exportJson(state);
+    navigator.clipboard.writeText(json).catch((err) => {
+      console.error("Failed to copy:", err);
     });
-  };
+  }, [controller, state]);
 
-  const handleClear = () => {
-    setGrid(createEmptyGrid(size));
-    setHasUniqueSolution(null);
-  };
-
-  const handleExport = () => {
-    const puzzleJson = {
-      name: puzzleName.trim() || "Untitled",
-      solution: grid
-    };
-    const jsonString = JSON.stringify(puzzleJson, null, 2);
-    navigator.clipboard.writeText(jsonString).catch(err => {
-      console.error('Failed to copy:', err);
-    });
-  };
-
-  // Get status message and class
-  const getStatusInfo = () => {
-    if (!hasFilledCells) {
-      return { message: "Draw your puzzle by clicking cells", className: "status-info" };
-    }
-    if (isChecking) {
-      return { message: "Checking solution...", className: "status-checking" };
-    }
-    if (hasUniqueSolution === true) {
-      return { message: "✓ Puzzle has a unique solution!", className: "status-valid" };
-    }
-    if (hasUniqueSolution === false) {
-      return { message: "✗ Puzzle does not have a unique solution", className: "status-invalid" };
-    }
-    return { message: "", className: "" };
-  };
-
-  const statusInfo = getStatusInfo();
+  const statusInfo = controller.getStatusInfo(state);
 
   return (
     <div className="designer">
       <h1>Puzzle Designer</h1>
-      
-      <div className="designer-controls">
-        <div className="name-input">
-          <label htmlFor="puzzle-name">Name:</label>
-          <input
-            type="text"
-            id="puzzle-name"
-            value={puzzleName}
-            onChange={(e) => setPuzzleName(e.target.value)}
-            placeholder="Enter puzzle name"
-          />
-        </div>
 
-        <div className="size-selector">
-          <label htmlFor="size-select">Size:</label>
-          <select 
-            id="size-select"
-            value={size} 
-            onChange={(e) => setSize(Number(e.target.value))}
-          >
-            {AVAILABLE_SIZES.map(s => (
-              <option key={s} value={s}>{s}×{s}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="designer-actions">
-          <button onClick={handleClear} className="btn-clear">
-            🗑️ Clear
-          </button>
-          <button 
-            onClick={handleExport} 
-            className="btn-export"
-            disabled={!hasFilledCells}
-            title="Copy puzzle code to clipboard"
-          >
-            📋 Copy Code
-          </button>
-        </div>
-      </div>
+      <DesignerControls
+        puzzleName={state.puzzleName}
+        size={state.size}
+        hasFilledCells={controller.hasFilledCells(state)}
+        onNameChange={handleNameChange}
+        onSizeChange={handleSizeChange}
+        onClear={handleClear}
+        onExport={handleExport}
+      />
 
-      <div className={`solution-status ${statusInfo.className}`}>
-        {statusInfo.message}
-      </div>
+      <SolutionStatus message={statusInfo.message} className={statusInfo.className} />
 
       <div className="designer-grid-container">
         <NonogramGrid
-          grid={grid}
-          rowHints={rowHints}
-          columnHints={columnHints}
+          grid={state.grid}
+          rowHints={state.rowHints}
+          columnHints={state.columnHints}
           onCellClick={handleCellClick}
         />
       </div>
 
-      <div className="designer-info">
-        <p>Click cells to toggle filled/unfilled. The hints update automatically.</p>
-        <p>A valid puzzle must have exactly one unique solution.</p>
-      </div>
+      <DesignerInfo />
     </div>
   );
 }
-

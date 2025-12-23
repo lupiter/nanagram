@@ -2,7 +2,6 @@ import { CellState as NonogramCellState, Hint, PuzzleSolutionData } from "../typ
 import { WorkingGrid, GameMode } from "../types/puzzle";
 import { checkHints } from "./hintChecker";
 import { isRowOrColumnComplete } from "./puzzleUtils";
-import { errorSound } from "./errorSound";
 
 export interface UpdateCellOptions {
   grid: WorkingGrid;
@@ -22,9 +21,9 @@ export interface UpdateCellResult {
   errorCell: [number, number] | null;
 }
 
-export async function updateCell(options: UpdateCellOptions): Promise<UpdateCellResult> {
+export function updateCell(options: UpdateCellOptions): UpdateCellResult {
   const { grid, puzzle, row, col, toolToUse, mode, rowHints, columnHints } = options;
-  const newGrid = [...grid];
+  const newGrid = grid.map(r => [...r]);
   const cell = newGrid[row][col];
   let errorCell: [number, number] | null = null;
 
@@ -36,7 +35,6 @@ export async function updateCell(options: UpdateCellOptions): Promise<UpdateCell
   ) {
     // Invalid move - show error feedback
     errorCell = [row, col];
-    await errorSound.play();
     // Cross out the cell instead
     newGrid[row][col] = NonogramCellState.CROSSED_OUT;
   } else {
@@ -86,4 +84,4 @@ export async function updateCell(options: UpdateCellOptions): Promise<UpdateCell
     newColumnHints,
     errorCell
   };
-} 
+}

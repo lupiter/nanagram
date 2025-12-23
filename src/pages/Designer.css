@@ -2,20 +2,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 2rem;
-  gap: 1rem;
+  padding: var(--space-4) var(--space-8);
+  gap: var(--space-4);
 }
 
 .designer h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.8rem;
-  color: #333;
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--text-2xl);
+  color: var(--color-text-primary);
 }
 
 /* Controls section */
 .designer-controls {
   display: flex;
-  gap: 2rem;
+  gap: var(--space-8);
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
@@ -24,117 +24,119 @@
 .name-input {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .name-input label {
   font-weight: 600;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 
 .name-input input {
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background: white;
-  min-width: 180px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  border: calc(var(--base-size) * 0.5) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
+  min-width: var(--size-input-min);
   transition: border-color 0.2s;
 }
 
 .name-input input:hover {
-  border-color: #007bff;
+  border-color: var(--color-primary);
 }
 
 .name-input input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
 }
 
 .name-input input::placeholder {
-  color: #aaa;
+  color: var(--color-gray-700);
 }
 
 .size-selector {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .size-selector label {
   font-weight: 600;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 
 .size-selector select {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background: white;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+  border: calc(var(--base-size) * 0.5) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
   cursor: pointer;
   transition: border-color 0.2s;
 }
 
 .size-selector select:hover {
-  border-color: #007bff;
+  border-color: var(--color-primary);
 }
 
 .size-selector select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
 }
 
 .designer-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .designer-actions button {
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
 }
 
 .btn-clear {
-  background: #f8f9fa;
-  color: #dc3545;
-  border: 1px solid #dc3545 !important;
+  background: var(--color-bg-card);
+  color: var(--color-danger);
+  border: var(--border-width) solid var(--color-danger) !important;
 }
 
 .btn-clear:hover {
-  background: #dc3545;
+  background: var(--color-danger);
   color: white;
 }
 
 .btn-export {
-  background: #007bff;
+  background: var(--color-primary);
   color: white;
 }
 
 .btn-export:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--color-primary-hover);
 }
 
 .btn-export:disabled {
-  background: #ccc;
-  color: #666;
+  background: var(--color-gray-500);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
 }
 
 /* Solution status */
 .solution-status {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
   font-weight: 600;
-  font-size: 1rem;
-  min-height: 1.5rem;
+  font-size: var(--text-base);
+  min-height: var(--space-6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,23 +144,23 @@
 }
 
 .status-info {
-  background: #e9ecef;
-  color: #6c757d;
+  background: var(--color-gray-300);
+  color: var(--color-text-hint);
 }
 
 .status-checking {
-  background: #fff3cd;
-  color: #856404;
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
 }
 
 .status-valid {
-  background: #d4edda;
-  color: #155724;
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
 }
 
 .status-invalid {
-  background: #f8d7da;
-  color: #721c24;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
 }
 
 /* Grid container */
@@ -167,91 +169,15 @@
   max-width: 100%;
 }
 
-
 /* Info section */
 .designer-info {
   text-align: center;
-  color: #6c757d;
-  font-size: 0.9rem;
-  max-width: 400px;
-  margin-top: 0.5rem;
+  color: var(--color-text-hint);
+  font-size: var(--text-sm);
+  max-width: var(--size-dialog);
+  margin-top: var(--space-2);
 }
 
 .designer-info p {
-  margin: 0.25rem 0;
+  margin: var(--space-1) 0;
 }
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .designer h1 {
-    color: #f0f0f0;
-  }
-
-  .name-input label {
-    color: #ccc;
-  }
-
-  .name-input input {
-    background: #333;
-    color: #fff;
-    border-color: #555;
-  }
-
-  .name-input input:hover {
-    border-color: #007bff;
-  }
-
-  .name-input input::placeholder {
-    color: #777;
-  }
-
-  .size-selector label {
-    color: #ccc;
-  }
-
-  .size-selector select {
-    background: #333;
-    color: #fff;
-    border-color: #555;
-  }
-
-  .size-selector select:hover {
-    border-color: #007bff;
-  }
-
-  .btn-clear {
-    background: #2c2c2c;
-    border-color: #dc3545 !important;
-    color: #ff6b6b;
-  }
-
-  .btn-clear:hover {
-    background: #dc3545;
-    color: white;
-  }
-
-  .status-info {
-    background: #3a3a3a;
-    color: #adb5bd;
-  }
-
-  .status-checking {
-    background: #5a4a20;
-    color: #ffd966;
-  }
-
-  .status-valid {
-    background: #1d4a2a;
-    color: #7fd992;
-  }
-
-  .status-invalid {
-    background: #4a1d1d;
-    color: #ff8080;
-  }
-
-  .designer-info {
-    color: #999;
-  }
-}
-
