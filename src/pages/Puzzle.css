@@ -46,15 +46,6 @@
   cursor: not-allowed;
 }
 
-.timer {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  padding: 0.25rem 0.75rem;
-  background: #f0f0f0;
-  border-radius: 4px;
-}
-
 /* Main puzzle container */
 .puzzle {
   display: flex;
@@ -106,11 +97,6 @@
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .timer {
-    background: #333;
-    color: #fff;
-  }
-  
   .category-label {
     color: #999;
   }

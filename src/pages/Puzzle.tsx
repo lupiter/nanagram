@@ -98,9 +98,6 @@ export default function Puzzle() {
       setShowVictory(true);
       markPuzzleCompleted(category, id);
       clearProgress(category, id);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
     } else if (!solved) {
       // Save progress for non-empty grids
       const hasContent = grid.some(row => row.some(cell => cell !== NonogramCellState.EMPTY));
@@ -232,7 +229,6 @@ export default function Puzzle() {
     setColumnHints(deriveColumnHints(puzzle.solution));
     setIsSolved(false);
     setShowVictory(false);
-    setElapsedTime(0);
     setHistory([]);
     setHistoryIndex(-1);
     clearProgress(category, id);
@@ -303,9 +299,6 @@ export default function Puzzle() {
           ) : (
             <span className="nav-button disabled">Next →</span>
           )}
-        </div>
-        <div className="timer" aria-label="Elapsed time">
-          ⏱️ {formatTime(elapsedTime)}
         </div>
       </div>
       <div className="puzzle">
