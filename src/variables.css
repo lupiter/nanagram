@@ -47,92 +47,41 @@
   --size-logo: calc(var(--base-size) * 24); /* 96px / 6em */
 }
 
-/* Color Variables - Light Theme (default) */
+/* Color Palette */
 :root {
-  /* Primary */
-  --color-primary: #007bff;
-  --color-primary-hover: #0056b3;
-  --color-primary-light: #3498db;
-  --color-primary-light-hover: #2980b9;
-  --color-primary-focus-ring: rgba(0, 123, 255, 0.15);
+  /* Core palette - only these raw colors */
+  --white: #fff;
+  --black: #000;
+  --gray-100: #f5f5f5;
+  --gray-200: #e0e0e0;
+  --gray-300: #ccc;
+  --gray-400: #999;
+  --gray-500: #666;
+  --gray-600: #333;
+  --blue: #007bff;
+  --blue-dark: #0056b3;
+  --green: #28a745;
+  --green-light: #d4edda;
+  --red: #dc3545;
 
-  /* Danger / Error */
-  --color-danger: #dc3545;
-  --color-danger-hover: #c82333;
-  --color-danger-bg: #f8d7da;
-  --color-danger-text: #721c24;
-
-  /* Success */
-  --color-success: #28a745;
-  --color-success-bg: #d4edda;
-  --color-success-bg-hover: #c3e6cb;
-  --color-success-text: #155724;
-
-  /* Warning */
-  --color-warning-bg: #fff3cd;
-  --color-warning-text: #856404;
-
-  /* Neutral / Gray */
-  --color-gray-50: #f9f9f9;
-  --color-gray-100: #f5f5f5;
-  --color-gray-200: #f0f0f0;
-  --color-gray-300: #e9ecef;
-  --color-gray-400: #e0e0e0;
-  --color-gray-500: #d0d0d0;
-  --color-gray-600: #ccc;
-  --color-gray-700: #aaa;
-  --color-gray-800: #999;
-  --color-gray-900: #888;
-
-  /* Text */
-  --color-text-primary: #333;
-  --color-text-secondary: #555;
-  --color-text-muted: #666;
-  --color-text-hint: #6c757d;
-  --color-text-disabled: #666;
-
-  /* Backgrounds */
-  --color-bg-page: #ffffff;
-  --color-bg-card: #f5f5f5;
-  --color-bg-input: white;
-  --color-bg-dialog: white;
-  --color-bg-button: #e0e0e0;
-  --color-bg-button-hover: #d0d0d0;
-
-  /* Borders */
-  --color-border: #ddd;
-  --color-border-dark: #808080;
-  --color-border-input: #ddd;
-
-  /* Grid */
-  --color-cell-empty: white;
-  --color-cell-filled: #000;
-  --color-cell-cross: #ccc;
-  --color-grid-border: #ccc;
-
-  /* Solution Preview */
-  --color-preview-empty: #ffffff;
-  --color-preview-filled: #000000;
-
-  /* Victory Dialog */
-  --color-victory-title: #2c3e50;
-  --color-victory-text: #34495e;
-  --color-victory-accent: #3498db;
-
-  /* Links */
-  --color-link: #646cff;
-  --color-link-hover: #535bf2;
-
-  /* Gradients (for toggle buttons) */
-  --gradient-button: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
-  --gradient-button-hover: linear-gradient(to bottom, #e8e8e8, #d8d8d8);
-  --gradient-button-pressed: linear-gradient(to bottom, #d0d0d0, #c0c0c0);
+  /* Semantic colors - reference core palette */
+  --color-text: var(--gray-600);
+  --color-text-muted: var(--gray-500);
+  --color-bg: var(--white);
+  --color-bg-subtle: var(--gray-100);
+  --color-border: var(--gray-300);
+  --color-primary: var(--blue);
+  --color-primary-hover: var(--blue-dark);
+  --color-success: var(--green);
+  --color-success-bg: var(--green-light);
+  --color-danger: var(--red);
+  --color-filled: var(--black);
+  --color-empty: var(--white);
 
   /* Shadows */
-  --shadow-button: 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.2);
-  --shadow-dialog: 0 var(--space-1) var(--space-2) rgba(0, 0, 0, 0.1);
-  --shadow-pressed: inset 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.2);
-  --shadow-focus: 0 0 0 var(--space-1) var(--color-primary-focus-ring);
+  --shadow-sm: 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 var(--space-1) var(--space-2) rgba(0, 0, 0, 0.15);
+  --shadow-inset: inset 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.1);
 
   /* Overlay */
   --color-overlay: rgba(0, 0, 0, 0.5);

@@ -10,7 +10,7 @@
 .toggle-group-title {
   font-weight: bold;
   margin-bottom: var(--space-1);
-  color: var(--color-text-primary);
+  color: var(--color-text);
 }
 
 .toggle-button {
@@ -18,14 +18,14 @@
   align-items: center;
   gap: var(--space-2);
   cursor: pointer;
-  background: var(--gradient-button);
-  border: var(--border-width) solid var(--color-border-dark);
+  background: var(--gray-100);
+  border: var(--border-width) solid var(--gray-400);
   border-right: none;
-  box-shadow: var(--shadow-button);
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
   position: relative;
   font-weight: bold;
-  color: var(--color-text-primary);
+  color: var(--color-text);
   overflow: hidden;
 }
 
@@ -35,11 +35,11 @@
 
 .toggle-button:last-child {
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  border-right: var(--border-width) solid var(--color-border-dark);
+  border-right: var(--border-width) solid var(--gray-400);
 }
 
 .toggle-button:hover {
-  background: var(--gradient-button-hover);
+  background: var(--gray-200);
 }
 
 .toggle-button input[type="radio"] {
@@ -51,14 +51,14 @@
 
 .toggle-button input[type="radio"]:checked {
   transform: translateY(var(--space-1));
-  box-shadow: var(--shadow-pressed);
-  background: var(--gradient-button-pressed);
+  box-shadow: var(--shadow-inset);
+  background: var(--gray-300);
 }
 
 .toggle-button input[type="radio"]:checked + span {
   transform: translateY(var(--space-1));
-  box-shadow: var(--shadow-pressed);
-  background: var(--gradient-button-pressed);
+  box-shadow: var(--shadow-inset);
+  background: var(--gray-300);
 }
 
 .toggle-button span {

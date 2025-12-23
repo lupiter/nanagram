@@ -34,6 +34,6 @@ table.nonogram-grid th .hint-numbers.horizontal {
 }
 
 .hint-numbers span.used {
-  color: var(--color-gray-800);
+  color: var(--gray-400);
   text-decoration: line-through;
 }

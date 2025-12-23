@@ -5,9 +5,9 @@
 }
 
 .solution-preview .cell {
-  background: var(--color-preview-empty);
+  background: var(--color-empty);
 }
 
 .solution-preview .cell.filled {
-  background: var(--color-preview-filled);
+  background: var(--color-filled);
 }

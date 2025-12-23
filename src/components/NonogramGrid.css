@@ -13,7 +13,7 @@ table.nonogram-grid td {
   width: calc(var(--size-cell) + var(--border-width) * 2);
   height: calc(var(--size-cell) + var(--border-width) * 2);
   line-height: 0;
-  background-color: var(--color-cell-empty);
+  background-color: var(--color-empty);
 }
 
 table.nonogram-grid td:first-child {
@@ -23,16 +23,16 @@ table.nonogram-grid td:first-child {
 /* Table headers */
 table.nonogram-grid th {
   padding: 0;
-  background-color: var(--color-cell-empty);
+  background-color: var(--color-empty);
   border: none;
 }
 
 table.nonogram-grid thead th:nth-child(even) {
-  background-color: var(--color-gray-200);
+  background-color: var(--gray-200);
 }
 
 table.nonogram-grid tbody tr:nth-child(odd) th {
-  background-color: var(--color-gray-200);
+  background-color: var(--gray-200);
 }
 
 table.nonogram-grid thead tr th:first-child {
@@ -77,18 +77,18 @@ table.nonogram-grid input[type="checkbox"] {
   border: none;
   appearance: none;
   -webkit-appearance: none;
-  background-color: var(--color-cell-empty);
+  background-color: var(--color-empty);
   cursor: pointer;
   position: relative;
   transition: background-color 0.2s;
 }
 
 table.nonogram-grid input[type="checkbox"]:checked {
-  background-color: var(--color-cell-filled);
+  background-color: var(--color-filled);
 }
 
 table.nonogram-grid input[type="checkbox"]:indeterminate {
-  background-color: var(--color-cell-empty);
+  background-color: var(--color-empty);
 }
 
 table.nonogram-grid input[type="checkbox"]:focus {
@@ -103,7 +103,7 @@ table.nonogram-grid input[type="checkbox"]::after {
   position: absolute;
   width: 100%;
   height: calc(var(--base-size) * 0.5);
-  background-color: var(--color-cell-cross);
+  background-color: var(--gray-300);
   top: 50%;
   left: 0;
 }
@@ -126,15 +126,15 @@ table.nonogram-grid input[type="checkbox"]:checked::after {
 
 /* Grid cell borders */
 table.nonogram-grid tbody td {
-  border: var(--border-width) solid var(--color-grid-border);
+  border: var(--border-width) solid var(--color-border);
 }
 
 table.nonogram-grid tbody tr:last-child td {
-  border-bottom: var(--border-width) solid var(--color-grid-border);
+  border-bottom: var(--border-width) solid var(--color-border);
 }
 
 table.nonogram-grid tbody tr td:last-child {
-  border-right: var(--border-width) solid var(--color-grid-border);
+  border-right: var(--border-width) solid var(--color-border);
 }
 
 /* Error animation */

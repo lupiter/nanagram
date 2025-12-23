@@ -41,8 +41,8 @@
 }
 
 .nav-button.disabled {
-  background: var(--color-gray-500);
-  color: var(--color-text-disabled);
+  background: var(--gray-300);
+  color: var(--gray-500);
   cursor: not-allowed;
 }
 
@@ -77,18 +77,18 @@
 
 .action-buttons button {
   padding: var(--space-2) var(--space-4);
-  background: var(--color-bg-button);
+  background: var(--gray-200);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: var(--text-sm);
   transition: all 0.2s;
-  color: var(--color-text-primary);
+  color: var(--color-text);
 }
 
 .action-buttons button:hover:not(:disabled) {
-  background: var(--color-bg-button-hover);
-  border-color: var(--color-border-dark);
+  background: var(--gray-300);
+  border-color: var(--gray-400);
 }
 
 .action-buttons button:disabled {
