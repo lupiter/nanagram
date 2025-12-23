@@ -8,6 +8,7 @@ export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    document.title = "Nanna Gram";
     setCompletedPuzzles(getCompletedPuzzles());
   }, []);
 

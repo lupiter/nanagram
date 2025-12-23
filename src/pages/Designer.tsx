@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDesigner } from "../hooks/useDesigner";
 import NonogramGrid from "../components/NonogramGrid";
 import DesignerControls from "../components/DesignerControls";
@@ -8,6 +8,10 @@ import "./Designer.css";
 
 export default function Designer() {
   const { state, setState, controller } = useDesigner();
+
+  useEffect(() => {
+    document.title = "Designer - Nanna Gram";
+  }, []);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {

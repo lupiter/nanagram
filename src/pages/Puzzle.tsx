@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { getNextPuzzle, getPreviousPuzzle, puzzleDefinition } from "../utils/puzzleLoader";
 import { GameMode } from "../types/puzzle";
 import { CellState } from "../types/nonogram";
@@ -19,6 +19,10 @@ export default function Puzzle() {
 
   const nextPuzzle = getNextPuzzle(category, id);
   const prevPuzzle = getPreviousPuzzle(category, id);
+
+  useEffect(() => {
+    document.title = `${category} #${id} - Nanna Gram`;
+  }, [category, id]);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
