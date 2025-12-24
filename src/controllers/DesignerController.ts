@@ -1,5 +1,6 @@
 import { CellState } from "../types/nonogram";
 import { deriveRowHints, deriveColumnHints } from "../utils/puzzleUtils";
+import { encodePuzzle } from "../utils/puzzleCodec";
 import { DesignerState, createEmptyGrid } from "./DesignerState";
 
 /**
@@ -135,6 +136,12 @@ export class DesignerController {
       solution: state.grid,
     };
     return JSON.stringify(puzzleJson, null, 2);
+  }
+
+  getShareUrl(state: DesignerState): string {
+    const name = state.puzzleName.trim() || "Untitled";
+    const encoded = encodePuzzle(name, state.grid);
+    return `${window.location.origin}${window.location.pathname}#/play/${encoded}`;
   }
 
   getStatusInfo(state: DesignerState): { message: string; className: string } {

@@ -66,6 +66,13 @@ export default function Designer() {
     });
   }, [controller, state]);
 
+  const handleShare = useCallback(() => {
+    const url = controller.getShareUrl(state);
+    navigator.clipboard.writeText(url).catch((err: unknown) => {
+      console.error("Failed to copy:", err);
+    });
+  }, [controller, state]);
+
   const statusInfo = controller.getStatusInfo(state);
 
   return (
@@ -76,10 +83,12 @@ export default function Designer() {
         puzzleName={state.puzzleName}
         size={state.size}
         hasFilledCells={controller.hasFilledCells(state)}
+        hasUniqueSolution={state.hasUniqueSolution === true}
         onNameChange={handleNameChange}
         onSizeChange={handleSizeChange}
         onClear={handleClear}
         onExport={handleExport}
+        onShare={handleShare}
       />
 
       <div className="designer-grid-container">

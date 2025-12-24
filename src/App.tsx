@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Puzzle from './pages/Puzzle';
 import Designer from './pages/Designer';
+import Play from './pages/Play';
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="puzzle/:category/:id" element={<Puzzle />} />
           <Route path="designer" element={<Designer />} />
+          <Route path="play/:encoded" element={<Play />} />
         </Route>
       </Routes>
     </HashRouter>
