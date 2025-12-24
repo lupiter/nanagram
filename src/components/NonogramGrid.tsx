@@ -42,30 +42,30 @@ export default function NonogramGrid({
               <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
             </th>
             {row.map((cell, colIndex) => (
-              <td key={`${rowIndex}-${colIndex}`} role="gridcell">
+              <td key={`${String(rowIndex)}-${String(colIndex)}`} role="gridcell">
                 <input
                   type="checkbox"
-                  id={`cell-${rowIndex}-${colIndex}`}
-                  checked={cell === CellState.FILLED}
-                  onChange={() => onCellClick(rowIndex, colIndex)}
+                  id={`cell-${String(rowIndex)}-${String(colIndex)}`}
+                  checked={cell === (CellState.FILLED as number)}
+                  onChange={() => { onCellClick(rowIndex, colIndex); }}
                   onContextMenu={
                     onCellRightClick
-                      ? (e) => onCellRightClick(rowIndex, colIndex, e)
+                      ? (e) => { onCellRightClick(rowIndex, colIndex, e); }
                       : undefined
                   }
                   onMouseDown={
                     onCellMouseDown
-                      ? (e) => onCellMouseDown(rowIndex, colIndex, e)
+                      ? (e) => { onCellMouseDown(rowIndex, colIndex, e); }
                       : undefined
                   }
                   onMouseEnter={
                     onCellMouseEnter
-                      ? () => onCellMouseEnter(rowIndex, colIndex)
+                      ? () => { onCellMouseEnter(rowIndex, colIndex); }
                       : undefined
                   }
                   ref={(input) => {
                     if (input) {
-                      input.indeterminate = cell === CellState.EMPTY;
+                      input.indeterminate = cell === (CellState.EMPTY as number);
                     }
                   }}
                   className={
@@ -75,7 +75,7 @@ export default function NonogramGrid({
                       ? "shake"
                       : ""
                   }
-                  aria-label={`Cell at row ${rowIndex + 1}, column ${colIndex + 1}`}
+                  aria-label={`Cell at row ${String(rowIndex + 1)}, column ${String(colIndex + 1)}`}
                 />
               </td>
             ))}

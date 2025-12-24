@@ -53,7 +53,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     } else if (!isSolved && controller.hasContent(state)) {
       saveProgress(category, id, state.grid);
     }
-  }, [state.grid]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.grid, controller, category, id, state.isSolved]);
 
   // Play error sound and clear error after animation
   useEffect(() => {
@@ -62,7 +62,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       const timer = setTimeout(() => {
         setState(s => controller.clearError(s));
       }, 200);
-      return () => clearTimeout(timer);
+      return () => { clearTimeout(timer); };
     }
   }, [state.errorCell, controller]);
 
@@ -85,7 +85,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       });
     };
     window.addEventListener("mouseup", handleGlobalMouseUp);
-    return () => window.removeEventListener("mouseup", handleGlobalMouseUp);
+    return () => { window.removeEventListener("mouseup", handleGlobalMouseUp); };
   }, [controller]);
 
   // Keyboard shortcuts - registered once, uses ref for latest state
@@ -101,7 +101,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => { window.removeEventListener("keydown", handleKeyDown); };
   }, [controller]);
 
   return { state, setState, controller };

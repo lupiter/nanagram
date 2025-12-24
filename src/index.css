@@ -62,25 +62,3 @@ h1 {
   font-size: var(--text-4xl);
   line-height: 1.1;
 }
-
-button {
-  border-radius: var(--radius-lg);
-  border: var(--border-width) solid transparent;
-  padding: var(--space-3) var(--space-5);
-  font-size: var(--text-base);
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--gray-200);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: var(--color-primary);
-}
-
-button:focus,
-button:focus-visible {
-  outline: var(--space-1) auto -webkit-focus-ring-color;
-}

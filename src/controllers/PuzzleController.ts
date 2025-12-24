@@ -166,9 +166,20 @@ export class PuzzleController {
 
   // --- Drag ---
 
+  private hasDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): boolean {
+    return draggedCells.get(row)?.has(col) ?? false;
+  }
+
+  private addDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): Map<number, Set<number>> {
+    const newMap = new Map(draggedCells);
+    const rowSet = newMap.get(row) ?? new Set<number>();
+    rowSet.add(col);
+    newMap.set(row, rowSet);
+    return newMap;
+  }
+
   startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
-    const newDraggedCells = new Set<string>();
-    newDraggedCells.add(`${row}-${col}`);
+    const newDraggedCells = this.addDraggedCell(new Map(), row, col);
     
     // Set drag state first
     const stateWithDrag: PuzzleState = {
@@ -187,14 +198,11 @@ export class PuzzleController {
       return state;
     }
 
-    const cellKey = `${row}-${col}`;
-    if (state.draggedCells.has(cellKey)) {
+    if (this.hasDraggedCell(state.draggedCells, row, col)) {
       return state;
     }
 
-    const newDraggedCells = new Set(state.draggedCells);
-    newDraggedCells.add(cellKey);
-
+    const newDraggedCells = this.addDraggedCell(state.draggedCells, row, col);
     const stateWithDrag = { ...state, draggedCells: newDraggedCells };
     return this.updateCell(stateWithDrag, row, col, state.dragTool);
   }
@@ -204,7 +212,7 @@ export class PuzzleController {
       ...state,
       isDragging: false,
       dragTool: null,
-      draggedCells: new Set(),
+      draggedCells: new Map(),
     };
   }
 

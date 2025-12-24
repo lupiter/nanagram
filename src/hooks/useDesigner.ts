@@ -23,8 +23,24 @@ export function useDesigner() {
       setState(s => controller.setUniqueSolution(s, result));
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [state.grid]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { clearTimeout(timer); };
+  }, [state.grid, state.hasUniqueSolution, controller]);
+
+  // Global mouse up handler for drag
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      requestAnimationFrame(() => {
+        setState(s => {
+          if (s.isDragging) {
+            return controller.endDrag(s);
+          }
+          return s;
+        });
+      });
+    };
+    window.addEventListener("mouseup", handleGlobalMouseUp);
+    return () => { window.removeEventListener("mouseup", handleGlobalMouseUp); };
+  }, [controller]);
 
   return { state, setState, controller };
 }

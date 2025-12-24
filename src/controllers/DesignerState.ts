@@ -9,6 +9,9 @@ export interface DesignerState {
   puzzleName: string;
   isChecking: boolean;
   hasUniqueSolution: boolean | null;
+  isDragging: boolean;
+  dragMode: CellState | null; // What we're filling with during drag
+  draggedCells: Map<number, Set<number>>;
 }
 
 export function createEmptyGrid(size: number): PuzzleSolutionData {
@@ -17,7 +20,7 @@ export function createEmptyGrid(size: number): PuzzleSolutionData {
   );
 }
 
-export function createInitialState(size: number = 5): DesignerState {
+export function createInitialState(size = 5): DesignerState {
   const grid = createEmptyGrid(size);
   return {
     size,
@@ -27,6 +30,9 @@ export function createInitialState(size: number = 5): DesignerState {
     puzzleName: "",
     isChecking: false,
     hasUniqueSolution: null,
+    isDragging: false,
+    dragMode: null,
+    draggedCells: new Map(),
   };
 }
 

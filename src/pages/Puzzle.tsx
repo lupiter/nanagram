@@ -28,7 +28,7 @@ export default function Puzzle() {
     (row: number, col: number) => {
       // Skip if already handled by drag start
       setState(s => {
-        if (s.isDragging && s.draggedCells.has(`${row}-${col}`)) {
+        if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
           return s;
         }
         return controller.updateCell(s, row, col);

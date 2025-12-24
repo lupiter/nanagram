@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 const AVAILABLE_SIZES = [5, 10, 15, 20] as const;
 
 interface DesignerControlsProps {
@@ -27,7 +29,7 @@ export default function DesignerControls({
           type="text"
           id="puzzle-name"
           value={puzzleName}
-          onChange={(e) => onNameChange(e.target.value)}
+          onChange={(e) => { onNameChange(e.target.value); }}
           placeholder="Enter puzzle name"
         />
       </div>
@@ -37,7 +39,7 @@ export default function DesignerControls({
         <select
           id="size-select"
           value={size}
-          onChange={(e) => onSizeChange(Number(e.target.value))}
+          onChange={(e) => { onSizeChange(Number(e.target.value)); }}
         >
           {AVAILABLE_SIZES.map((s) => (
             <option key={s} value={s}>
@@ -48,17 +50,17 @@ export default function DesignerControls({
       </div>
 
       <div className="designer-actions">
-        <button onClick={onClear} className="btn-clear">
+        <Button variant="danger" onClick={onClear}>
           🗑️ Clear
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="primary"
           onClick={onExport}
-          className="btn-export"
           disabled={!hasFilledCells}
           title="Copy puzzle code to clipboard"
         >
           📋 Copy Code
-        </button>
+        </Button>
       </div>
     </div>
   );

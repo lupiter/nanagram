@@ -15,32 +15,53 @@ export default function Designer() {
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
-      setState(s => controller.toggleCell(s, row, col));
+      // Skip if already handled by drag start
+      setState((s) => {
+        if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
+          return s;
+        }
+        return controller.toggleCell(s, row, col);
+      });
+    },
+    [controller, setState]
+  );
+
+  const handleMouseDown = useCallback(
+    (row: number, col: number, e: React.MouseEvent) => {
+      if (e.button === 2) return; // Ignore right click
+      setState((s) => controller.startDrag(s, row, col));
+    },
+    [controller, setState]
+  );
+
+  const handleMouseEnter = useCallback(
+    (row: number, col: number) => {
+      setState((s) => controller.continueDrag(s, row, col));
     },
     [controller, setState]
   );
 
   const handleNameChange = useCallback(
     (name: string) => {
-      setState(s => controller.setPuzzleName(s, name));
+      setState((s) => controller.setPuzzleName(s, name));
     },
     [controller, setState]
   );
 
   const handleSizeChange = useCallback(
     (size: number) => {
-      setState(s => controller.setSize(s, size));
+      setState((s) => controller.setSize(s, size));
     },
     [controller, setState]
   );
 
   const handleClear = useCallback(() => {
-    setState(s => controller.clear(s));
+    setState((s) => controller.clear(s));
   }, [controller, setState]);
 
   const handleExport = useCallback(() => {
     const json = controller.exportJson(state);
-    navigator.clipboard.writeText(json).catch((err) => {
+    navigator.clipboard.writeText(json).catch((err: unknown) => {
       console.error("Failed to copy:", err);
     });
   }, [controller, state]);
@@ -61,16 +82,21 @@ export default function Designer() {
         onExport={handleExport}
       />
 
-      <SolutionStatus message={statusInfo.message} className={statusInfo.className} />
-
       <div className="designer-grid-container">
         <NonogramGrid
           grid={state.grid}
           rowHints={state.rowHints}
           columnHints={state.columnHints}
           onCellClick={handleCellClick}
+          onCellMouseDown={handleMouseDown}
+          onCellMouseEnter={handleMouseEnter}
         />
       </div>
+
+      <SolutionStatus
+        message={statusInfo.message}
+        className={statusInfo.className}
+      />
 
       <DesignerInfo />
     </div>

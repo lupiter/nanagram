@@ -74,24 +74,3 @@
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
-
-.action-buttons button {
-  padding: var(--space-2) var(--space-4);
-  background: var(--gray-200);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  transition: all 0.2s;
-  color: var(--color-text);
-}
-
-.action-buttons button:hover:not(:disabled) {
-  background: var(--gray-300);
-  border-color: var(--gray-400);
-}
-
-.action-buttons button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}

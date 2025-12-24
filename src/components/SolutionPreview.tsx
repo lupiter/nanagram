@@ -14,14 +14,14 @@ export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPre
     <div 
       className="solution-preview"
       style={{
-        gridTemplateColumns: `repeat(${gridSize}, ${cellSize}px)`,
-        gridTemplateRows: `repeat(${gridSize}, ${cellSize}px)`,
+        gridTemplateColumns: `repeat(${String(gridSize)}, ${String(cellSize)}px)`,
+        gridTemplateRows: `repeat(${String(gridSize)}, ${String(cellSize)}px)`,
       }}
     >
       {solution.flatMap((row, rowIndex) =>
         row.map((cell, colIndex) => (
           <div
-            key={`${rowIndex}-${colIndex}`}
+            key={`${String(rowIndex)}-${String(colIndex)}`}
             className={cell === CellState.FILLED ? "cell filled" : "cell"}
           />
         ))

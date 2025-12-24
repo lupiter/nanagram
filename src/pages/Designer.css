@@ -92,42 +92,6 @@
   gap: var(--space-3);
 }
 
-.designer-actions button {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-base);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 500;
-}
-
-.btn-clear {
-  background: var(--color-bg-subtle);
-  color: var(--color-danger);
-  border: var(--border-width) solid var(--color-danger) !important;
-}
-
-.btn-clear:hover {
-  background: var(--color-danger);
-  color: white;
-}
-
-.btn-export {
-  background: var(--color-primary);
-  color: white;
-}
-
-.btn-export:hover:not(:disabled) {
-  background: var(--color-primary-hover);
-}
-
-.btn-export:disabled {
-  background: var(--gray-300);
-  color: var(--gray-500);
-  cursor: not-allowed;
-}
-
 /* Solution status */
 .solution-status {
   padding: var(--space-3) var(--space-6);
@@ -167,15 +131,3 @@
   max-width: 100%;
 }
 
-/* Info section */
-.designer-info {
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  max-width: var(--size-dialog);
-  margin-top: var(--space-2);
-}
-
-.designer-info p {
-  margin: var(--space-1) 0;
-}

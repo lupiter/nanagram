@@ -1,0 +1,36 @@
+.modal {
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: 90%;
+  width: var(--size-dialog);
+}
+
+.modal::backdrop {
+  background: var(--color-overlay);
+}
+
+.modal-container {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-md);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
+.modal-content {
+  color: var(--color-text);
+}
+

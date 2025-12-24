@@ -23,7 +23,7 @@ export function puzzlesByCategory(category: string): PuzzleDefinition[] {
 }
 
 export function getPuzzleCount(category: string): number {
-  return puzzleMap[category as PuzzleCategory]?.length ?? 0;
+  return puzzleMap[category as PuzzleCategory].length;
 }
 
 export function getNextPuzzle(category: string, currentId: string): { category: string; id: string } | null {

@@ -22,6 +22,74 @@ export class DesignerController {
     };
   }
 
+  // Drag operations
+  private hasDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): boolean {
+    return draggedCells.get(row)?.has(col) ?? false;
+  }
+
+  private addDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): Map<number, Set<number>> {
+    const newMap = new Map(draggedCells);
+    const rowSet = newMap.get(row) ?? new Set<number>();
+    rowSet.add(col);
+    newMap.set(row, rowSet);
+    return newMap;
+  }
+
+  startDrag(state: DesignerState, row: number, col: number): DesignerState {
+    const currentCell = state.grid[row][col];
+    // Determine what we're filling with: opposite of current cell state
+    const dragMode = currentCell === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
+    
+    const newGrid = state.grid.map(r => [...r]);
+    newGrid[row][col] = dragMode;
+    
+    const draggedCells = this.addDraggedCell(new Map(), row, col);
+
+    return {
+      ...state,
+      grid: newGrid,
+      rowHints: deriveRowHints(newGrid),
+      columnHints: deriveColumnHints(newGrid),
+      hasUniqueSolution: null,
+      isDragging: true,
+      dragMode,
+      draggedCells,
+    };
+  }
+
+  continueDrag(state: DesignerState, row: number, col: number): DesignerState {
+    if (!state.isDragging || state.dragMode === null) {
+      return state;
+    }
+
+    if (this.hasDraggedCell(state.draggedCells, row, col)) {
+      return state;
+    }
+
+    const newGrid = state.grid.map(r => [...r]);
+    newGrid[row][col] = state.dragMode;
+
+    const draggedCells = this.addDraggedCell(state.draggedCells, row, col);
+
+    return {
+      ...state,
+      grid: newGrid,
+      rowHints: deriveRowHints(newGrid),
+      columnHints: deriveColumnHints(newGrid),
+      hasUniqueSolution: null,
+      draggedCells,
+    };
+  }
+
+  endDrag(state: DesignerState): DesignerState {
+    return {
+      ...state,
+      isDragging: false,
+      dragMode: null,
+      draggedCells: new Map(),
+    };
+  }
+
   setSize(state: DesignerState, size: number): DesignerState {
     const grid = createEmptyGrid(size);
     return {

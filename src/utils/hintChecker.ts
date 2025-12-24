@@ -42,8 +42,8 @@ export function checkHints(
     if (hint.used) continue; // Skip if already used
     
     // Find the corresponding sequence in the answer for this hint
-    const answerSequence = answerSequences[hintIndex];
-    if (!answerSequence) continue;
+    const answerSequence = answerSequences[hintIndex] as { start: number; length: number } | undefined;
+    if (answerSequence === undefined) continue;
     
     // Find a matching sequence in the current state
     hint.used = currentSequences.some(seq => 

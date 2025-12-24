@@ -29,7 +29,7 @@ export interface PuzzleState {
   // Drag state
   isDragging: boolean;
   dragTool: CellState | null;
-  draggedCells: Set<string>;
+  draggedCells: Map<number, Set<number>>;
 }
 
 export function createInitialState(
@@ -53,6 +53,6 @@ export function createInitialState(
     isUndoRedoAction: false,
     isDragging: false,
     dragTool: null,
-    draggedCells: new Set(),
+    draggedCells: new Map(),
   };
 }

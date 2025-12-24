@@ -36,15 +36,15 @@ describe('updateCell', () => {
     ...overrides
   });
 
-  it('should fill an empty cell in free mode', async () => {
-    const result = await updateCell(createDefaultOptions());
+  it('should fill an empty cell in free mode', () => {
+    const result = updateCell(createDefaultOptions());
 
     expect(result.newGrid[1][1]).toBe(NonogramCellState.FILLED);
     expect(result.errorCell).toBeNull();
   });
 
-  it('should cross out invalid cell in assisted mode', async () => {
-    const result = await updateCell(createDefaultOptions({
+  it('should cross out invalid cell in assisted mode', () => {
+    const result = updateCell(createDefaultOptions({
       mode: GameMode.Assisted
     }));
 
@@ -52,11 +52,11 @@ describe('updateCell', () => {
     expect(result.errorCell).toEqual([1, 1]);
   });
 
-  it('should toggle filled cell back to empty', async () => {
+  it('should toggle filled cell back to empty', () => {
     const grid = createEmptyGrid(3, 3);
     grid[1][1] = NonogramCellState.FILLED;
 
-    const result = await updateCell(createDefaultOptions({
+    const result = updateCell(createDefaultOptions({
       grid
     }));
 
@@ -64,7 +64,7 @@ describe('updateCell', () => {
     expect(result.errorCell).toBeNull();
   });
 
-  it('should auto-cross out remaining cells in completed row', async () => {
+  it('should auto-cross out remaining cells in completed row', () => {
     // Create a puzzle where middle row should be all filled
     const puzzle = createSolutionGrid(3, 3);
     puzzle[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
@@ -74,7 +74,7 @@ describe('updateCell', () => {
     grid[1][0] = NonogramCellState.FILLED;
     grid[1][1] = NonogramCellState.FILLED;
 
-    const result = await updateCell(createDefaultOptions({
+    const result = updateCell(createDefaultOptions({
       grid,
       puzzle,
       row: 1,

@@ -140,7 +140,7 @@ export function generatePossibleDataForHints(
 ): Cell[][] {
   if (hints.length === 0) {
     // No hints = all empty
-    return [Array(size).fill(CellState.EMPTY)];
+    return [Array.from({ length: size }, () => CellState.EMPTY as Cell)];
   }
 
   const solutions: Cell[][] = [];

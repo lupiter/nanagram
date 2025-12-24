@@ -45,14 +45,14 @@ export class NonogramSolver {
     ]
   ) {
     this.noOfRows = this.rowsValues.length;
-    this.rowsDone = new Array(this.noOfRows).fill(0);
+    this.rowsDone = Array.from({ length: this.noOfRows }, () => 0);
 
     this.noOfCols = this.colsValues.length;
-    this.colsDone = new Array(this.noOfCols).fill(0);
+    this.colsDone = Array.from({ length: this.noOfCols }, () => 0);
 
     this.solved = false;
     this.board = Array.from({ length: this.noOfRows }, () =>
-      new Array(this.noOfCols).fill(0)
+      Array.from({ length: this.noOfCols }, () => 0)
     );
 
     // Step 1: Define all possible solutions for every row and col
@@ -115,9 +115,7 @@ export class NonogramSolver {
         }
       }
       this.checkSolved();
-      if (!this.solved) {
-        iterationsWithoutProgress++;
-      }
+      iterationsWithoutProgress++;
     }
 
     return this.board;
@@ -157,7 +155,7 @@ export class NonogramSolver {
     const resOpts: number[][] = [];
 
     for (const p of this.combinations(groups + nEmpty, groups)) {
-      const selected: number[] = new Array(groups + nEmpty).fill(-1);
+      const selected: number[] = Array.from({ length: groups + nEmpty }, () => -1);
       let onesIdx = 0;
 
       for (const val of p) {
@@ -193,7 +191,7 @@ export class NonogramSolver {
     for (const v of values) {
       const groups = v.length;
       const nEmpty = noOfOther - v.reduce((a, b) => a + b, 0) - groups + 1;
-      const ones = v.map((x) => new Array(x).fill(1));
+      const ones = v.map((x) => Array.from({ length: x }, () => 1));
       const res = this.createPossibilitiesForHint(nEmpty, groups, ones);
       possibilities.push(res);
     }

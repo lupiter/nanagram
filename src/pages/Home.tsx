@@ -31,7 +31,7 @@ export default function Home() {
                     key={index} 
                     to={`/puzzle/${category}/${String(index + 1)}`}
                     className={completed ? 'completed' : ''}
-                    title={completed ? puzzle.name : `Puzzle ${index + 1}`}
+                    title={completed ? puzzle.name : `Puzzle ${String(index + 1)}`}
                   >
                     {completed ? (
                       <>
