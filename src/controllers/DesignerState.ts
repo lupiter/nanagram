@@ -1,4 +1,4 @@
-import { CellState, Hint, PuzzleSolutionData } from "../types/nonogram";
+import { CellState, Hint, PuzzleSolutionData, SolutionCell } from "../types/nonogram";
 import { deriveRowHints, deriveColumnHints } from "../utils/puzzleUtils";
 
 export interface DesignerState {
@@ -10,7 +10,7 @@ export interface DesignerState {
   isChecking: boolean;
   hasUniqueSolution: boolean | null;
   isDragging: boolean;
-  dragMode: CellState | null; // What we're filling with during drag
+  dragMode: SolutionCell | null; // What we're filling with during drag
   draggedCells: Map<number, Set<number>>;
 }
 
