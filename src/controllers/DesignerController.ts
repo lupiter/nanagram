@@ -152,10 +152,10 @@ export class DesignerController {
       return { message: "Checking solution...", className: "status-checking" };
     }
     if (state.hasUniqueSolution === true) {
-      return { message: "✓ Puzzle has a unique solution!", className: "status-valid" };
+      return { message: "✓︎ Puzzle has a unique solution!", className: "status-valid" };
     }
     if (state.hasUniqueSolution === false) {
-      return { message: "✗ Puzzle does not have a unique solution", className: "status-invalid" };
+      return { message: "✗︎ Puzzle does not have a unique solution", className: "status-invalid" };
     }
     return { message: "", className: "" };
   }

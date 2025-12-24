@@ -14,7 +14,7 @@ export default function ToolSelector({ tool, onToolChange }: ToolSelectorProps) 
         onChange={onToolChange}
         options={[
           { value: CellState.FILLED, label: "■", ariaLabel: "Fill" },
-          { value: CellState.CROSSED_OUT, label: "✕", ariaLabel: "Cross" },
+          { value: CellState.CROSSED_OUT, label: "✕︎", ariaLabel: "Cross" },
         ]}
         name="tool"
         title="Tool"

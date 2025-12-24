@@ -114,12 +114,11 @@ export default function Play() {
   return (
     <>
       <div className="puzzle-header">
-        <nav className="puzzle-nav">
-          <Link to="/" className="nav-button">
-            ← Home
-          </Link>
-          <span className="puzzle-title">Shared Puzzle</span>
-        </nav>
+        <div className="puzzle-nav">
+          <h2>
+            User Created Puzzle <span className="category-label">({puzzle.solution.length}x{puzzle.solution[0].length})</span>
+          </h2>
+        </div>
       </div>
       <div className="puzzle">
         <ModeSelector mode={state.mode} onModeChange={handleModeChange} />

@@ -28,14 +28,14 @@
 
 /* Variants */
 .btn-default {
-  background: var(--gray-200);
+  background: var(--color-bg-light);
   color: var(--color-text);
   border-color: var(--color-border);
 }
 
 .btn-default:hover:not(:disabled) {
-  background: var(--gray-300);
-  border-color: var(--gray-400);
+  background: var(--color-bg-light-hover);
+  border-color: var(--color-border);
 }
 
 .btn-primary {

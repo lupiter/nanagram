@@ -48,7 +48,7 @@ export default function Modal({
         <header className="modal-header">
           <h2 id="modal-title">{title}</h2>
           <Button variant="secondary" square onClick={onClose} aria-label="Close">
-            ✕
+            ✕︎
           </Button>
         </header>
         <div className="modal-content">{children}</div>

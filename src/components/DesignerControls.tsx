@@ -1,6 +1,6 @@
 import Button from "./Button";
 
-const AVAILABLE_SIZES = [5, 10, 15, 20] as const;
+const AVAILABLE_SIZES = [5, 10, 15, 20, 25] as const;
 
 interface DesignerControlsProps {
   puzzleName: string;
@@ -55,14 +55,14 @@ export default function DesignerControls({
 
       <div className="designer-actions">
         <Button variant="danger" onClick={onClear}>
-          🗑️ Clear
+          🗑︎ Clear
         </Button>
         <Button
           onClick={onExport}
           disabled={!hasFilledCells}
           title="Copy puzzle code to clipboard"
         >
-          📋 Copy Code
+          📋︎ Copy Code
         </Button>
         <Button
           variant="primary"
@@ -70,7 +70,7 @@ export default function DesignerControls({
           disabled={!hasUniqueSolution}
           title={hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share"}
         >
-          🔗 Share
+          🔗︎ Share
         </Button>
       </div>
     </div>

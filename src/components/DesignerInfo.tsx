@@ -8,8 +8,8 @@ export default function DesignerInfo() {
 
   return (
     <div className="designer-info">
-      <Button variant="secondary" onClick={() => { setIsOpen(true); }} aria-label="Show help information">
-        ℹ️ Help
+      <Button onClick={() => { setIsOpen(true); }} aria-label="Show help information">
+        ℹ︎ Help
       </Button>
       <Modal isOpen={isOpen} onClose={() => { setIsOpen(false); }} title="Help">
         <div className="info-content">
