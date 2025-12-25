@@ -31,8 +31,8 @@
   --radius-lg: calc(var(--base-size) * 2);  /* 8px */
 
   /* Fixed sizes (component-specific) */
-  --size-cell: calc(var(--base-size) * 7.5);      /* 30px - grid cell */
-  --size-hint-area: calc(var(--base-size) * 25);  /* 100px - hint min-width */
+  --size-cell: calc(var(--base-size) * 5);      /* 30px - grid cell */
+  --size-hint-area: calc(var(--base-size) * 12);  /* 100px - hint min-width */
   --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
   --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
   --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */
@@ -66,10 +66,12 @@
   --green: #28a745;
   --green-light: #d4edda;
   --red: #dc3545;
+  --paper: #f0dac5;
 
   /* Semantic colors - reference core palette */
   --color-text: var(--gray-600);
   --color-text-muted: var(--gray-500);
+  --color-modal-bg: var(--paper);
   --color-bg: var(--white-300);
   --color-bg-light: var(--white-300);
   --color-bg-light-hover: var(--white-500);

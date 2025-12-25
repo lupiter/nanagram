@@ -7,7 +7,6 @@
 
   color-scheme: light;
   color: var(--color-text);
-  background-color: var(--color-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,9 +15,9 @@
 }
 
 #root {
-  max-width: var(--size-container-xl);
-  margin: 0 auto;
-  padding: var(--space-8);
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   text-align: center;
   min-height: calc(100vh - var(--space-8) * 2);
   display: flex;
@@ -32,6 +31,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 code {
@@ -52,13 +52,16 @@ a:hover {
 html, body {
   margin: 0;
   padding: 0;
+  /* Same background on both html and body for cross-browser overscroll support */
+  /* Safari uses body, Chrome/Firefox use html */
+  background-color: var(--color-modal-bg); /* Fallback - matches background.svg base color */
+  background-image: url('/background.svg');
+  background-repeat: repeat;
 }
 
 body {
   min-width: var(--size-container-sm);
-  background-color: var(--color-bg);
-  background-image: url('/background.svg');
-  background-repeat: repeat;
+  min-height: 100vh;
 }
 
 h1 {

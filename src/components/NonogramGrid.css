@@ -1,3 +1,9 @@
+.nonogram-grid-container {
+  max-width: calc(100vw - var(--space-8));
+  overflow-x: auto;
+  padding: 0 var(--space-4);
+}
+
 /* Nonogram Grid Table */
 table.nonogram-grid {
   border-collapse: collapse;
@@ -127,6 +133,14 @@ table.nonogram-grid input[type="checkbox"]:checked::after {
 /* Grid cell borders */
 table.nonogram-grid tbody td {
   border: var(--border-width) solid var(--color-border);
+}
+
+table.nonogram-grid tbody tr:nth-child(5n) td {
+  border-bottom: calc(var(--border-width) * 2) solid var(--color-border);
+}
+
+table.nonogram-grid tbody tr td:nth-child(5n + 1) {
+  border-right: calc(var(--border-width) * 2) solid var(--color-border);
 }
 
 table.nonogram-grid tbody tr:last-child td {

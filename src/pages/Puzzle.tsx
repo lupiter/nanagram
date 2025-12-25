@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-import { getNextPuzzle, getPreviousPuzzle, puzzleDefinition } from "../utils/puzzleLoader";
+import { getNextPuzzle, puzzleDefinition } from "../utils/puzzleLoader";
 import { GameMode } from "../types/puzzle";
 import { CellState } from "../types/nonogram";
 import { usePuzzleGame } from "../hooks/usePuzzleGame";
@@ -18,7 +18,6 @@ export default function Puzzle() {
   const { state, setState, controller } = usePuzzleGame({ category, id, puzzle });
 
   const nextPuzzle = getNextPuzzle(category, id);
-  const prevPuzzle = getPreviousPuzzle(category, id);
 
   useEffect(() => {
     document.title = `${category} #${id} - Nanna Gram`;
@@ -95,8 +94,6 @@ export default function Puzzle() {
       <PuzzleHeader
         category={category}
         id={id}
-        prevPuzzle={prevPuzzle}
-        nextPuzzle={nextPuzzle}
       />
       <div className="puzzle">
         <ModeSelector mode={state.mode} onModeChange={handleModeChange} />

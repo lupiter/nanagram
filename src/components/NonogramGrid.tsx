@@ -24,65 +24,80 @@ export default function NonogramGrid({
   errorCell,
 }: NonogramGridProps) {
   return (
-    <table className="nonogram-grid" role="grid">
-      <thead>
-        <tr>
-          <th></th>
-          {columnHints.map((hints, colIndex) => (
-            <th key={colIndex} role="columnheader">
-              <HintDisplay hints={hints} isVertical={true} />
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {grid.map((row, rowIndex) => (
-          <tr key={rowIndex} role="row">
-            <th role="rowheader">
-              <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
-            </th>
-            {row.map((cell, colIndex) => (
-              <td key={`${String(rowIndex)}-${String(colIndex)}`} role="gridcell">
-                <input
-                  type="checkbox"
-                  id={`cell-${String(rowIndex)}-${String(colIndex)}`}
-                  checked={cell === (CellState.FILLED as number)}
-                  onChange={() => { onCellClick(rowIndex, colIndex); }}
-                  onContextMenu={
-                    onCellRightClick
-                      ? (e) => { onCellRightClick(rowIndex, colIndex, e); }
-                      : undefined
-                  }
-                  onMouseDown={
-                    onCellMouseDown
-                      ? (e) => { onCellMouseDown(rowIndex, colIndex, e); }
-                      : undefined
-                  }
-                  onMouseEnter={
-                    onCellMouseEnter
-                      ? () => { onCellMouseEnter(rowIndex, colIndex); }
-                      : undefined
-                  }
-                  ref={(input) => {
-                    if (input) {
-                      input.indeterminate = cell === (CellState.EMPTY as number);
-                    }
-                  }}
-                  className={
-                    errorCell &&
-                    errorCell[0] === rowIndex &&
-                    errorCell[1] === colIndex
-                      ? "shake"
-                      : ""
-                  }
-                  aria-label={`Cell at row ${String(rowIndex + 1)}, column ${String(colIndex + 1)}`}
-                />
-              </td>
+    <div className="nonogram-grid-container">
+      <table className="nonogram-grid" role="grid">
+        <thead>
+          <tr>
+            <th></th>
+            {columnHints.map((hints, colIndex) => (
+              <th key={colIndex} role="columnheader">
+                <HintDisplay hints={hints} isVertical={true} />
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {grid.map((row, rowIndex) => (
+            <tr key={rowIndex} role="row">
+              <th role="rowheader">
+                <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
+              </th>
+              {row.map((cell, colIndex) => (
+                <td
+                  key={`${String(rowIndex)}-${String(colIndex)}`}
+                  role="gridcell"
+                >
+                  <input
+                    type="checkbox"
+                    id={`cell-${String(rowIndex)}-${String(colIndex)}`}
+                    checked={cell === (CellState.FILLED as number)}
+                    onChange={() => {
+                      onCellClick(rowIndex, colIndex);
+                    }}
+                    onContextMenu={
+                      onCellRightClick
+                        ? (e) => {
+                            onCellRightClick(rowIndex, colIndex, e);
+                          }
+                        : undefined
+                    }
+                    onMouseDown={
+                      onCellMouseDown
+                        ? (e) => {
+                            onCellMouseDown(rowIndex, colIndex, e);
+                          }
+                        : undefined
+                    }
+                    onMouseEnter={
+                      onCellMouseEnter
+                        ? () => {
+                            onCellMouseEnter(rowIndex, colIndex);
+                          }
+                        : undefined
+                    }
+                    ref={(input) => {
+                      if (input) {
+                        input.indeterminate =
+                          cell === (CellState.EMPTY as number);
+                      }
+                    }}
+                    className={
+                      errorCell &&
+                      errorCell[0] === rowIndex &&
+                      errorCell[1] === colIndex
+                        ? "shake"
+                        : ""
+                    }
+                    aria-label={`Cell at row ${String(
+                      rowIndex + 1
+                    )}, column ${String(colIndex + 1)}`}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
-

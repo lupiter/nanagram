@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useDesigner } from "../hooks/useDesigner";
 import NonogramGrid from "../components/NonogramGrid";
 import DesignerControls from "../components/DesignerControls";
@@ -7,6 +8,8 @@ import DesignerInfo from "../components/DesignerInfo";
 import "./Designer.css";
 
 export default function Designer() {
+  const [searchParams] = useSearchParams();
+  const showDevTools = searchParams.get("isDev") === "true";
   const { state, setState, controller } = useDesigner();
 
   useEffect(() => {
@@ -84,6 +87,7 @@ export default function Designer() {
         size={state.size}
         hasFilledCells={controller.hasFilledCells(state)}
         hasUniqueSolution={state.hasUniqueSolution === true}
+        showDevTools={showDevTools}
         onNameChange={handleNameChange}
         onSizeChange={handleSizeChange}
         onClear={handleClear}

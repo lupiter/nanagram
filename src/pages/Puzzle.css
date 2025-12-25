@@ -4,7 +4,6 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
 }
 
 .puzzle-nav {
@@ -77,12 +76,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  margin-bottom: var(--space-4);
 }
 
 /* Action buttons */
 .action-buttons {
   display: flex;
   gap: var(--space-2);
-  margin-top: var(--space-4);
 }

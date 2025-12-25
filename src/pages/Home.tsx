@@ -47,6 +47,12 @@ export default function Home() {
             </div>
           </div>
         ))}
+        <div className="puzzle-category">
+          <h2>Make your own</h2>
+          <div className="puzzle-links">
+            <Link to="/designer" aria-label="Designer">✏️</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@
 }
 
 .modal-container {
-  background: var(--color-bg);
+  background: var(--color-modal-bg);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   box-shadow: var(--shadow-md);

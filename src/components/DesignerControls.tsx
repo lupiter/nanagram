@@ -7,6 +7,7 @@ interface DesignerControlsProps {
   size: number;
   hasFilledCells: boolean;
   hasUniqueSolution: boolean;
+  showDevTools: boolean;
   onNameChange: (name: string) => void;
   onSizeChange: (size: number) => void;
   onClear: () => void;
@@ -19,6 +20,7 @@ export default function DesignerControls({
   size,
   hasFilledCells,
   hasUniqueSolution,
+  showDevTools,
   onNameChange,
   onSizeChange,
   onClear,
@@ -54,23 +56,25 @@ export default function DesignerControls({
       </div>
 
       <div className="designer-actions">
-        <Button variant="danger" onClick={onClear}>
-          🗑︎ Clear
+        <Button variant="danger" onClick={onClear} aria-label="clear" title="Clear puzzle">
+          🗑︎
         </Button>
-        <Button
-          onClick={onExport}
-          disabled={!hasFilledCells}
-          title="Copy puzzle code to clipboard"
-        >
-          📋︎ Copy Code
-        </Button>
+        {showDevTools && (
+          <Button
+            onClick={onExport}
+            disabled={!hasFilledCells}
+            title="Copy puzzle code to clipboard"
+          >
+            📋︎ Copy Code
+          </Button>
+        )}
         <Button
           variant="primary"
           onClick={onShare}
           disabled={!hasUniqueSolution}
           title={hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share"}
         >
-          🔗︎ Share
+          🔗︎
         </Button>
       </div>
     </div>

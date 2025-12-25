@@ -1,22 +1,22 @@
 .home {
-  padding: var(--space-8);
   max-width: var(--size-container-lg);
+  flex: 1;
 }
 
 .home h1 {
   text-align: center;
-  margin-bottom: var(--space-8);
+  margin: var(--space-4);
 }
 
 .puzzle-categories {
   display: grid;
-  gap: var(--space-8);
+  gap: var(--space-4);
   grid-template-columns: repeat(auto-fill, minmax(var(--size-category-min), 1fr));
 }
 
 .puzzle-category {
   background: var(--color-bg-subtle);
-  padding: var(--space-6);
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
 }
 
