@@ -19,7 +19,7 @@
   margin: 0;
   padding: 0;
   text-align: center;
-  min-height: calc(100vh - var(--space-8) * 2);
+  min-height: calc(100vh);
   display: flex;
   flex-direction: column;
 }

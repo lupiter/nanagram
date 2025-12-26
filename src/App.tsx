@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { PageTitleProvider } from './hooks/usePageTitle';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Puzzle from './pages/Puzzle';
@@ -9,14 +10,16 @@ import './App.css';
 function App() {
   return (
     <HashRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="puzzle/:category/:id" element={<Puzzle />} />
-          <Route path="designer" element={<Designer />} />
-          <Route path="play/:encoded" element={<Play />} />
-        </Route>
-      </Routes>
+      <PageTitleProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="puzzle/:category/:id" element={<Puzzle />} />
+            <Route path="designer" element={<Designer />} />
+            <Route path="play/:encoded" element={<Play />} />
+          </Route>
+        </Routes>
+      </PageTitleProvider>
     </HashRouter>
   );
 }

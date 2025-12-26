@@ -32,7 +32,7 @@
 
   /* Fixed sizes (component-specific) */
   --size-cell: calc(var(--base-size) * 5);      /* 30px - grid cell */
-  --size-hint-area: calc(var(--base-size) * 12);  /* 100px - hint min-width */
+  --size-hint-area: calc(var(--base-size) * 20);  /* 100px - hint min-width */
   --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
   --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
   --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */

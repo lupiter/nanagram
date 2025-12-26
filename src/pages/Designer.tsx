@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDesigner } from "../hooks/useDesigner";
+import { usePageTitle } from "../hooks/usePageTitle";
 import NonogramGrid from "../components/NonogramGrid";
 import DesignerControls from "../components/DesignerControls";
 import SolutionStatus from "../components/SolutionStatus";
@@ -11,10 +12,12 @@ export default function Designer() {
   const [searchParams] = useSearchParams();
   const showDevTools = searchParams.get("isDev") === "true";
   const { state, setState, controller } = useDesigner();
+  const { setTitle } = usePageTitle();
 
   useEffect(() => {
     document.title = "Designer - Nanna Gram";
-  }, []);
+    setTitle({ title: "Designer", subtitle: `${state.size}×${state.size}` });
+  }, [setTitle, state.size]);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -80,8 +83,6 @@ export default function Designer() {
 
   return (
     <div className="designer">
-      <h1>Puzzle Designer</h1>
-
       <DesignerControls
         puzzleName={state.puzzleName}
         size={state.size}

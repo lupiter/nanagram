@@ -2,15 +2,18 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Home.css';
 import { puzzleMap, getCompletedPuzzles } from '../utils/puzzleLoader';
+import { usePageTitle } from '../hooks/usePageTitle';
 import SolutionPreview from '../components/SolutionPreview';
 
 export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(new Set());
+  const { setTitle } = usePageTitle();
 
   useEffect(() => {
     document.title = "Nanna Gram";
+    setTitle(""); // Clear title for home page
     setCompletedPuzzles(getCompletedPuzzles());
-  }, []);
+  }, [setTitle]);
 
   const isPuzzleCompleted = (category: string, index: number) => {
     return completedPuzzles.has(`${category}-${String(index + 1)}`);

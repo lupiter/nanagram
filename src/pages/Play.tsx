@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { GameMode } from "../types/puzzle";
 import { CellState, PuzzleDefinition } from "../types/nonogram";
 import { usePuzzleGame } from "../hooks/usePuzzleGame";
+import { usePageTitle } from "../hooks/usePageTitle";
 import { decodePuzzle } from "../utils/puzzleCodec";
 import ModeSelector from "../components/ModeSelector";
 import ToolSelector from "../components/ToolSelector";
@@ -32,9 +33,18 @@ export default function Play() {
     puzzle: puzzle ?? { name: "Invalid", solution: [[CellState.EMPTY]] },
   });
 
+  const { setTitle } = usePageTitle();
+
   useEffect(() => {
-    document.title = puzzle ? "Play - Nanna Gram" : "Invalid Puzzle - Nanna Gram";
-  }, [puzzle]);
+    if (puzzle) {
+      const size = `${String(puzzle.solution.length)}×${String(puzzle.solution[0].length)}`;
+      document.title = `Shared Puzzle - Nanna Gram`;
+      setTitle({ title: "Shared Puzzle", subtitle: size });
+    } else {
+      document.title = "Invalid Puzzle - Nanna Gram";
+      setTitle({ title: "Invalid Puzzle" });
+    }
+  }, [puzzle, setTitle]);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -112,26 +122,9 @@ export default function Play() {
   }
 
   return (
-    <>
-      <div className="puzzle-header">
-        <div className="puzzle-nav">
-          <h2>
-            User Created Puzzle <span className="category-label">({puzzle.solution.length}x{puzzle.solution[0].length})</span>
-          </h2>
-        </div>
-      </div>
-      <div className="puzzle">
+    <div className="puzzle">
+      <div className="puzzle-controls">
         <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
-        <NonogramGrid
-          grid={state.grid}
-          rowHints={state.rowHints}
-          columnHints={state.columnHints}
-          onCellClick={handleCellClick}
-          onCellRightClick={handleRightClick}
-          onCellMouseDown={handleMouseDown}
-          onCellMouseEnter={handleMouseEnter}
-          errorCell={state.errorCell}
-        />
         <ToolSelector tool={state.tool} onToolChange={handleToolChange} />
         <ActionButtons
           canUndo={controller.canUndo(state)}
@@ -140,16 +133,26 @@ export default function Play() {
           onRedo={handleRedo}
           onReset={handleReset}
         />
-        {state.showVictory && (
-          <VictoryPopup
-            onClose={handleCloseVictory}
-            nextPuzzle={null}
-            puzzleName={puzzle.name}
-            solution={puzzle.solution}
-          />
-        )}
       </div>
-    </>
+      <NonogramGrid
+        grid={state.grid}
+        rowHints={state.rowHints}
+        columnHints={state.columnHints}
+        onCellClick={handleCellClick}
+        onCellRightClick={handleRightClick}
+        onCellMouseDown={handleMouseDown}
+        onCellMouseEnter={handleMouseEnter}
+        errorCell={state.errorCell}
+      />
+      {state.showVictory && (
+        <VictoryPopup
+          onClose={handleCloseVictory}
+          nextPuzzle={null}
+          puzzleName={puzzle.name}
+          solution={puzzle.solution}
+        />
+      )}
+    </div>
   );
 }
 
