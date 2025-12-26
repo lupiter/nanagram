@@ -3,9 +3,9 @@ import { DesignerState, createInitialState } from "../controllers/DesignerState"
 import { DesignerController } from "../controllers/DesignerController";
 import { checkPuzzleHasUniqueSolution } from "../utils/puzzleUtils";
 
-export function useDesigner() {
+export function useDesigner(size: number) {
   const controller = useMemo(() => new DesignerController(), []);
-  const [state, setState] = useState<DesignerState>(() => createInitialState());
+  const [state, setState] = useState<DesignerState>(() => createInitialState(size));
 
   // Check solution uniqueness with debounce
   useEffect(() => {

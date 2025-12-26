@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useDesigner } from "../hooks/useDesigner";
 import { usePageTitle } from "../hooks/usePageTitle";
 import NonogramGrid from "../components/NonogramGrid";
@@ -8,15 +8,19 @@ import SolutionStatus from "../components/SolutionStatus";
 import DesignerInfo from "../components/DesignerInfo";
 import "./Designer.css";
 
+const VALID_SIZES = [5, 10, 15, 20, 25];
+
 export default function Designer() {
+  const { size: sizeParam } = useParams<{ size: string }>();
+  const size = VALID_SIZES.includes(Number(sizeParam)) ? Number(sizeParam) : 5;
   const [searchParams] = useSearchParams();
   const showDevTools = searchParams.get("isDev") === "true";
-  const { state, setState, controller } = useDesigner();
+  const { state, setState, controller } = useDesigner(size);
   const { setTitle } = usePageTitle();
 
   useEffect(() => {
     document.title = "Designer - Nanna Gram";
-    setTitle({ title: "Designer", subtitle: `${state.size}×${state.size}` });
+    setTitle({ title: "Designer", subtitle: `${String(state.size)}×${String(state.size)}` });
   }, [setTitle, state.size]);
 
   const handleCellClick = useCallback(
@@ -54,13 +58,6 @@ export default function Designer() {
     [controller, setState]
   );
 
-  const handleSizeChange = useCallback(
-    (size: number) => {
-      setState((s) => controller.setSize(s, size));
-    },
-    [controller, setState]
-  );
-
   const handleClear = useCallback(() => {
     setState((s) => controller.clear(s));
   }, [controller, setState]);
@@ -85,12 +82,10 @@ export default function Designer() {
     <div className="designer">
       <DesignerControls
         puzzleName={state.puzzleName}
-        size={state.size}
         hasFilledCells={controller.hasFilledCells(state)}
         hasUniqueSolution={state.hasUniqueSolution === true}
         showDevTools={showDevTools}
         onNameChange={handleNameChange}
-        onSizeChange={handleSizeChange}
         onClear={handleClear}
         onExport={handleExport}
         onShare={handleShare}

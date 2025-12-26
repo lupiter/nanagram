@@ -1,5 +1,4 @@
 .home {
-  max-width: var(--size-container-lg);
   flex: 1;
 }
 
@@ -9,9 +8,10 @@
 }
 
 .puzzle-categories {
-  display: grid;
+  display: flex;
   gap: var(--space-4);
-  grid-template-columns: repeat(auto-fill, minmax(var(--size-category-min), 1fr));
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .puzzle-category {
@@ -27,8 +27,8 @@
 }
 
 .puzzle-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--size-touch-target), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 
@@ -36,8 +36,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2);
-  min-height: var(--size-touch-target);
+  padding: 0;;
+  min-height: calc(var(--size-touch-target) + var(--space-1) * 2 + var(--text-xs));
+  min-width: var(--size-touch-target);
   background: var(--color-bg);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -56,8 +57,6 @@
 .puzzle-links a.completed {
   flex-direction: column;
   gap: var(--space-1);
-  padding: 0;
-  min-height: auto;
 }
 
 .puzzle-links a.completed:hover {
@@ -75,5 +74,6 @@
   color: var(--color-text);
   font-weight: 400;
   max-width: 100%;
+  margin-bottom: var(--space-1);
 }
 

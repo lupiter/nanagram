@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Nanna Gram";
-    setTitle(""); // Clear title for home page
+    setTitle({ title: "Nana Gram", subtitle: "👵📔" });
     setCompletedPuzzles(getCompletedPuzzles());
   }, [setTitle]);
 
@@ -21,41 +21,45 @@ export default function Home() {
 
   return (
     <div className="home">
-      <h1>Nanna Gram 👵📔</h1>
       <div className="puzzle-categories">
-        {Object.entries(puzzleMap).map(([category, puzzles]) => (
-          <div key={category} className="puzzle-category">
-            <h2>{category}</h2>
-            <div className="puzzle-links">
-              {puzzles.map((puzzle, index) => {
-                const completed = isPuzzleCompleted(category, index);
-                return (
-                  <Link 
-                    key={index} 
-                    to={`/puzzle/${category}/${String(index + 1)}`}
-                    className={completed ? 'completed' : ''}
-                    title={completed ? puzzle.name : `Puzzle ${String(index + 1)}`}
-                  >
-                    {completed ? (
-                      <>
-                        <SolutionPreview solution={puzzle.solution} maxSize={44} />
-                        <span className="puzzle-name">{puzzle.name}</span>
-                      </>
-                    ) : (
-                      index + 1
-                    )}
-                  </Link>
-                );
-              })}
+        {Object.entries(puzzleMap).map(([category, puzzles]) => {
+          // Extract size from category (e.g., "5x5" -> 5)
+          const size = parseInt(category.split('x')[0], 10);
+          return (
+            <div key={category} className="puzzle-category">
+              <h2>{category}</h2>
+              <div className="puzzle-links">
+                {puzzles.map((puzzle, index) => {
+                  const completed = isPuzzleCompleted(category, index);
+                  return (
+                    <Link 
+                      key={index} 
+                      to={`/puzzle/${category}/${String(index + 1)}`}
+                      className={completed ? 'completed' : ''}
+                      title={completed ? puzzle.name : `Puzzle ${String(index + 1)}`}
+                    >
+                      {completed ? (
+                        <>
+                          <SolutionPreview solution={puzzle.solution} maxSize={44} />
+                          <span className="puzzle-name">{puzzle.name}</span>
+                        </>
+                      ) : (
+                        index + 1
+                      )}
+                    </Link>
+                  );
+                })}
+                <Link 
+                  to={`/designer/${String(size)}`}
+                  className="designer-link"
+                  title={`Design a ${category} puzzle`}
+                >
+                  ✏︎
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-        <div className="puzzle-category">
-          <h2>Make your own</h2>
-          <div className="puzzle-links">
-            <Link to="/designer" aria-label="Designer">✏️</Link>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );

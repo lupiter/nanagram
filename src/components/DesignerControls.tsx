@@ -1,15 +1,11 @@
 import Button from "./Button";
 
-const AVAILABLE_SIZES = [5, 10, 15, 20, 25] as const;
-
 interface DesignerControlsProps {
   puzzleName: string;
-  size: number;
   hasFilledCells: boolean;
   hasUniqueSolution: boolean;
   showDevTools: boolean;
   onNameChange: (name: string) => void;
-  onSizeChange: (size: number) => void;
   onClear: () => void;
   onExport: () => void;
   onShare: () => void;
@@ -17,12 +13,10 @@ interface DesignerControlsProps {
 
 export default function DesignerControls({
   puzzleName,
-  size,
   hasFilledCells,
   hasUniqueSolution,
   showDevTools,
   onNameChange,
-  onSizeChange,
   onClear,
   onExport,
   onShare,
@@ -38,21 +32,6 @@ export default function DesignerControls({
           onChange={(e) => { onNameChange(e.target.value); }}
           placeholder="Enter puzzle name"
         />
-      </div>
-
-      <div className="size-selector">
-        <label htmlFor="size-select">Size:</label>
-        <select
-          id="size-select"
-          value={size}
-          onChange={(e) => { onSizeChange(Number(e.target.value)); }}
-        >
-          {AVAILABLE_SIZES.map((s) => (
-            <option key={s} value={s}>
-              {s}×{s}
-            </option>
-          ))}
-        </select>
       </div>
 
       <div className="designer-actions">

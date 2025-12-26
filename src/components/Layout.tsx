@@ -9,13 +9,12 @@ export default function Layout() {
 
   return (
     <div className="layout">
-      {!isHome && (
+      
         <nav>
-          <Link to="/" aria-label="Home">←</Link>
+        {!isHome && (<Link to="/" aria-label="Home">←</Link>)}
           {title && <h1>{title}</h1>}
           {subtitle && <h4>{subtitle}</h4>}
         </nav>
-      )}
       <main>
         <Outlet />
       </main>

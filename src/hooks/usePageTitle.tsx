@@ -5,9 +5,9 @@ interface PageTitleContextValue {
   setTitle: (title: PageTitleState) => void;
 }
 
-type PageTitleState = {
-    title: string;
-    subtitle?: string;
+interface PageTitleState {
+  title: string;
+  subtitle?: string;
 }
 
 const PageTitleContext = createContext<PageTitleContextValue | null>(null);
