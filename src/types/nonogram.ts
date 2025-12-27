@@ -23,6 +23,7 @@ export type PuzzleSolutionData = SolutionCell[][];
 // Represents a puzzle definition with metadata
 export interface PuzzleDefinition {
   name: string;
+  difficulty: number; // 1-5 rating
   solution: PuzzleSolutionData;
 }
 

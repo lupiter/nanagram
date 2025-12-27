@@ -18,7 +18,7 @@ export default function Play() {
   const puzzle: PuzzleDefinition | null = useMemo(() => {
     try {
       const { name, solution } = decodePuzzle(encoded);
-      return { name, solution };
+      return { name, solution, difficulty: 0 }; // Shared puzzles have no difficulty rating
     } catch {
       return null;
     }
@@ -30,7 +30,7 @@ export default function Play() {
   const { state, setState, controller } = usePuzzleGame({
     category: "play",
     id: puzzleKey,
-    puzzle: puzzle ?? { name: "Invalid", solution: [[CellState.EMPTY]] },
+    puzzle: puzzle ?? { name: "Invalid", difficulty: 0, solution: [[CellState.EMPTY]] },
   });
 
   const { setTitle } = usePageTitle();
