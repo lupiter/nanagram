@@ -40,7 +40,7 @@ export default function Home() {
                     >
                       {completed ? (
                         <>
-                          <SolutionPreview solution={puzzle.solution} maxSize={44} />
+                          <SolutionPreview solution={puzzle.solution} maxSize={100} />
                           <span className="puzzle-name">{puzzle.name}</span>
                         </>
                       ) : (
@@ -54,7 +54,8 @@ export default function Home() {
                   className="designer-link"
                   title={`Design a ${category} puzzle`}
                 >
-                  ✏︎
+                 <span className="designer-link-icon"><span className="icon">✏︎</span></span>
+                  <span className="puzzle-name">{`Make your own`}</span>
                 </Link>
               </div>
             </div>

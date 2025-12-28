@@ -6,9 +6,13 @@ interface SolutionPreviewProps {
   maxSize?: number; // Maximum total size in pixels (default 200)
 }
 
+const roundToOneDecimal = (value: number) => {
+  return Math.round(value * 10) / 10;
+};
+
 export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPreviewProps) {
   const gridSize = solution.length;
-  const cellSize = Math.max(2, Math.floor(maxSize / gridSize));
+  const cellSize = Math.max(2, roundToOneDecimal(maxSize / gridSize));
 
   return (
     <div 

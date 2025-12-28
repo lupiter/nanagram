@@ -14,7 +14,7 @@ export default function Designer() {
   const { size: sizeParam } = useParams<{ size: string }>();
   const size = VALID_SIZES.includes(Number(sizeParam)) ? Number(sizeParam) : 5;
   const [searchParams] = useSearchParams();
-  const showDevTools = searchParams.get("isDev") === "true";
+  const showDevTools = searchParams.get("dev") === "true";
   const { state, setState, controller } = useDesigner(size);
   const { setTitle } = usePageTitle();
 
