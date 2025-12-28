@@ -16,14 +16,6 @@
   justify-content: flex-end;
   min-width: var(--size-hint-area);
   text-align: right;
-}
-
-/* Override table styles */
-table.nonogram-grid th .hint-numbers.horizontal {
-  flex-direction: row;
-  justify-content: flex-end;
-  min-width: var(--size-hint-area);
-  text-align: right;
   min-height: auto;
 }
 
@@ -36,4 +28,36 @@ table.nonogram-grid th .hint-numbers.horizontal {
 .hint-numbers span.used {
   color: var(--gray-400);
   text-decoration: line-through;
+}
+
+.hint-numbers.puzzle-size-10.horizontal {
+  min-width: calc(var(--size-hint-area) * 1);
+}
+
+.hint-numbers.puzzle-size-10.vertical {
+  min-height: calc(var(--size-hint-area) * 1);
+}
+
+.hint-numbers.puzzle-size-15.horizontal {
+  min-width: calc(var(--size-hint-area) * 1.5);
+}
+
+.hint-numbers.puzzle-size-15.vertical {
+  min-height: calc(var(--size-hint-area) * 1.5);
+}
+
+.hint-numbers.puzzle-size-20.horizontal {
+  min-width: calc(var(--size-hint-area) * 2);
+}
+
+.hint-numbers.puzzle-size-20.vertical {
+  min-height: calc(var(--size-hint-area) * 2);
+}
+
+.hint-numbers.puzzle-size-25.horizontal {
+  min-width: calc(var(--size-hint-area) * 2.5);
+}
+
+.hint-numbers.puzzle-size-25.vertical {
+  min-height: calc(var(--size-hint-area) * 2.5);
 }

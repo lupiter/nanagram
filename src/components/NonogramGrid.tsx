@@ -31,7 +31,7 @@ export default function NonogramGrid({
             <th></th>
             {columnHints.map((hints, colIndex) => (
               <th key={colIndex} role="columnheader">
-                <HintDisplay hints={hints} isVertical={true} />
+                <HintDisplay hints={hints} isVertical={true} puzzleSize={grid.length} />
               </th>
             ))}
           </tr>
@@ -40,12 +40,19 @@ export default function NonogramGrid({
           {grid.map((row, rowIndex) => (
             <tr key={rowIndex} role="row">
               <th role="rowheader">
-                <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
+                <HintDisplay hints={rowHints[rowIndex]} isVertical={false} puzzleSize={grid.length}  />
               </th>
               {row.map((cell, colIndex) => (
                 <td
                   key={`${String(rowIndex)}-${String(colIndex)}`}
                   role="gridcell"
+                  onMouseEnter={
+                    onCellMouseEnter
+                      ? () => {
+                          onCellMouseEnter(rowIndex, colIndex);
+                        }
+                      : undefined
+                  }
                 >
                   <input
                     type="checkbox"
@@ -65,13 +72,6 @@ export default function NonogramGrid({
                       onCellMouseDown
                         ? (e) => {
                             onCellMouseDown(rowIndex, colIndex, e);
-                          }
-                        : undefined
-                    }
-                    onMouseEnter={
-                      onCellMouseEnter
-                        ? () => {
-                            onCellMouseEnter(rowIndex, colIndex);
                           }
                         : undefined
                     }
