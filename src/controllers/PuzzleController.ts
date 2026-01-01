@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import { WorkingGrid, GameMode } from "../types/puzzle";
 import { CellState, PuzzleSolutionData } from "../types/nonogram";
 import {
@@ -18,7 +19,7 @@ export interface PuzzleContext {
 /**
  * Controller for puzzle game logic.
  * All methods are pure - they take state and return new state.
- * No React dependencies. Fully unit testable.
+ * Uses Immer for immutable updates with minimal boilerplate.
  */
 export class PuzzleController {
   private context: PuzzleContext;
@@ -45,20 +46,21 @@ export class PuzzleController {
       columnHints: state.columnHints,
     });
 
-    let newState: PuzzleState = {
-      ...state,
-      grid: result.newGrid,
-      rowHints: result.newRowHints,
-      columnHints: result.newColumnHints,
-      errorCell: result.errorCell,
-    };
+    let newState = produce(state, draft => {
+      draft.grid = result.newGrid;
+      draft.rowHints = result.newRowHints;
+      draft.columnHints = result.newColumnHints;
+      draft.errorCell = result.errorCell;
+    });
 
     // Add to history if not an undo/redo action
     if (!state.isUndoRedoAction) {
       newState = this.addToHistory(newState);
     }
 
-    return { ...newState, isUndoRedoAction: false };
+    return produce(newState, draft => {
+      draft.isUndoRedoAction = false;
+    });
   }
 
   handleRightClick(state: PuzzleState, row: number, col: number): PuzzleState {
@@ -69,17 +71,23 @@ export class PuzzleController {
   // --- Tool & Mode ---
 
   setTool(state: PuzzleState, tool: CellState): PuzzleState {
-    return { ...state, tool };
+    return produce(state, draft => {
+      draft.tool = tool;
+    });
   }
 
   setMode(state: PuzzleState, mode: GameMode): PuzzleState {
-    return { ...state, mode };
+    return produce(state, draft => {
+      draft.mode = mode;
+    });
   }
 
   // --- Victory ---
 
   setShowVictory(state: PuzzleState, show: boolean): PuzzleState {
-    return { ...state, showVictory: show };
+    return produce(state, draft => {
+      draft.showVictory = show;
+    });
   }
 
   checkSolution(state: PuzzleState): { isSolved: boolean; justSolved: boolean } {
@@ -89,30 +97,34 @@ export class PuzzleController {
   }
 
   markSolved(state: PuzzleState): PuzzleState {
-    return { ...state, isSolved: true, showVictory: true };
+    return produce(state, draft => {
+      draft.isSolved = true;
+      draft.showVictory = true;
+    });
   }
 
   // --- Error ---
 
   clearError(state: PuzzleState): PuzzleState {
-    return { ...state, errorCell: null };
+    return produce(state, draft => {
+      draft.errorCell = null;
+    });
   }
 
   // --- Reset ---
 
   reset(state: PuzzleState): PuzzleState {
-    return {
-      ...state,
-      grid: createEmptyGameState(this.context.solution[0].length, this.context.solution.length),
-      rowHints: deriveRowHints(this.context.solution),
-      columnHints: deriveColumnHints(this.context.solution),
-      isSolved: false,
-      showVictory: false,
-      history: [],
-      historyIndex: -1,
-      errorCell: null,
-      isUndoRedoAction: false,
-    };
+    return produce(state, draft => {
+      draft.grid = createEmptyGameState(this.context.solution[0].length, this.context.solution.length);
+      draft.rowHints = deriveRowHints(this.context.solution);
+      draft.columnHints = deriveColumnHints(this.context.solution);
+      draft.isSolved = false;
+      draft.showVictory = false;
+      draft.history = [];
+      draft.historyIndex = -1;
+      draft.errorCell = null;
+      draft.isUndoRedoAction = false;
+    });
   }
 
   // --- Undo/Redo ---
@@ -128,23 +140,21 @@ export class PuzzleController {
   undo(state: PuzzleState): PuzzleState {
     if (state.historyIndex > 0) {
       const prevEntry = state.history[state.historyIndex - 1];
-      return {
-        ...state,
-        grid: prevEntry.grid.map(row => [...row]),
-        rowHints: prevEntry.rowHints.map(hints => hints.map(h => ({ ...h }))),
-        columnHints: prevEntry.columnHints.map(hints => hints.map(h => ({ ...h }))),
-        historyIndex: state.historyIndex - 1,
-        isUndoRedoAction: true,
-      };
+      return produce(state, draft => {
+        draft.grid = prevEntry.grid;
+        draft.rowHints = prevEntry.rowHints;
+        draft.columnHints = prevEntry.columnHints;
+        draft.historyIndex = state.historyIndex - 1;
+        draft.isUndoRedoAction = true;
+      });
     } else if (state.historyIndex === 0) {
-      return {
-        ...state,
-        grid: createEmptyGameState(this.context.solution[0].length, this.context.solution.length),
-        rowHints: deriveRowHints(this.context.solution),
-        columnHints: deriveColumnHints(this.context.solution),
-        historyIndex: -1,
-        isUndoRedoAction: true,
-      };
+      return produce(state, draft => {
+        draft.grid = createEmptyGameState(this.context.solution[0].length, this.context.solution.length);
+        draft.rowHints = deriveRowHints(this.context.solution);
+        draft.columnHints = deriveColumnHints(this.context.solution);
+        draft.historyIndex = -1;
+        draft.isUndoRedoAction = true;
+      });
     }
     return state;
   }
@@ -152,14 +162,13 @@ export class PuzzleController {
   redo(state: PuzzleState): PuzzleState {
     if (state.historyIndex < state.history.length - 1) {
       const nextEntry = state.history[state.historyIndex + 1];
-      return {
-        ...state,
-        grid: nextEntry.grid.map(row => [...row]),
-        rowHints: nextEntry.rowHints.map(hints => hints.map(h => ({ ...h }))),
-        columnHints: nextEntry.columnHints.map(hints => hints.map(h => ({ ...h }))),
-        historyIndex: state.historyIndex + 1,
-        isUndoRedoAction: true,
-      };
+      return produce(state, draft => {
+        draft.grid = nextEntry.grid;
+        draft.rowHints = nextEntry.rowHints;
+        draft.columnHints = nextEntry.columnHints;
+        draft.historyIndex = state.historyIndex + 1;
+        draft.isUndoRedoAction = true;
+      });
     }
     return state;
   }
@@ -170,24 +179,12 @@ export class PuzzleController {
     return draggedCells.get(row)?.has(col) ?? false;
   }
 
-  private addDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): Map<number, Set<number>> {
-    const newMap = new Map(draggedCells);
-    const rowSet = newMap.get(row) ?? new Set<number>();
-    rowSet.add(col);
-    newMap.set(row, rowSet);
-    return newMap;
-  }
-
   startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
-    const newDraggedCells = this.addDraggedCell(new Map(), row, col);
-    
-    // Set drag state first
-    const stateWithDrag: PuzzleState = {
-      ...state,
-      isDragging: true,
-      dragTool: state.tool,
-      draggedCells: newDraggedCells,
-    };
+    const stateWithDrag = produce(state, draft => {
+      draft.isDragging = true;
+      draft.dragTool = state.tool;
+      draft.draggedCells = new Map([[row, new Set([col])]]);
+    });
     
     // Update the first cell
     return this.updateCell(stateWithDrag, row, col, state.tool);
@@ -202,18 +199,21 @@ export class PuzzleController {
       return state;
     }
 
-    const newDraggedCells = this.addDraggedCell(state.draggedCells, row, col);
-    const stateWithDrag = { ...state, draggedCells: newDraggedCells };
+    const stateWithDrag = produce(state, draft => {
+      const rowSet = draft.draggedCells.get(row) ?? new Set<number>();
+      rowSet.add(col);
+      draft.draggedCells.set(row, rowSet);
+    });
+    
     return this.updateCell(stateWithDrag, row, col, state.dragTool);
   }
 
   endDrag(state: PuzzleState): PuzzleState {
-    return {
-      ...state,
-      isDragging: false,
-      dragTool: null,
-      draggedCells: new Map(),
-    };
+    return produce(state, draft => {
+      draft.isDragging = false;
+      draft.dragTool = null;
+      draft.draggedCells = new Map();
+    });
   }
 
   // --- Helpers ---
@@ -228,16 +228,14 @@ export class PuzzleController {
     }
 
     const newEntry: HistoryEntry = {
-      grid: state.grid.map(row => [...row]),
-      rowHints: state.rowHints.map(hints => hints.map(h => ({ ...h }))),
-      columnHints: state.columnHints.map(hints => hints.map(h => ({ ...h }))),
+      grid: state.grid,
+      rowHints: state.rowHints,
+      columnHints: state.columnHints,
     };
 
-    const newHistory = [...state.history.slice(0, state.historyIndex + 1), newEntry];
-    return {
-      ...state,
-      history: newHistory,
-      historyIndex: newHistory.length - 1,
-    };
+    return produce(state, draft => {
+      draft.history = [...state.history.slice(0, state.historyIndex + 1), newEntry];
+      draft.historyIndex = draft.history.length - 1;
+    });
   }
 }

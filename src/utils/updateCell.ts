@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import { CellState as NonogramCellState, Hint, PuzzleSolutionData } from "../types/nonogram";
 import { WorkingGrid, GameMode } from "../types/puzzle";
 import { checkHints } from "./hintChecker";
@@ -23,60 +24,63 @@ export interface UpdateCellResult {
 
 export function updateCell(options: UpdateCellOptions): UpdateCellResult {
   const { grid, puzzle, row, col, toolToUse, mode, rowHints, columnHints } = options;
-  const newGrid = grid.map(r => [...r]);
-  const cell = newGrid[row][col];
   let errorCell: [number, number] | null = null;
 
-  // In assisted mode, check if the move is valid
-  if (
-    mode === GameMode.Assisted &&
-    toolToUse === NonogramCellState.FILLED &&
-    puzzle[row][col] === NonogramCellState.EMPTY
-  ) {
-    // Invalid move - show error feedback
-    errorCell = [row, col];
-    // Cross out the cell instead
-    newGrid[row][col] = NonogramCellState.CROSSED_OUT;
-  } else {
-    // Normal update logic
-    if (cell === NonogramCellState.EMPTY || cell === toolToUse) {
-      newGrid[row][col] =
-        cell === toolToUse ? NonogramCellState.EMPTY : toolToUse;
+  const newGrid = produce(grid, draft => {
+    const cell = draft[row][col];
+
+    // In assisted mode, check if the move is valid
+    if (
+      mode === GameMode.Assisted &&
+      toolToUse === NonogramCellState.FILLED &&
+      puzzle[row][col] === NonogramCellState.EMPTY
+    ) {
+      // Invalid move - show error feedback
+      errorCell = [row, col];
+      // Cross out the cell instead
+      draft[row][col] = NonogramCellState.CROSSED_OUT;
+    } else {
+      // Normal update logic
+      if (cell === NonogramCellState.EMPTY || cell === toolToUse) {
+        draft[row][col] = cell === toolToUse ? NonogramCellState.EMPTY : toolToUse;
+      }
     }
-  }
+
+    // In assisted mode, check if we need to auto-cross out cells
+    if (mode === GameMode.Assisted) {
+      // Check if the row is complete
+      if (isRowOrColumnComplete(puzzle, draft, true, row)) {
+        // Auto-cross out remaining empty cells in the row
+        for (let i = 0; i < draft[row].length; i++) {
+          if (draft[row][i] === NonogramCellState.EMPTY) {
+            draft[row][i] = NonogramCellState.CROSSED_OUT;
+          }
+        }
+      }
+
+      // Check if the column is complete
+      if (isRowOrColumnComplete(puzzle, draft, false, col)) {
+        // Auto-cross out remaining empty cells in the column
+        for (const [i, rowData] of draft.entries()) {
+          if (rowData[col] === NonogramCellState.EMPTY) {
+            draft[i][col] = NonogramCellState.CROSSED_OUT;
+          }
+        }
+      }
+    }
+  });
 
   // Update row hints
-  const newRowHints = [...rowHints];
-  newRowHints[row] = checkHints(newGrid[row], newRowHints[row], puzzle[row]);
+  const newRowHints = produce(rowHints, draft => {
+    draft[row] = checkHints(newGrid[row], draft[row], puzzle[row]);
+  });
 
   // Update column hints
-  const newColumnHints = [...columnHints];
-  const column = newGrid.map(row => row[col]);
-  const answerColumn = puzzle.map(row => row[col]);
-  newColumnHints[col] = checkHints(column, newColumnHints[col], answerColumn);
-
-  // In assisted mode, check if we need to auto-cross out cells
-  if (mode === GameMode.Assisted) {
-    // Check if the row is complete
-    if (isRowOrColumnComplete(puzzle, newGrid, true, row)) {
-      // Auto-cross out remaining empty cells in the row
-      for (const [i, cell] of newGrid[row].entries()) {
-        if (cell === NonogramCellState.EMPTY) {
-          newGrid[row][i] = NonogramCellState.CROSSED_OUT;
-        }
-      }
-    }
-
-    // Check if the column is complete
-    if (isRowOrColumnComplete(puzzle, newGrid, false, col)) {
-      // Auto-cross out remaining empty cells in the column
-      for (const [i, row] of newGrid.entries()) {
-        if (row[col] === NonogramCellState.EMPTY) {
-          newGrid[i][col] = NonogramCellState.CROSSED_OUT;
-        }
-      }
-    }
-  }
+  const newColumnHints = produce(columnHints, draft => {
+    const column = newGrid.map(r => r[col]);
+    const answerColumn = puzzle.map(r => r[col]);
+    draft[col] = checkHints(column, draft[col], answerColumn);
+  });
 
   return {
     newGrid,

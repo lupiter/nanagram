@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import { CellState } from "../types/nonogram";
 import { deriveRowHints, deriveColumnHints } from "../utils/puzzleUtils";
 import { encodePuzzle } from "../utils/puzzleCodec";
@@ -6,21 +7,17 @@ import { DesignerState, createEmptyGrid } from "./DesignerState";
 /**
  * Controller for puzzle designer logic.
  * All methods are pure - they take state and return new state.
+ * Uses Immer for immutable updates with minimal boilerplate.
  */
 export class DesignerController {
   toggleCell(state: DesignerState, row: number, col: number): DesignerState {
-    const newGrid = state.grid.map(r => [...r]);
-    newGrid[row][col] = newGrid[row][col] === CellState.FILLED
-      ? CellState.EMPTY
-      : CellState.FILLED;
-
-    return {
-      ...state,
-      grid: newGrid,
-      rowHints: deriveRowHints(newGrid),
-      columnHints: deriveColumnHints(newGrid),
-      hasUniqueSolution: null, // Reset when grid changes
-    };
+    return produce(state, draft => {
+      const newValue = draft.grid[row][col] === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
+      draft.grid[row][col] = newValue;
+      draft.rowHints = deriveRowHints(draft.grid);
+      draft.columnHints = deriveColumnHints(draft.grid);
+      draft.hasUniqueSolution = null;
+    });
   }
 
   // Drag operations
@@ -28,34 +25,19 @@ export class DesignerController {
     return draggedCells.get(row)?.has(col) ?? false;
   }
 
-  private addDraggedCell(draggedCells: Map<number, Set<number>>, row: number, col: number): Map<number, Set<number>> {
-    const newMap = new Map(draggedCells);
-    const rowSet = newMap.get(row) ?? new Set<number>();
-    rowSet.add(col);
-    newMap.set(row, rowSet);
-    return newMap;
-  }
-
   startDrag(state: DesignerState, row: number, col: number): DesignerState {
     const currentCell = state.grid[row][col];
-    // Determine what we're filling with: opposite of current cell state
     const dragMode = currentCell === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
-    
-    const newGrid = state.grid.map(r => [...r]);
-    newGrid[row][col] = dragMode;
-    
-    const draggedCells = this.addDraggedCell(new Map(), row, col);
 
-    return {
-      ...state,
-      grid: newGrid,
-      rowHints: deriveRowHints(newGrid),
-      columnHints: deriveColumnHints(newGrid),
-      hasUniqueSolution: null,
-      isDragging: true,
-      dragMode,
-      draggedCells,
-    };
+    return produce(state, draft => {
+      draft.grid[row][col] = dragMode;
+      draft.rowHints = deriveRowHints(draft.grid);
+      draft.columnHints = deriveColumnHints(draft.grid);
+      draft.hasUniqueSolution = null;
+      draft.isDragging = true;
+      draft.dragMode = dragMode;
+      draft.draggedCells = new Map([[row, new Set([col])]]);
+    });
   }
 
   continueDrag(state: DesignerState, row: number, col: number): DesignerState {
@@ -67,63 +49,66 @@ export class DesignerController {
       return state;
     }
 
-    const newGrid = state.grid.map(r => [...r]);
-    newGrid[row][col] = state.dragMode;
-
-    const draggedCells = this.addDraggedCell(state.draggedCells, row, col);
-
-    return {
-      ...state,
-      grid: newGrid,
-      rowHints: deriveRowHints(newGrid),
-      columnHints: deriveColumnHints(newGrid),
-      hasUniqueSolution: null,
-      draggedCells,
-    };
+    const dragMode = state.dragMode;
+    return produce(state, draft => {
+      draft.grid[row][col] = dragMode;
+      draft.rowHints = deriveRowHints(draft.grid);
+      draft.columnHints = deriveColumnHints(draft.grid);
+      draft.hasUniqueSolution = null;
+      
+      // Update draggedCells Map
+      const rowSet = draft.draggedCells.get(row) ?? new Set<number>();
+      rowSet.add(col);
+      draft.draggedCells.set(row, rowSet);
+    });
   }
 
   endDrag(state: DesignerState): DesignerState {
-    return {
-      ...state,
-      isDragging: false,
-      dragMode: null,
-      draggedCells: new Map(),
-    };
+    return produce(state, draft => {
+      draft.isDragging = false;
+      draft.dragMode = null;
+      draft.draggedCells = new Map();
+    });
   }
 
   setSize(state: DesignerState, size: number): DesignerState {
     const grid = createEmptyGrid(size);
-    return {
-      ...state,
-      size,
-      grid,
-      rowHints: deriveRowHints(grid),
-      columnHints: deriveColumnHints(grid),
-      hasUniqueSolution: null,
-    };
+    return produce(state, draft => {
+      draft.size = size;
+      draft.grid = grid;
+      draft.rowHints = deriveRowHints(grid);
+      draft.columnHints = deriveColumnHints(grid);
+      draft.hasUniqueSolution = null;
+    });
   }
 
   setPuzzleName(state: DesignerState, name: string): DesignerState {
-    return { ...state, puzzleName: name };
+    return produce(state, draft => {
+      draft.puzzleName = name;
+    });
   }
 
   clear(state: DesignerState): DesignerState {
     const grid = createEmptyGrid(state.size);
-    return {
-      ...state,
-      grid,
-      rowHints: deriveRowHints(grid),
-      columnHints: deriveColumnHints(grid),
-      hasUniqueSolution: null,
-    };
+    return produce(state, draft => {
+      draft.grid = grid;
+      draft.rowHints = deriveRowHints(grid);
+      draft.columnHints = deriveColumnHints(grid);
+      draft.hasUniqueSolution = null;
+    });
   }
 
   setChecking(state: DesignerState, isChecking: boolean): DesignerState {
-    return { ...state, isChecking };
+    return produce(state, draft => {
+      draft.isChecking = isChecking;
+    });
   }
 
   setUniqueSolution(state: DesignerState, hasUniqueSolution: boolean | null): DesignerState {
-    return { ...state, hasUniqueSolution, isChecking: false };
+    return produce(state, draft => {
+      draft.hasUniqueSolution = hasUniqueSolution;
+      draft.isChecking = false;
+    });
   }
 
   hasFilledCells(state: DesignerState): boolean {
@@ -160,4 +145,3 @@ export class DesignerController {
     return { message: "", className: "" };
   }
 }
-
