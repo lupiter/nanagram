@@ -56,7 +56,7 @@
 
 .puzzle-links a.completed {
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .puzzle-links a.completed:hover {
@@ -70,11 +70,10 @@
 }
 
 .puzzle-links .puzzle-name {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   color: var(--color-text);
   font-weight: 400;
   max-width: 100%;
-  margin-bottom: var(--space-1);
 }
 
 .designer-link-icon {
@@ -96,6 +95,7 @@
 
 .designer-link .puzzle-name {
   justify-self: flex-end;
+  margin: var(--space-2);
 }
 
 .puzzle-links .designer-link {
@@ -108,4 +108,58 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Random puzzle link */
+.random-puzzle-link-container {
+  display: flex;
+  justify-content: center;
+}
+
+.random-puzzle-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  transition: all 0.2s ease;
+}
+
+.random-puzzle-link:hover {
+  background: var(--color-bg-light-hover);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.random-icon {
+  font-size: 1.5rem;
+}
+
+.random-text {
+  letter-spacing: 0.02em;
+}
+
+/* Puzzle number and stars for incomplete puzzles */
+.puzzle-links a:not(.completed):not(.designer-link) {
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+
+.puzzle-links a.completed .difficulty-stars {
+  margin-bottom: var(--space-2);
+}
+
+.puzzle-number {
+  font-size: var(--text-lg);
+  min-width: 100px;
+  min-height: 100px;
+  text-align: center;
+  font-weight: 600;
 }

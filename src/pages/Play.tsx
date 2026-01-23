@@ -10,6 +10,7 @@ import ToolSelector from "../components/ToolSelector";
 import ActionButtons from "../components/ActionButtons";
 import VictoryPopup from "../components/VictoryPopup";
 import NonogramGrid from "../components/NonogramGrid";
+import DifficultyStars from "../components/DifficultyStars";
 import "./Puzzle.css";
 
 export default function Play() {
@@ -17,8 +18,8 @@ export default function Play() {
 
   const puzzle: PuzzleDefinition | null = useMemo(() => {
     try {
-      const { name, solution } = decodePuzzle(encoded);
-      return { name, solution, difficulty: 0 }; // Shared puzzles have no difficulty rating
+      const { name, solution, difficulty } = decodePuzzle(encoded);
+      return { name, solution, difficulty };
     } catch {
       return null;
     }
@@ -38,8 +39,9 @@ export default function Play() {
   useEffect(() => {
     if (puzzle) {
       const size = `${String(puzzle.solution.length)}×${String(puzzle.solution[0].length)}`;
-      document.title = `Shared Puzzle - Nanna Gram`;
-      setTitle({ title: "Shared Puzzle", subtitle: size });
+      const title = puzzle.name === "Random" ? "Random Puzzle" : "Shared Puzzle";
+      document.title = `${title} - Nanna Gram`;
+      setTitle({ title, subtitle: size });
     } else {
       document.title = "Invalid Puzzle - Nanna Gram";
       setTitle({ title: "Invalid Puzzle" });
@@ -133,6 +135,11 @@ export default function Play() {
           onRedo={handleRedo}
           onReset={handleReset}
         />
+        {puzzle.difficulty > 0 && (
+          <div className="puzzle-difficulty">
+            <DifficultyStars difficulty={puzzle.difficulty} size="medium" />
+          </div>
+        )}
       </div>
       <NonogramGrid
         grid={state.grid}

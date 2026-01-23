@@ -105,6 +105,7 @@ export default function Designer() {
       <SolutionStatus
         message={statusInfo.message}
         className={statusInfo.className}
+        difficulty={statusInfo.difficulty}
       />
 
       <DesignerInfo />

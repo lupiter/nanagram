@@ -10,7 +10,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "validate-puzzle": "tsx scripts/validate-puzzle.ts",
+    "generate-puzzles": "tsx scripts/generate-puzzles.ts"
   },
   "dependencies": {
     "immer": "^11.1.3",
@@ -35,6 +37,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.27.0",
     "vite": "^6.2.0"

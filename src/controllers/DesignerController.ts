@@ -2,6 +2,7 @@ import { produce } from "immer";
 import { CellState } from "../types/nonogram";
 import { deriveRowHints, deriveColumnHints } from "../utils/puzzleUtils";
 import { encodePuzzle } from "../utils/puzzleCodec";
+import { getDifficultyRating } from "../utils/difficultyAnalyzer";
 import { DesignerState, createEmptyGrid } from "./DesignerState";
 
 /**
@@ -17,6 +18,7 @@ export class DesignerController {
       draft.rowHints = deriveRowHints(draft.grid);
       draft.columnHints = deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
+      draft.difficulty = null;
     });
   }
 
@@ -34,6 +36,7 @@ export class DesignerController {
       draft.rowHints = deriveRowHints(draft.grid);
       draft.columnHints = deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
+      draft.difficulty = null;
       draft.isDragging = true;
       draft.dragMode = dragMode;
       draft.draggedCells = new Map([[row, new Set([col])]]);
@@ -55,6 +58,7 @@ export class DesignerController {
       draft.rowHints = deriveRowHints(draft.grid);
       draft.columnHints = deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
+      draft.difficulty = null;
       
       // Update draggedCells Map
       const rowSet = draft.draggedCells.get(row) ?? new Set<number>();
@@ -79,6 +83,7 @@ export class DesignerController {
       draft.rowHints = deriveRowHints(grid);
       draft.columnHints = deriveColumnHints(grid);
       draft.hasUniqueSolution = null;
+      draft.difficulty = null;
     });
   }
 
@@ -95,6 +100,7 @@ export class DesignerController {
       draft.rowHints = deriveRowHints(grid);
       draft.columnHints = deriveColumnHints(grid);
       draft.hasUniqueSolution = null;
+      draft.difficulty = null;
     });
   }
 
@@ -108,6 +114,12 @@ export class DesignerController {
     return produce(state, draft => {
       draft.hasUniqueSolution = hasUniqueSolution;
       draft.isChecking = false;
+      // Calculate difficulty if puzzle is valid
+      if (hasUniqueSolution === true) {
+        draft.difficulty = getDifficultyRating(state.grid);
+      } else {
+        draft.difficulty = null;
+      }
     });
   }
 
@@ -125,23 +137,25 @@ export class DesignerController {
 
   getShareUrl(state: DesignerState): string {
     const name = state.puzzleName.trim() || "Untitled";
-    const encoded = encodePuzzle(name, state.grid);
+    const difficulty = state.difficulty ?? 0;
+    const encoded = encodePuzzle(name, state.grid, difficulty);
     return `${window.location.origin}${window.location.pathname}#/play/${encoded}`;
   }
 
-  getStatusInfo(state: DesignerState): { message: string; className: string } {
+  getStatusInfo(state: DesignerState): { message: string; className: string; difficulty: number | null } {
     if (!this.hasFilledCells(state)) {
-      return { message: "Draw your puzzle by clicking cells", className: "status-info" };
+      return { message: "Draw your puzzle by clicking cells", className: "status-info", difficulty: null };
     }
     if (state.isChecking) {
-      return { message: "Checking solution...", className: "status-checking" };
+      return { message: "Checking solution...", className: "status-checking", difficulty: null };
     }
     if (state.hasUniqueSolution === true) {
-      return { message: "✓︎ Puzzle has a unique solution!", className: "status-valid" };
+      const difficultyText = state.difficulty ? ` (Difficulty: ${state.difficulty}/5)` : '';
+      return { message: `✓︎ Puzzle has a unique solution!${difficultyText}`, className: "status-valid", difficulty: state.difficulty };
     }
     if (state.hasUniqueSolution === false) {
-      return { message: "✗︎ Puzzle does not have a unique solution", className: "status-invalid" };
+      return { message: "✗︎ Puzzle does not have a unique solution", className: "status-invalid", difficulty: null };
     }
-    return { message: "", className: "" };
+    return { message: "", className: "", difficulty: null };
   }
 }

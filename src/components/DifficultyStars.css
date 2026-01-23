@@ -1,0 +1,26 @@
+.difficulty-stars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.difficulty-stars .star {
+  color: var(--gray-300);
+  transition: color 0.2s ease;
+}
+
+.difficulty-stars .star.filled {
+  color: var(--color-text);
+}
+
+/* Sizes */
+.difficulty-stars-small {
+  font-size: var(--text-xs);
+}
+
+.difficulty-stars-medium {
+  font-size: var(--text-sm);
+}
+
+.difficulty-stars-large {
+  font-size: var(--text-lg);
+}

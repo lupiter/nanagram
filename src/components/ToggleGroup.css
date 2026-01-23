@@ -72,3 +72,15 @@
   font-size: var(--text-base);
   line-height: 1;
 }
+
+.toggle-group-disabled {
+  opacity: 0.6;
+}
+
+.toggle-button.disabled {
+  cursor: not-allowed;
+}
+
+.toggle-button.disabled:hover {
+  background: var(--gray-100);
+}

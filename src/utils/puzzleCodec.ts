@@ -77,9 +77,9 @@ function fromBase64Url(str: string): Uint8Array {
 
 /**
  * Encode a puzzle into a URL-safe string
- * Format: [size:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
+ * Format: [size:1][difficulty:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
  */
-export function encodePuzzle(name: string, solution: PuzzleSolutionData): string {
+export function encodePuzzle(name: string, solution: PuzzleSolutionData, difficulty = 0): string {
   const size = solution.length;
   const encoder = new TextEncoder();
   const nameBytes = encoder.encode(name);
@@ -87,13 +87,16 @@ export function encodePuzzle(name: string, solution: PuzzleSolutionData): string
   const gridBytes = packGridToBits(solution);
 
   // Build the byte array
-  const totalLength = 1 + 2 + obfuscatedName.length + gridBytes.length;
+  const totalLength = 1 + 1 + 2 + obfuscatedName.length + gridBytes.length;
   const bytes = new Uint8Array(totalLength);
 
   let offset = 0;
 
   // Size (1 byte)
   bytes[offset++] = size;
+
+  // Difficulty (1 byte, 0-5)
+  bytes[offset++] = Math.min(5, Math.max(0, difficulty));
 
   // Name length (2 bytes, little-endian)
   bytes[offset++] = obfuscatedName.length & 0xff;
@@ -111,8 +114,9 @@ export function encodePuzzle(name: string, solution: PuzzleSolutionData): string
 
 /**
  * Decode a puzzle from a URL-safe string
+ * Supports both old format (no difficulty) and new format (with difficulty)
  */
-export function decodePuzzle(encoded: string): { name: string; solution: PuzzleSolutionData } {
+export function decodePuzzle(encoded: string): { name: string; solution: PuzzleSolutionData; difficulty: number } {
   const bytes = fromBase64Url(encoded);
 
   let offset = 0;
@@ -120,9 +124,30 @@ export function decodePuzzle(encoded: string): { name: string; solution: PuzzleS
   // Size (1 byte)
   const size = bytes[offset++];
 
-  // Name length (2 bytes, little-endian)
-  const nameLen = bytes[offset] | (bytes[offset + 1] << 8);
-  offset += 2;
+  // Check if this is the new format with difficulty
+  // We can detect this by checking if the next byte is a valid difficulty (0-5)
+  // and if the name length that follows makes sense
+  const possibleDifficulty = bytes[offset];
+  const possibleNameLenOld = bytes[offset] | (bytes[offset + 1] << 8);
+  const possibleNameLenNew = bytes[offset + 1] | (bytes[offset + 2] << 8);
+  
+  // Heuristic: if possibleDifficulty is 0-5 and the new format name length is reasonable
+  // (less than the remaining bytes), use new format
+  const remainingBytesNew = bytes.length - 4 - Math.ceil(size * size / 8);
+  
+  let difficulty = 0;
+  let nameLen: number;
+  
+  if (possibleDifficulty <= 5 && possibleNameLenNew <= remainingBytesNew && possibleNameLenNew >= 0) {
+    // New format with difficulty
+    difficulty = bytes[offset++];
+    nameLen = bytes[offset] | (bytes[offset + 1] << 8);
+    offset += 2;
+  } else {
+    // Old format without difficulty
+    nameLen = possibleNameLenOld;
+    offset += 2;
+  }
 
   // Obfuscated name
   const obfuscatedName = bytes.slice(offset, offset + nameLen);
@@ -135,6 +160,6 @@ export function decodePuzzle(encoded: string): { name: string; solution: PuzzleS
   const gridBytes = bytes.slice(offset);
   const solution = unpackBitsToGrid(gridBytes, size);
 
-  return { name, solution };
+  return { name, solution, difficulty };
 }
 

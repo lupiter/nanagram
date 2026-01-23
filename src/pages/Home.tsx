@@ -1,12 +1,15 @@
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import './Home.css';
-import { puzzleMap, getCompletedPuzzles } from '../utils/puzzleLoader';
-import { usePageTitle } from '../hooks/usePageTitle';
-import SolutionPreview from '../components/SolutionPreview';
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import "./Home.css";
+import { puzzleMap, getCompletedPuzzles } from "../utils/puzzleLoader";
+import { usePageTitle } from "../hooks/usePageTitle";
+import SolutionPreview from "../components/SolutionPreview";
+import DifficultyStars from "../components/DifficultyStars";
 
 export default function Home() {
-  const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(new Set());
+  const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(
+    new Set()
+  );
   const { setTitle } = usePageTitle();
 
   useEffect(() => {
@@ -24,7 +27,7 @@ export default function Home() {
       <div className="puzzle-categories">
         {Object.entries(puzzleMap).map(([category, puzzles]) => {
           // Extract size from category (e.g., "5x5" -> 5)
-          const size = parseInt(category.split('x')[0], 10);
+          const size = parseInt(category.split("x")[0], 10);
           return (
             <div key={category} className="puzzle-category">
               <h2>{category}</h2>
@@ -32,35 +35,58 @@ export default function Home() {
                 {puzzles.map((puzzle, index) => {
                   const completed = isPuzzleCompleted(category, index);
                   return (
-                    <Link 
-                      key={index} 
+                    <Link
+                      key={index}
                       to={`/puzzle/${category}/${String(index + 1)}`}
-                      className={completed ? 'completed' : ''}
-                      title={completed ? puzzle.name : `Puzzle ${String(index + 1)}`}
+                      className={completed ? "completed" : ""}
+                      title={
+                        completed ? puzzle.name : `Puzzle ${String(index + 1)}`
+                      }
                     >
                       {completed ? (
                         <>
-                          <SolutionPreview solution={puzzle.solution} maxSize={100} />
+                          <SolutionPreview
+                            solution={puzzle.solution}
+                            maxSize={100}
+                          />
                           <span className="puzzle-name">{puzzle.name}</span>
+                          <DifficultyStars
+                            difficulty={puzzle.difficulty}
+                            size="small"
+                          />
                         </>
                       ) : (
-                        index + 1
+                        <>
+                          <span className="puzzle-number">{index + 1}</span>
+                          <DifficultyStars
+                            difficulty={puzzle.difficulty}
+                            size="small"
+                          />
+                        </>
                       )}
                     </Link>
                   );
                 })}
-                <Link 
+                <Link
                   to={`/designer/${String(size)}`}
                   className="designer-link"
                   title={`Design a ${category} puzzle`}
                 >
-                 <span className="designer-link-icon"><span className="icon">✏︎</span></span>
+                  <span className="designer-link-icon">
+                    <span className="icon">✏︎</span>
+                  </span>
                   <span className="puzzle-name">{`Make your own`}</span>
                 </Link>
               </div>
             </div>
           );
         })}
+        <div className="random-puzzle-link-container">
+          <Link to="/random" className="random-puzzle-link">
+            <span className="random-icon">🎲</span>
+            <span className="random-text">Random Puzzle</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

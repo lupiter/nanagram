@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Puzzle from './pages/Puzzle';
 import Designer from './pages/Designer';
 import Play from './pages/Play';
+import RandomPuzzle from './pages/RandomPuzzle';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="puzzle/:category/:id" element={<Puzzle />} />
             <Route path="designer/:size" element={<Designer />} />
             <Route path="play/:encoded" element={<Play />} />
+            <Route path="random" element={<RandomPuzzle />} />
           </Route>
         </Routes>
       </PageTitleProvider>

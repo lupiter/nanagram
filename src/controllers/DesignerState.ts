@@ -9,6 +9,7 @@ export interface DesignerState {
   puzzleName: string;
   isChecking: boolean;
   hasUniqueSolution: boolean | null;
+  difficulty: number | null; // Calculated difficulty when puzzle is valid
   isDragging: boolean;
   dragMode: SolutionCell | null; // What we're filling with during drag
   draggedCells: Map<number, Set<number>>;
@@ -30,6 +31,7 @@ export function createInitialState(size = 5): DesignerState {
     puzzleName: "",
     isChecking: false,
     hasUniqueSolution: null,
+    difficulty: null,
     isDragging: false,
     dragMode: null,
     draggedCells: new Map(),
