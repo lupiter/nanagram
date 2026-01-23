@@ -1,5 +1,7 @@
 {
   "name": "Butterfly",
+  "height": 10,
+  "width": 10,
   "difficulty": 3,
   "solution": [
     [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],

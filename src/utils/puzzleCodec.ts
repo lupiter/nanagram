@@ -12,14 +12,15 @@ function xorObfuscate(bytes: Uint8Array): Uint8Array {
 }
 
 function packGridToBits(grid: PuzzleSolutionData): Uint8Array {
-  const size = grid.length;
-  const totalCells = size * size;
+  const height = grid.length;
+  const width = grid[0]?.length ?? 0;
+  const totalCells = height * width;
   const byteCount = Math.ceil(totalCells / 8);
   const bytes = new Uint8Array(byteCount);
 
   let bitIndex = 0;
-  for (let row = 0; row < size; row++) {
-    for (let col = 0; col < size; col++) {
+  for (let row = 0; row < height; row++) {
+    for (let col = 0; col < width; col++) {
       if (grid[row][col] === CellState.FILLED) {
         const bytePos = Math.floor(bitIndex / 8);
         const bitPos = 7 - (bitIndex % 8); // MSB first
@@ -32,13 +33,13 @@ function packGridToBits(grid: PuzzleSolutionData): Uint8Array {
   return bytes;
 }
 
-function unpackBitsToGrid(bytes: Uint8Array, size: number): PuzzleSolutionData {
+function unpackBitsToGrid(bytes: Uint8Array, height: number, width: number): PuzzleSolutionData {
   const grid: PuzzleSolutionData = [];
 
   let bitIndex = 0;
-  for (let row = 0; row < size; row++) {
+  for (let row = 0; row < height; row++) {
     const gridRow: SolutionCell[] = [];
-    for (let col = 0; col < size; col++) {
+    for (let col = 0; col < width; col++) {
       const bytePos = Math.floor(bitIndex / 8);
       const bitPos = 7 - (bitIndex % 8);
       const isFilled = (bytes[bytePos] & (1 << bitPos)) !== 0;
@@ -77,23 +78,27 @@ function fromBase64Url(str: string): Uint8Array {
 
 /**
  * Encode a puzzle into a URL-safe string
- * Format: [size:1][difficulty:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
+ * Format: [height:1][width:1][difficulty:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
  */
 export function encodePuzzle(name: string, solution: PuzzleSolutionData, difficulty = 0): string {
-  const size = solution.length;
+  const height = solution.length;
+  const width = solution[0]?.length ?? 0;
   const encoder = new TextEncoder();
   const nameBytes = encoder.encode(name);
   const obfuscatedName = xorObfuscate(nameBytes);
   const gridBytes = packGridToBits(solution);
 
-  // Build the byte array
-  const totalLength = 1 + 1 + 2 + obfuscatedName.length + gridBytes.length;
+  // Build the byte array: height + width + difficulty + nameLen(2) + name + grid
+  const totalLength = 1 + 1 + 1 + 2 + obfuscatedName.length + gridBytes.length;
   const bytes = new Uint8Array(totalLength);
 
   let offset = 0;
 
-  // Size (1 byte)
-  bytes[offset++] = size;
+  // Height (1 byte)
+  bytes[offset++] = height;
+
+  // Width (1 byte)
+  bytes[offset++] = width;
 
   // Difficulty (1 byte, 0-5)
   bytes[offset++] = Math.min(5, Math.max(0, difficulty));
@@ -114,40 +119,25 @@ export function encodePuzzle(name: string, solution: PuzzleSolutionData, difficu
 
 /**
  * Decode a puzzle from a URL-safe string
- * Supports both old format (no difficulty) and new format (with difficulty)
+ * Format: [height:1][width:1][difficulty:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
  */
 export function decodePuzzle(encoded: string): { name: string; solution: PuzzleSolutionData; difficulty: number } {
   const bytes = fromBase64Url(encoded);
 
   let offset = 0;
 
-  // Size (1 byte)
-  const size = bytes[offset++];
+  // Height (1 byte)
+  const height = bytes[offset++];
 
-  // Check if this is the new format with difficulty
-  // We can detect this by checking if the next byte is a valid difficulty (0-5)
-  // and if the name length that follows makes sense
-  const possibleDifficulty = bytes[offset];
-  const possibleNameLenOld = bytes[offset] | (bytes[offset + 1] << 8);
-  const possibleNameLenNew = bytes[offset + 1] | (bytes[offset + 2] << 8);
-  
-  // Heuristic: if possibleDifficulty is 0-5 and the new format name length is reasonable
-  // (less than the remaining bytes), use new format
-  const remainingBytesNew = bytes.length - 4 - Math.ceil(size * size / 8);
-  
-  let difficulty = 0;
-  let nameLen: number;
-  
-  if (possibleDifficulty <= 5 && possibleNameLenNew <= remainingBytesNew && possibleNameLenNew >= 0) {
-    // New format with difficulty
-    difficulty = bytes[offset++];
-    nameLen = bytes[offset] | (bytes[offset + 1] << 8);
-    offset += 2;
-  } else {
-    // Old format without difficulty
-    nameLen = possibleNameLenOld;
-    offset += 2;
-  }
+  // Width (1 byte)
+  const width = bytes[offset++];
+
+  // Difficulty (1 byte, 0-5)
+  const difficulty = bytes[offset++];
+
+  // Name length (2 bytes, little-endian)
+  const nameLen = bytes[offset] | (bytes[offset + 1] << 8);
+  offset += 2;
 
   // Obfuscated name
   const obfuscatedName = bytes.slice(offset, offset + nameLen);
@@ -158,7 +148,7 @@ export function decodePuzzle(encoded: string): { name: string; solution: PuzzleS
 
   // Grid data
   const gridBytes = bytes.slice(offset);
-  const solution = unpackBitsToGrid(gridBytes, size);
+  const solution = unpackBitsToGrid(gridBytes, height, width);
 
   return { name, solution, difficulty };
 }

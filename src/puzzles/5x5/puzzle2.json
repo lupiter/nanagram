@@ -1,5 +1,7 @@
 {
   "name": "Letter M",
+  "height": 5,
+  "width": 5,
   "difficulty": 1,
   "solution": [
     [1, 1, 0, 1, 1],

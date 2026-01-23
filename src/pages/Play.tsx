@@ -19,7 +19,9 @@ export default function Play() {
   const puzzle: PuzzleDefinition | null = useMemo(() => {
     try {
       const { name, solution, difficulty } = decodePuzzle(encoded);
-      return { name, solution, difficulty };
+      const height = solution.length;
+      const width = solution[0]?.length ?? 0;
+      return { name, height, width, solution, difficulty };
     } catch {
       return null;
     }
@@ -31,7 +33,7 @@ export default function Play() {
   const { state, setState, controller } = usePuzzleGame({
     category: "play",
     id: puzzleKey,
-    puzzle: puzzle ?? { name: "Invalid", difficulty: 0, solution: [[CellState.EMPTY]] },
+    puzzle: puzzle ?? { name: "Invalid", height: 1, width: 1, difficulty: 0, solution: [[CellState.EMPTY]] },
   });
 
   const { setTitle } = usePageTitle();

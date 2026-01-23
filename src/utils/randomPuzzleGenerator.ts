@@ -7,11 +7,11 @@ export interface GeneratedPuzzle {
   difficulty: number;
 }
 
-function generateRandomGrid(size: number): PuzzleSolutionData {
+function generateRandomGrid(height: number, width: number): PuzzleSolutionData {
   const grid: PuzzleSolutionData = [];
-  for (let row = 0; row < size; row++) {
+  for (let row = 0; row < height; row++) {
     const rowData: SolutionCell[] = [];
-    for (let col = 0; col < size; col++) {
+    for (let col = 0; col < width; col++) {
       // Random fill with ~40-60% probability for interesting puzzles
       const fillProbability = 0.4 + Math.random() * 0.2;
       rowData.push(Math.random() < fillProbability ? CellState.FILLED : CellState.EMPTY);
@@ -24,14 +24,18 @@ function generateRandomGrid(size: number): PuzzleSolutionData {
 /**
  * Generate a random puzzle of the given size and minimum difficulty.
  * Returns null if unable to generate after max attempts.
+ * @param height - Number of rows
+ * @param width - Number of columns (defaults to height for square puzzles)
  */
 export function generateRandomPuzzle(
-  size: number,
+  height: number,
   minDifficulty: number,
-  maxAttempts = 1000
+  maxAttempts = 1000,
+  width?: number
 ): GeneratedPuzzle | null {
+  const actualWidth = width ?? height;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const grid = generateRandomGrid(size);
+    const grid = generateRandomGrid(height, actualWidth);
     
     // Check if puzzle has unique solution
     if (!checkPuzzleHasUniqueSolution(grid)) {
@@ -51,13 +55,17 @@ export function generateRandomPuzzle(
 /**
  * Generate a random puzzle asynchronously, yielding to the event loop periodically.
  * This prevents the UI from freezing during generation.
+ * @param height - Number of rows
+ * @param width - Number of columns (defaults to height for square puzzles)
  */
 export async function generateRandomPuzzleAsync(
-  size: number,
+  height: number,
   minDifficulty: number,
   maxAttempts = 1000,
-  onProgress?: (attempt: number, found: number) => void
+  onProgress?: (attempt: number, found: number) => void,
+  width?: number
 ): Promise<GeneratedPuzzle | null> {
+  const actualWidth = width ?? height;
   let validFound = 0;
   
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -67,7 +75,7 @@ export async function generateRandomPuzzleAsync(
       onProgress?.(attempt, validFound);
     }
     
-    const grid = generateRandomGrid(size);
+    const grid = generateRandomGrid(height, actualWidth);
     
     // Check if puzzle has unique solution
     if (!checkPuzzleHasUniqueSolution(grid)) {

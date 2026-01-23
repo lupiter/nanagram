@@ -1,5 +1,7 @@
 {
   "name": "Ticket stub",
+  "height": 10,
+  "width": 10,
   "difficulty": 3,
   "solution": [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],

@@ -1,12 +1,14 @@
 import { PuzzleDefinition } from '../types/nonogram';
 import puzzles5x5 from '../puzzles/5x5';
 import puzzles10x10 from '../puzzles/10x10';
+import puzzles10x15 from '../puzzles/10x15';
 import puzzles15x15 from '../puzzles/15x15';
 import puzzles20x20 from '../puzzles/20x20';
 
 export const puzzleMap = {
   '5x5': puzzles5x5,
   '10x10': puzzles10x10,
+  '10x15': puzzles10x15,
   '15x15': puzzles15x15,
   '20x20': puzzles20x20,
 };

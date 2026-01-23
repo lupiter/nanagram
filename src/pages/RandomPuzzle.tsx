@@ -7,18 +7,32 @@ import DifficultyStars from '../components/DifficultyStars';
 import ToggleGroup from '../components/ToggleGroup';
 import './RandomPuzzle.css';
 
-const VALID_SIZES = [5, 10, 15, 20] as const;
+interface PuzzleSize {
+  height: number;
+  width: number;
+  label: string;
+}
+
+const VALID_SIZES: PuzzleSize[] = [
+  { height: 5, width: 5, label: '5×5' },
+  { height: 10, width: 10, label: '10×10' },
+  { height: 10, width: 15, label: '10×15' },
+  { height: 15, width: 15, label: '15×15' },
+  { height: 20, width: 20, label: '20×20' },
+];
 const MAX_DIFFICULTY = 4; // Limit to 4 as difficulty 5 is very slow
 const DIFFICULTIES = [1, 2, 3, MAX_DIFFICULTY] as const;
 
 export default function RandomPuzzle() {
   const navigate = useNavigate();
   const { setTitle } = usePageTitle();
-  const [size, setSize] = useState(10);
+  const [sizeIndex, setSizeIndex] = useState(1); // Default to 10×10
   const [difficulty, setDifficulty] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState({ attempt: 0, found: 0 });
   const [error, setError] = useState<string | null>(null);
+  
+  const selectedSize = VALID_SIZES[sizeIndex];
 
   useEffect(() => {
     document.title = 'Random Puzzle - Nanna Gram';
@@ -26,10 +40,10 @@ export default function RandomPuzzle() {
   }, [setTitle]);
 
   const sizeOptions = useMemo(() => 
-    VALID_SIZES.map((s) => ({
-      value: s,
-      label: `${s}×${s}`,
-      ariaLabel: `${s} by ${s} grid`
+    VALID_SIZES.map((s, index) => ({
+      value: index,
+      label: s.label,
+      ariaLabel: `${s.height} by ${s.width} grid`
     })), 
   []);
 
@@ -51,10 +65,11 @@ export default function RandomPuzzle() {
       const maxAttempts = difficulty >= 3 ? 5000 : 1000;
       
       const result = await generateRandomPuzzleAsync(
-        size,
+        selectedSize.height,
         difficulty,
         maxAttempts,
-        (attempt, found) => setProgress({ attempt, found })
+        (attempt, found) => setProgress({ attempt, found }),
+        selectedSize.width
       );
 
       if (result) {
@@ -69,7 +84,7 @@ export default function RandomPuzzle() {
     } finally {
       setIsGenerating(false);
     }
-  }, [size, difficulty, navigate]);
+  }, [selectedSize, difficulty, navigate]);
 
   return (
     <div className="random-puzzle">
@@ -77,8 +92,8 @@ export default function RandomPuzzle() {
         <ToggleGroup
           name="size"
           title="Puzzle Size"
-          value={size}
-          onChange={setSize}
+          value={sizeIndex}
+          onChange={setSizeIndex}
           options={sizeOptions}
           disabled={isGenerating}
         />

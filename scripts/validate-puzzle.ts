@@ -6,8 +6,9 @@
  * Usage: npx tsx scripts/validate-puzzle.ts <path-to-puzzle.json>
  * 
  * Validates that a puzzle JSON file:
- * - Has valid JSON structure with required fields (name, difficulty, solution)
+ * - Has valid JSON structure with required fields (name, height, width, difficulty, solution)
  * - Has a valid solution grid (rectangular, only 0s and 1s)
+ * - Has matching height/width dimensions
  * - Has a unique solution (solvable from hints alone)
  */
 
@@ -70,6 +71,28 @@ function validatePuzzleFile(filePath: string): ValidationResult {
     result.warnings.push('"name" is empty');
   }
 
+  if (!('height' in puzzle)) {
+    result.valid = false;
+    result.errors.push('Missing required field: "height"');
+  } else if (typeof puzzle.height !== 'number') {
+    result.valid = false;
+    result.errors.push('"height" must be a number');
+  } else if (!Number.isInteger(puzzle.height) || puzzle.height < 1) {
+    result.valid = false;
+    result.errors.push('"height" must be a positive integer');
+  }
+
+  if (!('width' in puzzle)) {
+    result.valid = false;
+    result.errors.push('Missing required field: "width"');
+  } else if (typeof puzzle.width !== 'number') {
+    result.valid = false;
+    result.errors.push('"width" must be a number');
+  } else if (!Number.isInteger(puzzle.width) || puzzle.width < 1) {
+    result.valid = false;
+    result.errors.push('"width" must be a positive integer');
+  }
+
   if (!('difficulty' in puzzle)) {
     result.valid = false;
     result.errors.push('Missing required field: "difficulty"');
@@ -102,14 +125,28 @@ function validatePuzzleFile(filePath: string): ValidationResult {
     return result;
   }
 
-  const height = solution.length;
-  const width = Array.isArray(solution[0]) ? solution[0].length : 0;
+  const actualHeight = solution.length;
+  const actualWidth = Array.isArray(solution[0]) ? solution[0].length : 0;
 
-  if (width === 0) {
+  if (actualWidth === 0) {
     result.valid = false;
     result.errors.push('Solution rows cannot be empty');
     return result;
   }
+
+  // Validate height/width match solution dimensions
+  if (typeof puzzle.height === 'number' && puzzle.height !== actualHeight) {
+    result.valid = false;
+    result.errors.push(`"height" (${puzzle.height}) does not match solution rows (${actualHeight})`);
+  }
+
+  if (typeof puzzle.width === 'number' && puzzle.width !== actualWidth) {
+    result.valid = false;
+    result.errors.push(`"width" (${puzzle.width}) does not match solution columns (${actualWidth})`);
+  }
+
+  const height = actualHeight;
+  const width = actualWidth;
 
   // Check all rows have same width and contain only 0s and 1s
   for (let i = 0; i < height; i++) {
