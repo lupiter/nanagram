@@ -20,16 +20,15 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { PuzzleSolutionData, CellState } from '../src/types/nonogram';
-import { deriveRowHints, deriveColumnHints } from '../src/utils/puzzleUtils';
-import { NonogramSolver } from '../src/utils/nonogramSolver';
-import { getDifficultyRating } from '../src/utils/difficultyAnalyzer';
+import { PuzzleSolutionData, CellState, Hint } from '../src/types/nonogram';
+import { puzzleService } from '../src/services/Puzzle';
+import { difficultyAnalyzer } from '../src/services/DifficultyAnalyzer';
 
 interface Options {
   size: number;
   minDifficulty: number;
   puzzles: number;
-  outputDir: string | null;
+  outputDir: string;
   dryRun: boolean;
 }
 
@@ -40,7 +39,7 @@ function parseArgs(): Options | null {
     size: 5,
     minDifficulty: 1,
     puzzles: 0,
-    outputDir: null,
+    outputDir: '',
     dryRun: false,
   };
 
@@ -104,8 +103,8 @@ function parseArgs(): Options | null {
   }
 
   // Set default output dir based on size
-  if (options.outputDir === null) {
-    options.outputDir = `generated-puzzles/${options.size}x${options.size}`;
+  if (options.outputDir === '') {
+    options.outputDir = `generated-puzzles/${String(options.size)}x${String(options.size)}`;
   }
 
   return options;
@@ -139,13 +138,10 @@ function gridToNumber(grid: PuzzleSolutionData, size: number): bigint {
 }
 
 function hasUniqueSolution(solution: PuzzleSolutionData, size: number): boolean {
-  const rowHints = deriveRowHints(solution).map(row => row.map(h => h.hint));
-  const columnHints = deriveColumnHints(solution).map(col => col.map(h => h.hint));
+  const rowHints = puzzleService.deriveRowHints(solution).map((row: Hint[]) => row.map((h: Hint) => h.hint));
+  const columnHints = puzzleService.deriveColumnHints(solution).map((col: Hint[]) => col.map((h: Hint) => h.hint));
 
-  const solver = new NonogramSolver(rowHints, columnHints);
-  solver.solve();
-  
-  const solvedBoard = solver.board;
+  const solvedBoard = puzzleService.solve(rowHints, columnHints);
   
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
@@ -216,7 +212,7 @@ function reflect(n: bigint, size: number): bigint {
 }
 
 
-async function main() {
+function main(): void {
   const options = parseArgs();
   
   if (options === null) {
@@ -226,18 +222,18 @@ async function main() {
   const size = options.size;
   const totalCells = size * size;
   
-  console.log(`🧩 ${size}x${size} Random Puzzle Generator`);
+  console.log(`🧩 ${String(size)}x${String(size)} Random Puzzle Generator`);
   console.log('================================');
-  console.log(`Size: ${size}x${size} (${totalCells} cells)`);
-  console.log(`Puzzles to generate: ${options.puzzles}`);
-  console.log(`Min difficulty: ${options.minDifficulty}`);
+  console.log(`Size: ${String(size)}x${String(size)} (${String(totalCells)} cells)`);
+  console.log(`Puzzles to generate: ${String(options.puzzles)}`);
+  console.log(`Min difficulty: ${String(options.minDifficulty)}`);
   console.log(`Output directory: ${options.outputDir}`);
-  console.log(`Dry run: ${options.dryRun}`);
+  console.log(`Dry run: ${String(options.dryRun)}`);
   console.log();
 
   // Create output directory
   if (!options.dryRun) {
-    fs.mkdirSync(options.outputDir!, { recursive: true });
+    fs.mkdirSync(options.outputDir, { recursive: true });
   }
 
   const seenCanonical = new Set<string>();
@@ -270,7 +266,7 @@ async function main() {
     
     // Check for unique solution
     if (hasUniqueSolution(grid, size)) {
-      const difficulty = getDifficultyRating(grid);
+      const difficulty = difficultyAnalyzer.getRating(grid);
       
       // Filter by minimum difficulty
       if (difficulty < options.minDifficulty) {
@@ -282,13 +278,13 @@ async function main() {
       
       if (!options.dryRun) {
         const puzzleData = {
-          name: `Generated ${valid}`,
+          name: `Generated ${String(valid)}`,
           difficulty,
           solution: grid.map(row => row.map(c => c === CellState.FILLED ? 1 : 0)),
         };
         
-        const fileName = `puzzle_${valid.toString().padStart(5, '0')}.json`;
-        const filePath = path.join(options.outputDir!, fileName);
+        const fileName = `puzzle_${String(valid).padStart(5, '0')}.json`;
+        const filePath = path.join(options.outputDir, fileName);
         fs.writeFileSync(filePath, JSON.stringify(puzzleData, null, 2) + '\n');
       }
     } else {
@@ -304,9 +300,9 @@ async function main() {
       const eta = rate > 0 ? remaining / rate : Infinity;
       
       console.log(
-        `Progress: ${valid}/${options.puzzles} | ` +
+        `Progress: ${String(valid)}/${String(options.puzzles)} | ` +
         `Attempts: ${attempts.toLocaleString()} | ` +
-        `Invalid: ${invalid} | Dup: ${skippedDuplicate} | Too easy: ${skippedDifficulty} | ` +
+        `Invalid: ${String(invalid)} | Dup: ${String(skippedDuplicate)} | Too easy: ${String(skippedDifficulty)} | ` +
         `ETA: ${formatTime(eta)}`
       );
       lastProgressTime = now;
@@ -336,8 +332,8 @@ async function main() {
 function formatTime(seconds: number): string {
   if (!isFinite(seconds)) return '∞';
   if (seconds < 60) return `${seconds.toFixed(0)}s`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ${Math.floor(seconds % 60)}s`;
-  return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
+  if (seconds < 3600) return `${String(Math.floor(seconds / 60))}m ${String(Math.floor(seconds % 60))}s`;
+  return `${String(Math.floor(seconds / 3600))}h ${String(Math.floor((seconds % 3600) / 60))}m`;
 }
 
-main().catch(console.error);
+main();

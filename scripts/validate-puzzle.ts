@@ -16,9 +16,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Import types and utilities
-import { PuzzleDefinition, CellState, PuzzleSolutionData } from '../src/types/nonogram';
-import { deriveRowHints, deriveColumnHints } from '../src/utils/puzzleUtils';
-import { NonogramSolver } from '../src/utils/nonogramSolver';
+import { CellState, PuzzleSolutionData, Hint } from '../src/types/nonogram';
+import { puzzleService } from '../src/services/Puzzle';
+
 
 interface ValidationResult {
   valid: boolean;
@@ -44,7 +44,7 @@ function validatePuzzleFile(filePath: string): ValidationResult {
   let puzzleData: unknown;
   try {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-    puzzleData = JSON.parse(fileContent);
+    puzzleData = JSON.parse(fileContent) as unknown;
   } catch (e) {
     result.valid = false;
     result.errors.push(`Invalid JSON: ${e instanceof Error ? e.message : String(e)}`);
@@ -126,7 +126,8 @@ function validatePuzzleFile(filePath: string): ValidationResult {
   }
 
   const actualHeight = solution.length;
-  const actualWidth = Array.isArray(solution[0]) ? solution[0].length : 0;
+  const firstRow = solution[0] as unknown;
+  const actualWidth = Array.isArray(firstRow) ? firstRow.length : 0;
 
   if (actualWidth === 0) {
     result.valid = false;
@@ -137,12 +138,12 @@ function validatePuzzleFile(filePath: string): ValidationResult {
   // Validate height/width match solution dimensions
   if (typeof puzzle.height === 'number' && puzzle.height !== actualHeight) {
     result.valid = false;
-    result.errors.push(`"height" (${puzzle.height}) does not match solution rows (${actualHeight})`);
+    result.errors.push(`"height" (${String(puzzle.height)}) does not match solution rows (${String(actualHeight)})`);
   }
 
   if (typeof puzzle.width === 'number' && puzzle.width !== actualWidth) {
     result.valid = false;
-    result.errors.push(`"width" (${puzzle.width}) does not match solution columns (${actualWidth})`);
+    result.errors.push(`"width" (${String(puzzle.width)}) does not match solution columns (${String(actualWidth)})`);
   }
 
   const height = actualHeight;
@@ -150,25 +151,25 @@ function validatePuzzleFile(filePath: string): ValidationResult {
 
   // Check all rows have same width and contain only 0s and 1s
   for (let i = 0; i < height; i++) {
-    const row = solution[i];
+    const row = solution[i] as unknown;
     
     if (!Array.isArray(row)) {
       result.valid = false;
-      result.errors.push(`Row ${i} is not an array`);
+      result.errors.push(`Row ${String(i)} is not an array`);
       continue;
     }
 
     if (row.length !== width) {
       result.valid = false;
-      result.errors.push(`Row ${i} has ${row.length} cells, expected ${width}`);
+      result.errors.push(`Row ${String(i)} has ${String(row.length)} cells, expected ${String(width)}`);
       continue;
     }
 
     for (let j = 0; j < row.length; j++) {
-      const cell = row[j];
+      const cell = row[j] as unknown;
       if (cell !== 0 && cell !== 1) {
         result.valid = false;
-        result.errors.push(`Invalid cell value at [${i}][${j}]: ${cell} (must be 0 or 1)`);
+        result.errors.push(`Invalid cell value at [${String(i)}][${String(j)}]: ${String(cell)} (must be 0 or 1)`);
       }
     }
   }
@@ -178,24 +179,21 @@ function validatePuzzleFile(filePath: string): ValidationResult {
   }
 
   // Check if puzzle has at least one filled cell
-  const hasFilledCell = solution.some((row: number[]) => row.some((cell: number) => cell === 1));
+  const hasFilledCell = (solution as number[][]).some((row: number[]) => row.some((cell: number) => cell === 1));
   if (!hasFilledCell) {
     result.warnings.push('Solution has no filled cells');
   }
 
   // Check for unique solution
-  console.log(`\n📐 Puzzle dimensions: ${width}x${height}`);
+  console.log(`\n📐 Puzzle dimensions: ${String(width)}x${String(height)}`);
   console.log('🔍 Checking for unique solution...');
   
   const solutionData = solution as PuzzleSolutionData;
-  const rowHints = deriveRowHints(solutionData).map(row => row.map(h => h.hint));
-  const columnHints = deriveColumnHints(solutionData).map(col => col.map(h => h.hint));
+  const rowHints = puzzleService.deriveRowHints(solutionData).map((row: Hint[]) => row.map((h: Hint) => h.hint));
+  const columnHints = puzzleService.deriveColumnHints(solutionData).map((col: Hint[]) => col.map((h: Hint) => h.hint));
 
-  const solver = new NonogramSolver(rowHints, columnHints);
-  solver.solve();
-  
   // Compare solved board with original solution
-  const solvedBoard = solver.board;
+  const solvedBoard = puzzleService.solve(rowHints, columnHints);
   let matches = true;
   
   for (let i = 0; i < height && matches; i++) {

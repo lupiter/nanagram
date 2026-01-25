@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import { DesignerState, createInitialState } from "../controllers/DesignerState";
-import { DesignerController } from "../controllers/DesignerController";
-import { checkPuzzleHasUniqueSolution } from "../utils/puzzleUtils";
+import { DesignerState, createInitialDesignerState } from "../components/DesignerControls/DesignerState";
+import { DesignerController } from "../components/DesignerControls/DesignerController";
+import { puzzleService } from "../services/Puzzle";
 
-export function useDesigner(size: number) {
+export function useDesigner(height: number, width?: number) {
   const controller = useMemo(() => new DesignerController(), []);
-  const [state, setState] = useState<DesignerState>(() => createInitialState(size));
+  const w = width ?? height;
+  const [state, setState] = useState<DesignerState>(() => createInitialDesignerState(height, w));
 
   // Check solution uniqueness with debounce
   useEffect(() => {
@@ -19,7 +20,7 @@ export function useDesigner(size: number) {
     setState(s => controller.setChecking(s, true));
 
     const timer = setTimeout(() => {
-      const result = checkPuzzleHasUniqueSolution(state.grid);
+      const result = puzzleService.checkPuzzleHasUniqueSolution(state.grid);
       setState(s => controller.setUniqueSolution(s, result));
     }, 300);
 

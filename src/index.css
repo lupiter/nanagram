@@ -86,3 +86,32 @@ input, select {
   font-family: inherit;
   transition: border-color 0.2s;
 }
+
+/* Panel - bordered section container */
+.panel {
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.panel h2 {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
+/* Utility classes */
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-muted-sm {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.text-muted-xs {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}

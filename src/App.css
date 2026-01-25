@@ -28,10 +28,6 @@
   }
 }
 
-.card {
-  padding: var(--space-8);
-}
-
 .read-the-docs {
   color: var(--gray-400);
 }

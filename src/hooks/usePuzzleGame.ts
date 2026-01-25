@@ -1,15 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { GameMode, WorkingGrid } from "../types/puzzle";
+import { GameMode } from "../types/puzzle";
+import { GameState } from "../types/nonogram";
 import { PuzzleDefinition } from "../types/nonogram";
-import { PuzzleState } from "../controllers/PuzzleState";
-import { PuzzleController } from "../controllers/PuzzleController";
-import {
-  markPuzzleCompleted,
-  saveProgress,
-  loadProgress,
-  clearProgress,
-} from "../utils/puzzleLoader";
-import { errorSound } from "../utils/errorSound";
+import { PuzzleState } from "../components/NonogramGrid/PuzzleState";
+import { PuzzleController } from "../components/NonogramGrid/PuzzleController";
+import { puzzleLibrary } from "../services/PuzzleLibrary";
+import { errorSound } from "../services/ErrorSound";
 
 interface UsePuzzleGameProps {
   category: string;
@@ -24,14 +20,14 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
   );
 
   const [state, setState] = useState<PuzzleState>(() => {
-    const savedGrid = loadProgress(category, id) as WorkingGrid | null;
+    const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
     const savedMode = localStorage.getItem("gameMode") as GameMode | null;
     return controller.createInitialState(savedGrid, savedMode);
   });
 
   // Reset state when puzzle changes
   useEffect(() => {
-    const savedGrid = loadProgress(category, id) as WorkingGrid | null;
+    const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
     const savedMode = localStorage.getItem("gameMode") as GameMode | null;
     setState(controller.createInitialState(savedGrid, savedMode));
   }, [controller, category, id]);
@@ -48,10 +44,10 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     const { isSolved, justSolved } = controller.checkSolution(state);
     if (justSolved) {
       setState(controller.markSolved(state));
-      markPuzzleCompleted(category, id);
-      clearProgress(category, id);
+      puzzleLibrary.markCompleted(category, id);
+      puzzleLibrary.clearProgress(category, id);
     } else if (!isSolved && controller.hasContent(state)) {
-      saveProgress(category, id, state.grid);
+      puzzleLibrary.saveProgress(category, id, state.grid);
     }
   }, [state.grid, controller, category, id, state.isSolved]);
 

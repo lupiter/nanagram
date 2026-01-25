@@ -1,0 +1,16 @@
+/* Override PuzzleCard for library context */
+.design-card {
+  background: var(--color-bg-subtle);
+}
+
+.action-group {
+  flex: 1;
+  min-width: var(--size-nav-title);
+  align-items: stretch;
+}
+
+.action-group h3 {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--color-text);
+}

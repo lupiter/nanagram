@@ -29,13 +29,5 @@ export interface PuzzleDefinition {
   solution: PuzzleSolutionData;
 }
 
-// Represents the current state of the game
+// Represents the current state of the game (working grid with EMPTY, FILLED, CROSSED_OUT)
 export type GameState = Cell[][];
-
-// Represents a complete puzzle with its current state
-export interface Puzzle {
-  solution: PuzzleSolutionData;
-  state: GameState;
-  rowHints: Hint[][];    // Derived from solution
-  columnHints: Hint[][]; // Derived from solution
-} 

@@ -32,7 +32,8 @@
 
   /* Fixed sizes (component-specific) */
   --size-cell: calc(var(--base-size) * 5);      /* 30px - grid cell */
-  --size-hint-area: calc(var(--base-size) * 20);  /* 100px - hint min-width */
+  --size-card-min: calc(var(--base-size) * 30);   /* 120px - card min-width */
+  --size-hint-area: calc(var(--base-size) * 25);  /* 100px - hint min-width */
   --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
   --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
   --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */
@@ -40,6 +41,7 @@
   --size-touch-target: calc(var(--base-size) * 11); /* 44px - min touch target */
   --size-badge: calc(var(--base-size) * 4);       /* 16px - badge size */
   --size-container-sm: calc(var(--base-size) * 80);  /* 320px - min body width */
+  --size-container-md: calc(var(--base-size) * 225); /* 900px - medium container */
   --size-container-lg: calc(var(--base-size) * 300); /* 1200px - home max-width */
   --size-container-xl: calc(var(--base-size) * 320); /* 1280px - root max-width */
 

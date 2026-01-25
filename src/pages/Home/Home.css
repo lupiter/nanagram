@@ -1,0 +1,168 @@
+.home {
+  flex: 1;
+}
+
+.home h1 {
+  text-align: center;
+  margin: var(--space-4);
+}
+
+.puzzle-categories {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.puzzle-category {
+  background: var(--color-bg-subtle);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.puzzle-category h2 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  color: var(--color-text);
+}
+
+.puzzle-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.puzzle-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;;
+  min-height: calc(var(--size-touch-target) + var(--space-1) * 2 + var(--text-xs));
+  min-width: var(--size-touch-target);
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.puzzle-links a:hover {
+  background: var(--color-bg-light-hover);
+  border-color: var(--color-border);
+}
+
+.puzzle-links a.completed {
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.puzzle-links a.completed:hover {
+  background: var(--color-bg-light-hover);
+  border-color: var(--color-border);
+}
+
+/* Override solution preview styles for home page thumbnails */
+.puzzle-links .solution-preview {
+  margin: 0;
+}
+
+.puzzle-links .puzzle-name {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  font-weight: 400;
+  max-width: 100%;
+}
+
+.designer-link-icon {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.designer-link-icon .icon {
+  font-size: var(--text-4xl);
+  color: var(--color-text);
+  font-weight: 400;
+  width: var(--size-hint-area);
+  text-align: center;
+}
+
+
+.designer-link .puzzle-name {
+  justify-self: flex-end;
+  margin: var(--space-2);
+}
+
+.puzzle-links .designer-link {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  font-weight: 400;
+  max-width: 100%;
+  min-width: var(--size-hint-area);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Special links container */
+.special-links-container {
+  /* Uses ButtonGroup */
+}
+
+/* Puzzle number and stars for incomplete puzzles */
+.puzzle-links a:not(.completed):not(.designer-link) {
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+
+.puzzle-links a.completed .difficulty-stars {
+  margin-bottom: var(--space-2);
+}
+
+.puzzle-number {
+  font-size: var(--text-lg);
+  min-width: var(--size-hint-area);
+  min-height: var(--size-hint-area);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* User design items in category sections */
+.design-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.design-item.user-design {
+  position: relative;
+}
+
+.user-badge {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  z-index: 10;
+  background: var(--color-primary);
+  color: var(--white);
+  width: var(--size-badge);
+  height: var(--size-badge);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: bold;
+  box-shadow: var(--shadow-sm);
+}
+
+.design-actions {
+  margin-top: var(--space-1);
+}

@@ -1,14 +1,14 @@
-import { checkPuzzleHasUniqueSolution, validatePuzzle } from '../utils/puzzleUtils';
+import { puzzleService } from '../services/Puzzle';
 import { starPuzzle } from './basic';
 
 describe('Basic Puzzles', () => {
   describe('starPuzzle', () => {
     it('is a valid puzzle definition', () => {
-      expect(() => { validatePuzzle(starPuzzle); }).not.toThrow();
+      expect(() => { puzzleService.validatePuzzle(starPuzzle); }).not.toThrow();
     });
 
     it('has a unique solution', () => {
-      expect(checkPuzzleHasUniqueSolution(starPuzzle)).toBe(true);
+      expect(puzzleService.checkPuzzleHasUniqueSolution(starPuzzle)).toBe(true);
     });
   });
 }); 
