@@ -4,6 +4,7 @@ import Button from "../Button/Button";
 import ButtonGroup from "../ButtonGroup/ButtonGroup";
 import Modal from "../Modal/Modal";
 import SolutionPreview from "../SolutionPreview/SolutionPreview";
+import { Icons } from "../Icons/Icons";
 import "./VictoryPopup.css";
 
 interface VictoryPopupProps {
@@ -46,7 +47,7 @@ export default function VictoryPopup({
           </Button>
           {nextPuzzle && (
             <Button variant="primary" onClick={handleNextPuzzle} aria-label="Go to next puzzle">
-              Next Puzzle →
+              Next Puzzle <Icons.ArrowRight />
             </Button>
           )}
         </ButtonGroup>

@@ -10,6 +10,7 @@ import DifficultyStars from "../../components/DifficultyStars/DifficultyStars";
 import Button from "../../components/Button/Button";
 import ButtonGroup from "../../components/ButtonGroup/ButtonGroup";
 import LinkCard from "../../components/LinkCard/LinkCard";
+import { Icons } from "../../components/Icons/Icons";
 
 export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(
@@ -20,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Nanna Gram";
-    setTitle({ title: "Nana Gram", subtitle: "👵📔" });
+    setTitle({ title: "Nana Gram", subtitle: <><Icons.Grandma /> <Icons.Notebook /></> });
     setCompletedPuzzles(puzzleLibrary.getCompletedPuzzles());
     setSavedDesigns(designStorage.getAll());
   }, [setTitle]);
@@ -66,7 +67,7 @@ export default function Home() {
     
     return (
       <div key={design.id} className="design-item user-design">
-        <span className="user-badge" title="Your design">✦</span>
+        <span className="user-badge" title="Your design"><Icons.Sparkle /></span>
         <Link
           to={`/play/${encoded}`}
           className="completed"
@@ -88,14 +89,14 @@ export default function Home() {
             onClick={() => { handleShare(design); }}
             title="Copy share link"
           >
-            🔗
+            <Icons.Link />
           </Button>
           <Button
             square
             to={`/designer/${designerSize}?edit=${design.id}`}
             title="Edit design"
           >
-            ✏︎
+            <Icons.Edit />
           </Button>
           <Button
             variant="danger"
@@ -103,7 +104,7 @@ export default function Home() {
             onClick={() => { handleDeleteDesign(design.id, design.name); }}
             title="Delete design"
           >
-            ×
+            <Icons.Close />
           </Button>
         </ButtonGroup>
       </div>
@@ -168,7 +169,7 @@ export default function Home() {
                   title={`Design a ${category} puzzle`}
                 >
                   <span className="designer-link-icon">
-                    <span className="icon">✏︎</span>
+                    <span className="icon"><Icons.Edit /></span>
                   </span>
                   <span className="puzzle-name">{`Make your own`}</span>
                 </Link>
@@ -178,9 +179,9 @@ export default function Home() {
         })}
 
         <ButtonGroup gap={4} justify="center" wrap className="special-links-container">
-          <LinkCard to="/random" icon="🎲">Random Puzzle</LinkCard>
-          <LinkCard to="/play" icon="📂">Sketch, Share, Solve</LinkCard>
-          <LinkCard to="/library" icon="📚">My Library</LinkCard>
+          <LinkCard to="/random" icon={<Icons.Dice />}>Random Puzzle</LinkCard>
+          <LinkCard to="/play" icon={<Icons.Folder />}>Sketch, Share, Solve</LinkCard>
+          <LinkCard to="/library" icon={<Icons.Library />}>My Library</LinkCard>
         </ButtonGroup>
       </div>
     </div>

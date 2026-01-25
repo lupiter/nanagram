@@ -10,6 +10,7 @@ import PuzzleCard from "../../components/PuzzleCard/PuzzleCard";
 import PageContainer from "../../components/PageContainer/PageContainer";
 import CardGrid from "../../components/CardGrid/CardGrid";
 import Toast from "../../components/Toast/Toast";
+import { Icons } from "../../components/Icons/Icons";
 import "./Library.css";
 
 export default function Library() {
@@ -171,10 +172,10 @@ export default function Library() {
           <ButtonGroup column gap={2} className="action-group">
             <h3>All Designs</h3>
             <Button onClick={handleExportAll} disabled={designs.length === 0}>
-              ⬇︎ Export All as JSON
+              <Icons.Download /> Export All as JSON
             </Button>
             <FileUploadButton onFileSelect={handleImportFile}>
-              ⬆︎ Import from JSON
+              <Icons.Upload /> Import from JSON
             </FileUploadButton>
           </ButtonGroup>
 
@@ -182,16 +183,16 @@ export default function Library() {
             <h3>Sketch, Share, Solve Format</h3>
             <p className="text-muted-sm">10×15 puzzles only ({designs10x15Count} available)</p>
             <Button onClick={handleExportAsSSS} disabled={designs10x15Count === 0}>
-              ⬇︎ Export as SSS File
+              <Icons.Download /> Export as SSS File
             </Button>
             <FileUploadButton onFileSelect={handleImportSSS}>
-              ⬆︎ Import from SSS File
+              <Icons.Upload /> Import from SSS File
             </FileUploadButton>
             <FileUploadButton
               onFileSelect={handleMergeToSSS}
               disabled={designs10x15Count === 0}
             >
-              🔀 Add My Designs to SSS File
+              <Icons.Merge /> Add My Designs to SSS File
             </FileUploadButton>
           </ButtonGroup>
         </ButtonGroup>

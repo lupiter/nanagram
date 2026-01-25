@@ -13,6 +13,7 @@ import FileUploadButton from "../../components/FileUploadButton/FileUploadButton
 import PageContainer from "../../components/PageContainer/PageContainer";
 import CardGrid from "../../components/CardGrid/CardGrid";
 import UploadZone from "../../components/UploadZone/UploadZone";
+import { Icons } from "../../components/Icons/Icons";
 import "./Play.css";
 
 // SSS Browser component (shown when no encoded param)
@@ -62,7 +63,7 @@ function SSSBrowser() {
       {!sssFile ? (
         <UploadZone message="Open a Sketch, Share, Solve file to browse and play puzzles.">
           <FileUploadButton onFileSelect={handleFileUpload}>
-            📂 Open File
+            <Icons.Folder /> Open File
           </FileUploadButton>
         </UploadZone>
       ) : (
@@ -70,7 +71,7 @@ function SSSBrowser() {
           <div className="sss-header">
             <span className="sss-file-name">{fileName}</span>
             <FileUploadButton onFileSelect={handleFileUpload}>
-              📂 Open Different File
+              <Icons.Folder /> Open Different File
             </FileUploadButton>
           </div>
           <p className="sss-count">{sssPuzzles.length} puzzles</p>

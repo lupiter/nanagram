@@ -9,6 +9,7 @@ import ActionButtons from "../ActionButtons/ActionButtons";
 import VictoryPopup from "../VictoryPopup/VictoryPopup";
 import NonogramGrid from "../NonogramGrid/NonogramGrid";
 import DifficultyStars from "../DifficultyStars/DifficultyStars";
+import { Icons } from "../Icons/Icons";
 import "./PuzzlePlayer.css";
 
 interface NextPuzzleInfo {
@@ -103,7 +104,7 @@ export default function PuzzlePlayer({
       <div className="puzzle-player">
         <h1>Invalid Puzzle</h1>
         <p>The puzzle data in the URL is invalid or corrupted.</p>
-        <Link to="/">← Back to Home</Link>
+        <Link to="/"><Icons.ArrowLeft /> Back to Home</Link>
       </div>
     );
   }

@@ -133,13 +133,9 @@ export class DesignStorage {
   /** Parse exported JSON and return designs */
   parseExportedJson(json: string): SavedDesign[] | null {
     try {
-      const data = JSON.parse(json) as { version?: number; designs?: SavedDesign[] };
+      const data = JSON.parse(json) as { version: number; designs: SavedDesign[] };
       if (data.version === 1 && Array.isArray(data.designs)) {
         return data.designs;
-      }
-      // Maybe it's just a raw array of designs
-      if (Array.isArray(data)) {
-        return data as SavedDesign[];
       }
       return null;
     } catch {

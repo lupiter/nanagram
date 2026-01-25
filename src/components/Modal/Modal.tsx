@@ -1,6 +1,7 @@
 import { useEffect, useRef, ReactNode } from "react";
 import clsx from "clsx";
 import Button from "../Button/Button";
+import { Icons } from "../Icons/Icons";
 import "./Modal.css";
 
 interface ModalProps {
@@ -49,7 +50,7 @@ export default function Modal({
         <header className="modal-header">
           <h2 id="modal-title">{title}</h2>
           <Button variant="secondary" square onClick={onClose} aria-label="Close">
-            ✕︎
+            <Icons.Close />
           </Button>
         </header>
         <div className="modal-content">{children}</div>

@@ -8,6 +8,7 @@
 * Try to use existing styles first, then using tokens, then writing custom styles.
 * You're not allowed to export loose functions. OOP! OOP!
 * NEVER use dynamic (require) imports. They are BANNED.
+* Always try and use the sizes and colours defined in variables.css.
 * If you want to typecheck, there's a npm run command for that
 
 * We don't care about backwards compatiblity EVER.

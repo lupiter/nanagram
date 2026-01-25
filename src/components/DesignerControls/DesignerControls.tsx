@@ -2,6 +2,7 @@ import Button from "../Button/Button";
 import ButtonGroup from "../ButtonGroup/ButtonGroup";
 import FileUploadButton from "../FileUploadButton/FileUploadButton";
 import FormField from "../FormField/FormField";
+import { Icons } from "../Icons/Icons";
 
 interface DesignerControlsProps {
   puzzleName: string;
@@ -46,7 +47,7 @@ export default function DesignerControls({
 
       <ButtonGroup gap={3}>
         <Button variant="danger" onClick={onClear} aria-label="clear" title="Clear puzzle">
-          🗑︎
+          <Icons.Trash />
         </Button>
         {showDevTools && (
           <Button
@@ -54,7 +55,7 @@ export default function DesignerControls({
             disabled={!hasFilledCells}
             title="Copy puzzle code to clipboard"
           >
-            📋︎ Copy Code
+            <Icons.Copy /> Copy Code
           </Button>
         )}
         {isSketchFormat && onDownloadSSS && (
@@ -63,7 +64,7 @@ export default function DesignerControls({
             disabled={!hasUniqueSolution}
             title={hasUniqueSolution ? "Download as Sketch, Share, Solve file" : "Puzzle must have a unique solution to download"}
           >
-            ⬇︎
+            <Icons.Download />
           </Button>
         )}
         {isSketchFormat && onUploadSSS && (
@@ -72,7 +73,7 @@ export default function DesignerControls({
             disabled={!hasUniqueSolution}
             title={hasUniqueSolution ? "Add puzzle to existing Sketch, Share, Solve file" : "Puzzle must have a unique solution to upload"}
           >
-            ⬆︎
+            <Icons.Upload />
           </FileUploadButton>
         )}
         <Button
@@ -80,7 +81,7 @@ export default function DesignerControls({
           disabled={!hasFilledCells}
           title="Save to my designs"
         >
-          💾︎
+          <Icons.Save />
         </Button>
         <Button
           variant="primary"
@@ -88,7 +89,7 @@ export default function DesignerControls({
           disabled={!hasUniqueSolution}
           title={hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share"}
         >
-          🔗︎
+          <Icons.Link />
         </Button>
       </ButtonGroup>
     </ButtonGroup>

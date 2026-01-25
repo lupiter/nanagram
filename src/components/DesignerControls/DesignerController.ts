@@ -153,10 +153,10 @@ export class DesignerController {
     }
     if (state.hasUniqueSolution === true) {
       const difficultyText = state.difficulty ? ` (Difficulty: ${String(state.difficulty)}/5)` : '';
-      return { message: `✓︎ Puzzle has a unique solution!${difficultyText}`, variant: "success", difficulty: state.difficulty };
+      return { message: `Puzzle has a unique solution!${difficultyText}`, variant: "success", difficulty: state.difficulty };
     }
     if (state.hasUniqueSolution === false) {
-      return { message: "✗︎ Puzzle does not have a unique solution", variant: "error", difficulty: null };
+      return { message: "Puzzle does not have a unique solution", variant: "error", difficulty: null };
     }
     return { message: "", variant: "info", difficulty: null };
   }

@@ -1,5 +1,6 @@
 import { CellState } from "../../types/nonogram";
 import ToggleGroup from "../ToggleGroup/ToggleGroup";
+import { Icons } from "../Icons/Icons";
 
 interface ToolSelectorProps {
   tool: CellState;
@@ -13,8 +14,8 @@ export default function ToolSelector({ tool, onToolChange }: ToolSelectorProps) 
         value={tool}
         onChange={onToolChange}
         options={[
-          { value: CellState.FILLED, label: "■", ariaLabel: "Fill" },
-          { value: CellState.CROSSED_OUT, label: "✕︎", ariaLabel: "Cross" },
+          { value: CellState.FILLED, label: <Icons.FilledSquare />, ariaLabel: "Fill" },
+          { value: CellState.CROSSED_OUT, label: <Icons.CrossMark />, ariaLabel: "Cross" },
         ]}
         name="tool"
         title="Tool"

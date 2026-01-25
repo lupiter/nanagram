@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Icons } from '../Icons/Icons';
 import './DifficultyStars.css';
 
 interface DifficultyStarsProps {
@@ -21,7 +22,7 @@ export default function DifficultyStars({
         key={i} 
         className={clsx('star', i <= difficulty ? 'filled' : 'empty')}
       >
-        ★
+        <Icons.Star />
       </span>
     );
   }
