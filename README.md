@@ -24,7 +24,7 @@ Nonograms are picture logic puzzles where you fill in cells on a grid to reveal 
 
 ### Prerequisites
 
-- Node.js (v18 or higher recommended)
+- Node.js (v22 or higher required)
 - npm
 
 ### Installation
