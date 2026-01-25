@@ -19,8 +19,7 @@ import librarySvg from "./svg/library.svg";
 import mergeSvg from "./svg/merge.svg";
 import editSvg from "./svg/edit.svg";
 import sparkleSvg from "./svg/sparkle.svg";
-import grandmaSvg from "./svg/grandma.svg";
-import notebookSvg from "./svg/notebook.svg";
+import logoSvg from "./svg/logo.svg";
 import checkSvg from "./svg/check.svg";
 import "./Icons.css";
 
@@ -120,12 +119,8 @@ export class Icons {
     return <img src={sparkleSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
-  static Grandma({ className, alt = "Grandma" }: IconProps = {}) {
-    return <img src={grandmaSvg} alt={alt} className={`icon ${className ?? ""}`} />;
-  }
-
-  static Notebook({ className, alt = "Notebook" }: IconProps = {}) {
-    return <img src={notebookSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+  static Logo({ className, alt = "Nana Gram" }: IconProps = {}) {
+    return <img src={logoSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
   static Check({ className, alt = "Check" }: IconProps = {}) {

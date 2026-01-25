@@ -21,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Nanna Gram";
-    setTitle({ title: "Nana Gram", subtitle: <><Icons.Grandma /> <Icons.Notebook /></> });
+    setTitle({ title: "Nana Gram", subtitle: <Icons.Logo /> });
     setCompletedPuzzles(puzzleLibrary.getCompletedPuzzles());
     setSavedDesigns(designStorage.getAll());
   }, [setTitle]);
