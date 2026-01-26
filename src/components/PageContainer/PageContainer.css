@@ -1,0 +1,22 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.page-container-sm {
+  max-width: var(--size-dialog);
+}
+
+.page-container-md {
+  max-width: var(--size-container-md);
+}
+
+.page-container-lg {
+  max-width: var(--size-container-lg);
+}

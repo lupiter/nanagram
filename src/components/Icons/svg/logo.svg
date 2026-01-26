@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3d3d3d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Grandma head -->
+  <circle cx="12" cy="6" r="4" />
+  <!-- Eyes -->
+  <circle cx="10.5" cy="5.5" r="0.4" fill="#3d3d3d" />
+  <circle cx="13.5" cy="5.5" r="0.4" fill="#3d3d3d" />
+  <!-- Glasses -->
+  <path d="M8 5.5c0-.8.5-1.5 1.5-1.8" />
+  <!-- Smile -->
+  <path d="M10.5 7.5c.5.4 1.5.4 2 0" />
+  <!-- Hair curls -->
+  <path d="M8.5 3.5c-.8-.8-.8-2 .5-2.5" />
+  <path d="M15.5 3.5c.8-.8.8-2-.5-2.5" />
+  <!-- Body with book -->
+  <path d="M8 10v8c0 1 .5 2 2 2h4c1.5 0 2-1 2-2v-8" />
+  <!-- Book in hands -->
+  <path d="M9 13h6" />
+  <path d="M9 13v5h2.5v-4" />
+  <path d="M15 13v5h-2.5v-4" />
+  <!-- Arms -->
+  <path d="M8 11c-1.5 0-2.5 1-2.5 2.5" />
+  <path d="M16 11c1.5 0 2.5 1 2.5 2.5" />
+</svg>

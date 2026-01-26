@@ -1,0 +1,27 @@
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.progress-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.progress-bar {
+  height: calc(var(--base-size) * 1.5);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-filled);
+  border-radius: var(--radius-sm);
+  transition: width 0.1s ease-out;
+}

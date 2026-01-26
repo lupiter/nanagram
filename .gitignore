@@ -1,43 +1,27 @@
-# Build directories
-build/
-bin/
-obj/
-out/
-generated/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Object files
-*.o
-*.obj
-*.elf
+node_modules
+dist
+dist-ssr
+*.local
 
-# ROM files
-*.gb
-*.gbc
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# IDE specific files
-.idea/
-*.swp
-*~
-
-# OS specific files
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Dependency directories
-vendor/
-deps/
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-
-# Log files
-*.log 
+# Generated puzzle output
+generated-puzzles/

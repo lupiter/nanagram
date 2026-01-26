@@ -1,0 +1,46 @@
+.status-message {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+/* Variants */
+.status-message-info {
+  background: var(--gray-200);
+  color: var(--color-text-muted);
+}
+
+.status-message-success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.status-message-warning {
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.status-message-error {
+  background: var(--color-bg);
+  border: var(--border-width) solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* Size variants */
+.status-message-lg {
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
+  font-weight: 600;
+  min-height: var(--space-6);
+}
+
+.status-message-sm {
+  padding: var(--space-2);
+  font-size: var(--text-xs);
+}

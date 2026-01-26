@@ -1,0 +1,87 @@
+/* Washi tape button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  
+  /* Tape appearance - flat, no shadow */
+  background: var(--color-btn-default);
+  border: none;
+  color: var(--color-text);
+  
+  /* Jagged edges using mask - left edge */
+  --tape-edge-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='100' preserveAspectRatio='none'%3E%3Cpath d='M4,0 L8,0 L8,100 L4,100 L6,95 L3,90 L5,85 L2,80 L6,75 L4,70 L7,65 L3,60 L5,55 L2,50 L6,45 L4,40 L7,35 L3,30 L5,25 L2,20 L6,15 L4,10 L7,5 Z' fill='black'/%3E%3C/svg%3E");
+  /* Right edge - mirrored (x coordinates flipped: 8-x) */
+  --tape-edge-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='100' preserveAspectRatio='none'%3E%3Cpath d='M4,0 L0,0 L0,100 L4,100 L2,95 L5,90 L3,85 L6,80 L2,75 L4,70 L1,65 L5,60 L3,55 L6,50 L2,45 L4,40 L1,35 L5,30 L3,25 L6,20 L2,15 L4,10 L1,5 Z' fill='black'/%3E%3C/svg%3E");
+  
+  mask-image: var(--tape-edge-left), 
+              linear-gradient(black, black), 
+              var(--tape-edge-right);
+  mask-size: 8px 100%, calc(100% - 12px) 100%, 8px 100%;
+  mask-position: left, center, right;
+  mask-repeat: no-repeat;
+  
+  -webkit-mask-image: var(--tape-edge-left), 
+                      linear-gradient(black, black), 
+                      var(--tape-edge-right);
+  -webkit-mask-size: 8px 100%, calc(100% - 12px) 100%, 8px 100%;
+  -webkit-mask-position: left, center, right;
+  -webkit-mask-repeat: no-repeat;
+  
+  transition: filter 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.btn:active:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Square buttons (for icons) */
+.btn-square {
+  padding: var(--space-2);
+  line-height: 1;
+  /* Simpler edges for small buttons */
+  mask-image: none;
+  -webkit-mask-image: none;
+  border-radius: var(--radius-sm);
+}
+
+/* Variants - different washi tape colors */
+.btn-default {
+  background-color: var(--color-btn-default);
+}
+
+.btn-primary {
+  background-color: var(--color-btn-primary);
+}
+
+.btn-secondary {
+  background-color: var(--color-btn-secondary);
+}
+
+.btn-danger {
+  background-color: var(--color-btn-danger);
+  color: var(--color-btn-danger-text);
+}
+
+/* Focus styles */
+.btn:focus-visible {
+  outline: 2px dashed var(--color-primary);
+  outline-offset: var(--space-1);
+}
+

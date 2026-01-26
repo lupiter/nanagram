@@ -1,0 +1,86 @@
+.toggle-group-container {
+  margin: var(--space-2) 0;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 0;
+}
+
+.toggle-group-title {
+  font-weight: bold;
+  margin-bottom: var(--space-1);
+  color: var(--color-text);
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  background: var(--gray-100);
+  border: var(--border-width) solid var(--gray-400);
+  border-right: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  position: relative;
+  font-weight: bold;
+  color: var(--color-text);
+  overflow: hidden;
+}
+
+.toggle-button:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.toggle-button:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-right: var(--border-width) solid var(--gray-400);
+}
+
+.toggle-button:hover {
+  background: var(--gray-200);
+}
+
+.toggle-button input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-button input[type="radio"]:checked {
+  transform: translateY(var(--space-1));
+  box-shadow: var(--shadow-inset);
+  background: var(--gray-300);
+}
+
+.toggle-button input[type="radio"]:checked + .toggle-button-label {
+  transform: translateY(var(--space-1));
+  box-shadow: var(--shadow-inset);
+  background: var(--gray-300);
+}
+
+.toggle-button-label {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  width: 100%;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: inherit;
+  border-radius: inherit;
+  font-size: var(--text-base);
+  line-height: 1;
+}
+
+.toggle-group-disabled {
+  opacity: 0.6;
+}
+
+.toggle-button.disabled {
+  cursor: not-allowed;
+}
+
+.toggle-button.disabled:hover {
+  background: var(--gray-100);
+}

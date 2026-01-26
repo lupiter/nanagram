@@ -1,0 +1,24 @@
+.toast {
+  position: fixed;
+  top: var(--space-12);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: var(--white);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  animation: toast-slide-down 0.3s ease;
+}
+
+@keyframes toast-slide-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(-1 * var(--space-5)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

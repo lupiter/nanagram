@@ -1,0 +1,104 @@
+/* Base sizing unit - all sizes derived from this */
+:root {
+  --base-size: 0.25rem; /* 4px at default 16px font size */
+  --border-width: 1px;
+
+  /* Spacing scale (multiples of base-size) */
+  --space-0: 0;
+  --space-1: calc(var(--base-size) * 1);  /* 4px */
+  --space-2: calc(var(--base-size) * 2);  /* 8px */
+  --space-3: calc(var(--base-size) * 3);  /* 12px */
+  --space-4: calc(var(--base-size) * 4);  /* 16px */
+  --space-5: calc(var(--base-size) * 5);  /* 20px */
+  --space-6: calc(var(--base-size) * 6);  /* 24px */
+  --space-8: calc(var(--base-size) * 8);  /* 32px */
+  --space-10: calc(var(--base-size) * 10); /* 40px */
+  --space-12: calc(var(--base-size) * 12); /* 48px */
+
+  /* Font sizes */
+  --text-xs: calc(var(--base-size) * 2.5);   /* 10px */
+  --text-sm: calc(var(--base-size) * 3.5);   /* 14px */
+  --text-base: calc(var(--base-size) * 4);   /* 16px */
+  --text-lg: calc(var(--base-size) * 4.5);   /* 18px */
+  --text-xl: calc(var(--base-size) * 5);     /* 20px */
+  --text-2xl: calc(var(--base-size) * 7);    /* 28px */
+  --text-3xl: calc(var(--base-size) * 8);    /* 32px */
+  --text-4xl: calc(var(--base-size) * 12.8); /* 51.2px ~3.2em */
+
+  /* Border radius */
+  --radius-sm: calc(var(--base-size) * 1);  /* 4px */
+  --radius-md: calc(var(--base-size) * 1.5); /* 6px */
+  --radius-lg: calc(var(--base-size) * 2);  /* 8px */
+
+  /* Fixed sizes (component-specific) */
+  --size-cell: calc(var(--base-size) * 5);      /* 30px - grid cell */
+  --size-card-min: calc(var(--base-size) * 30);   /* 120px - card min-width */
+  --size-hint-area: calc(var(--base-size) * 25);  /* 100px - hint min-width */
+  --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
+  --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
+  --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */
+  --size-dialog: calc(var(--base-size) * 100);    /* 400px - dialog width */
+  --size-touch-target: calc(var(--base-size) * 11); /* 44px - min touch target */
+  --size-badge: calc(var(--base-size) * 4);       /* 16px - badge size */
+  --size-container-sm: calc(var(--base-size) * 80);  /* 320px - min body width */
+  --size-container-md: calc(var(--base-size) * 225); /* 900px - medium container */
+  --size-container-lg: calc(var(--base-size) * 300); /* 1200px - home max-width */
+  --size-container-xl: calc(var(--base-size) * 320); /* 1280px - root max-width */
+
+  /* Logo/decorative sizes */
+  --size-logo: calc(var(--base-size) * 24); /* 96px / 6em */
+}
+
+/* Color Palette */
+:root {
+  /* Core palette - only these raw colors */
+  --white: #fff;
+  --black: #000;
+  --white-300: rgba(255, 255, 255, 0.2);
+  --white-500: rgba(255, 255, 255, 0.5);
+  /* Grays as black with alpha (equivalent appearance over white) */
+  --gray-100: rgba(0, 0, 0, 0.04);  /* #f5f5f5 */
+  --gray-200: rgba(0, 0, 0, 0.12);  /* #e0e0e0 */
+  --gray-300: rgba(0, 0, 0, 0.2);   /* #ccc */
+  --gray-400: rgba(0, 0, 0, 0.4);   /* #999 */
+  --gray-500: rgba(0, 0, 0, 0.6);   /* #666 */
+  --gray-600: rgba(0, 0, 0, 0.8);   /* #333 */
+  --blue: #007bff;
+  --blue-dark: #0056b3;
+  --green: #28a745;
+  --green-light: #d4edda;
+  --red: #dc3545;
+  --paper: #f0dac5;
+
+  /* Semantic colors - reference core palette */
+  --color-text: var(--gray-600);
+  --color-text-muted: var(--gray-500);
+  --color-modal-bg: var(--paper);
+  --color-bg: var(--white-300);
+  --color-bg-light: var(--white-300);
+  --color-bg-light-hover: var(--white-500);
+  --color-bg-subtle: var(--gray-100);
+  --color-border: var(--gray-300);
+  --color-primary: var(--blue);
+  --color-primary-hover: var(--blue-dark);
+  --color-success: var(--green);
+  --color-success-bg: var(--green-light);
+  --color-danger: var(--red);
+  --color-filled: var(--black);
+  --color-empty: var(--gray-100);
+
+  /* Shadows */
+  --shadow-sm: 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 var(--space-1) var(--space-2) rgba(0, 0, 0, 0.15);
+  --shadow-inset: inset 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.1);
+
+  /* Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Button colors (washi tape style) */
+  --color-btn-default: rgba(255, 255, 255, 0.7);
+  --color-btn-primary: rgba(130, 200, 255, 0.9);
+  --color-btn-secondary: rgba(220, 200, 160, 0.9);
+  --color-btn-danger: rgba(255, 130, 150, 0.9);
+  --color-btn-danger-text: #8b0000;
+}

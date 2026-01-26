@@ -1,0 +1,30 @@
+.random-puzzle-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  background: var(--color-bg-subtle);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+
+.generate-button {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.generate-button:hover:not(:disabled) {
+  background: var(--color-bg-light-hover);
+}
+
+.generate-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

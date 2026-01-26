@@ -1,0 +1,65 @@
+.button-group {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Gap variants */
+.button-group-gap-1 {
+  gap: var(--space-1);
+}
+
+.button-group-gap-2 {
+  gap: var(--space-2);
+}
+
+.button-group-gap-3 {
+  gap: var(--space-3);
+}
+
+.button-group-gap-4 {
+  gap: var(--space-4);
+}
+
+.button-group-gap-6 {
+  gap: var(--space-6);
+}
+
+/* Direction */
+.button-group-column {
+  flex-direction: column;
+}
+
+/* Justify variants */
+.button-group-justify-center {
+  justify-content: center;
+}
+
+.button-group-justify-between {
+  justify-content: space-between;
+}
+
+.button-group-justify-start {
+  justify-content: flex-start;
+}
+
+.button-group-justify-end {
+  justify-content: flex-end;
+}
+
+/* Wrap */
+.button-group-wrap {
+  flex-wrap: wrap;
+}
+
+/* Align */
+.button-group-align-center {
+  align-items: center;
+}
+
+.button-group-align-start {
+  align-items: flex-start;
+}
+
+.button-group-align-end {
+  align-items: flex-end;
+}

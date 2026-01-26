@@ -1,0 +1,22 @@
+.designer-info {
+  margin-top: var(--space-4);
+}
+
+.info-content {
+  text-align: left;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+}
+
+.info-content p {
+  margin: var(--space-2) 0;
+}
+
+.info-content p:first-child {
+  margin-top: 0;
+}
+
+.info-content p:last-child {
+  margin-bottom: 0;
+}
+

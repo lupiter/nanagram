@@ -1,0 +1,22 @@
+.difficulty-stars {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: var(--border-width);
+}
+
+.difficulty-stars .star {
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.difficulty-stars-small {
+  font-size: var(--text-xs);
+}
+
+.difficulty-stars-medium {
+  font-size: var(--text-sm);
+}
+
+.difficulty-stars-large {
+  font-size: var(--text-lg);
+}

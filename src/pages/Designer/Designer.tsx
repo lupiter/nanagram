@@ -1,0 +1,230 @@
+import { useCallback, useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useDesigner } from "../../hooks/useDesigner";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import NonogramGrid from "../../components/NonogramGrid/NonogramGrid";
+import DesignerControls from "../../components/DesignerControls/DesignerControls";
+import SolutionStatus from "../../components/SolutionStatus/SolutionStatus";
+import DesignerInfo from "../../components/DesignerInfo/DesignerInfo";
+import PageContainer from "../../components/PageContainer/PageContainer";
+import { CellState } from "../../types/nonogram";
+import { sssFormat, SSSFile } from "../../services/SSSFormat";
+import { designStorage, SavedDesign } from "../../services/DesignStorage";
+import "./Designer.css";
+
+const VALID_SIZES = [5, 10, 15, 20, 25];
+
+// Special size string for 10x15 Sketch format
+const SKETCH_SIZE = "10x15";
+
+export default function Designer() {
+  const { size: sizeParam } = useParams<{ size: string }>();
+  
+  // Check if this is the Sketch format (10x15)
+  const isSketchFormat = sizeParam === SKETCH_SIZE;
+  const size = isSketchFormat ? 10 : (VALID_SIZES.includes(Number(sizeParam)) ? Number(sizeParam) : 5);
+  const width = isSketchFormat ? 15 : size;
+  
+  const [searchParams] = useSearchParams();
+  const showDevTools = searchParams.get("dev") === "true";
+  const editId = searchParams.get("edit");
+  const { state, setState, controller } = useDesigner(size, width);
+  const { setTitle } = usePageTitle();
+  
+  // State for SSS file operations
+  const [sssFile, setSSSFile] = useState<SSSFile | null>(null);
+  
+  // Track if we're editing an existing design
+  const [editingDesign, setEditingDesign] = useState<SavedDesign | null>(null);
+  
+  // Load design for editing on mount
+  useEffect(() => {
+    if (editId) {
+      const design = designStorage.getById(editId);
+      if (design) {
+        setEditingDesign(design);
+        setState((s) => controller.loadDesign(s, design));
+      }
+    }
+  }, [editId, controller, setState]);
+
+  useEffect(() => {
+    document.title = "Designer - Nanna Gram";
+    const subtitle = isSketchFormat 
+      ? "Sketch, Share, Solve" 
+      : `${String(state.height)}×${String(state.width)}`;
+    setTitle({ title: "Designer", subtitle });
+  }, [setTitle, state.height, state.width, isSketchFormat]);
+
+  const handleCellClick = useCallback(
+    (row: number, col: number) => {
+      // Skip if already handled by drag start
+      setState((s) => {
+        if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
+          return s;
+        }
+        return controller.toggleCell(s, row, col);
+      });
+    },
+    [controller, setState]
+  );
+
+  const handleMouseDown = useCallback(
+    (row: number, col: number, e: React.MouseEvent) => {
+      if (e.button === 2) return; // Ignore right click
+      setState((s) => controller.startDrag(s, row, col));
+    },
+    [controller, setState]
+  );
+
+  const handleMouseEnter = useCallback(
+    (row: number, col: number) => {
+      setState((s) => controller.continueDrag(s, row, col));
+    },
+    [controller, setState]
+  );
+
+  const handleNameChange = useCallback(
+    (name: string) => {
+      setState((s) => controller.setPuzzleName(s, name));
+    },
+    [controller, setState]
+  );
+
+  const handleClear = useCallback(() => {
+    setState((s) => controller.clear(s));
+  }, [controller, setState]);
+
+  const handleExport = useCallback(() => {
+    const json = controller.exportJson(state);
+    navigator.clipboard.writeText(json).catch((err: unknown) => {
+      console.error("Failed to copy:", err);
+    });
+  }, [controller, state]);
+
+  const handleShare = useCallback(() => {
+    const url = controller.getShareUrl(state);
+    navigator.clipboard.writeText(url).catch((err: unknown) => {
+      console.error("Failed to copy:", err);
+    });
+  }, [controller, state]);
+
+  const handleSave = useCallback(() => {
+    const puzzleName = state.puzzleName.trim() || "Untitled";
+    const difficulty = state.difficulty ?? 0;
+    
+    // If editing an existing design, update it
+    if (editingDesign) {
+      designStorage.update(editingDesign.id, {
+        name: puzzleName,
+        height: state.height,
+        width: state.width,
+        difficulty,
+        solution: state.grid,
+      });
+      alert(`"${puzzleName}" updated!`);
+      return;
+    }
+    
+    // Check for duplicate only when creating new
+    const duplicate = designStorage.findDuplicate(state.grid);
+    if (duplicate) {
+      alert(`This puzzle already exists as "${duplicate.name}"`);
+      return;
+    }
+    
+    const saved = designStorage.save({
+      name: puzzleName,
+      height: state.height,
+      width: state.width,
+      difficulty,
+      solution: state.grid,
+    });
+    
+    // Start editing the newly saved design
+    setEditingDesign(saved);
+    alert(`"${puzzleName}" saved to your designs!`);
+  }, [state, editingDesign]);
+
+  // SSS format handlers
+  const handleDownloadSSS = useCallback(() => {
+    const puzzleName = state.puzzleName.trim() || "Untitled";
+    // Convert grid to number[][] for SSS format
+    const gridAsNumbers = state.grid.map(row => row.map(cell => cell === CellState.FILLED ? 1 : 0));
+    
+    // Add to existing file or create new one
+    const baseFile = sssFile ?? sssFormat.createEmptyFile();
+    const updatedFile = sssFormat.addPuzzle(baseFile, {
+      title: puzzleName,
+      grid: gridAsNumbers,
+    }, "Designer");
+    
+    setSSSFile(updatedFile);
+    sssFormat.download(updatedFile, `${puzzleName.replace(/\s+/g, '_')}.json`);
+  }, [state.puzzleName, state.grid, sssFile]);
+
+  const handleUploadSSS = useCallback((file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result;
+      if (typeof content === 'string') {
+        const parsed = sssFormat.parse(content);
+        if (parsed) {
+          // Add current puzzle to the uploaded file
+          const puzzleName = state.puzzleName.trim() || "Untitled";
+          const gridAsNumbers = state.grid.map(row => row.map(cell => cell === CellState.FILLED ? 1 : 0));
+          const updatedFile = sssFormat.addPuzzle(parsed, {
+            title: puzzleName,
+            grid: gridAsNumbers,
+          }, "Designer");
+          
+          setSSSFile(updatedFile);
+          sssFormat.download(updatedFile, file.name);
+        } else {
+          console.error("Invalid SSS file format");
+        }
+      }
+    };
+    reader.readAsText(file);
+  }, [state.puzzleName, state.grid]);
+
+  const statusInfo = controller.getStatusInfo(state);
+
+  return (
+    <PageContainer className="designer">
+      <DesignerControls
+        puzzleName={state.puzzleName}
+        hasFilledCells={controller.hasFilledCells(state)}
+        hasUniqueSolution={state.hasUniqueSolution === true}
+        showDevTools={showDevTools}
+        isSketchFormat={isSketchFormat}
+        onNameChange={handleNameChange}
+        onClear={handleClear}
+        onExport={handleExport}
+        onShare={handleShare}
+        onSave={handleSave}
+        onDownloadSSS={handleDownloadSSS}
+        onUploadSSS={handleUploadSSS}
+      />
+
+      <div className="designer-grid-container">
+        <NonogramGrid
+          grid={state.grid}
+          rowHints={state.rowHints}
+          columnHints={state.columnHints}
+          onCellClick={handleCellClick}
+          onCellMouseDown={handleMouseDown}
+          onCellMouseEnter={handleMouseEnter}
+        />
+      </div>
+
+      <SolutionStatus
+        message={statusInfo.message}
+        variant={statusInfo.variant}
+        difficulty={statusInfo.difficulty}
+      />
+
+      <DesignerInfo />
+    </PageContainer>
+  );
+}
