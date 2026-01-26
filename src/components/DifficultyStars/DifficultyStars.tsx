@@ -17,12 +17,10 @@ export default function DifficultyStars({
   
   const stars = [];
   for (let i = 1; i <= maxStars; i++) {
+    const isFilled = i <= difficulty;
     stars.push(
-      <span 
-        key={i} 
-        className={clsx('star', i <= difficulty ? 'filled' : 'empty')}
-      >
-        <Icons.Star />
+      <span key={i} className="star">
+        {isFilled ? <Icons.StarFilled /> : <Icons.StarEmpty />}
       </span>
     );
   }

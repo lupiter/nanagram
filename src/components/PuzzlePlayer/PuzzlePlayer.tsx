@@ -8,7 +8,6 @@ import ToolSelector from "../ToolSelector/ToolSelector";
 import ActionButtons from "../ActionButtons/ActionButtons";
 import VictoryPopup from "../VictoryPopup/VictoryPopup";
 import NonogramGrid from "../NonogramGrid/NonogramGrid";
-import DifficultyStars from "../DifficultyStars/DifficultyStars";
 import { Icons } from "../Icons/Icons";
 import "./PuzzlePlayer.css";
 
@@ -23,7 +22,6 @@ interface PuzzlePlayerProps {
   setState: React.Dispatch<React.SetStateAction<PuzzleState>>;
   controller: PuzzleController;
   nextPuzzle?: NextPuzzleInfo | null;
-  showDifficulty?: boolean;
 }
 
 export default function PuzzlePlayer({
@@ -32,7 +30,6 @@ export default function PuzzlePlayer({
   setState,
   controller,
   nextPuzzle = null,
-  showDifficulty = false,
 }: PuzzlePlayerProps) {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -121,11 +118,6 @@ export default function PuzzlePlayer({
           onRedo={handleRedo}
           onReset={handleReset}
         />
-        {showDifficulty && puzzle.difficulty > 0 && (
-          <div className="puzzle-player-difficulty">
-            <DifficultyStars difficulty={puzzle.difficulty} size="medium" />
-          </div>
-        )}
       </div>
       <NonogramGrid
         grid={state.grid}

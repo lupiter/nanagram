@@ -19,8 +19,8 @@ export default function Library() {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    document.title = "My Library - Nanna Gram";
-    setTitle({ title: "My Library", subtitle: "Manage your designs" });
+    document.title = "Manage Puzzles - Nanna Gram";
+    setTitle({ title: "Manage Puzzles" });
     setDesigns(designStorage.getAll());
   }, [setTitle]);
 

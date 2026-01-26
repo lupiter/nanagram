@@ -55,13 +55,13 @@
   background: var(--gray-300);
 }
 
-.toggle-button input[type="radio"]:checked + span {
+.toggle-button input[type="radio"]:checked + .toggle-button-label {
   transform: translateY(var(--space-1));
   box-shadow: var(--shadow-inset);
   background: var(--gray-300);
 }
 
-.toggle-button span {
+.toggle-button-label {
   display: inline-block;
   padding: var(--space-2) var(--space-4);
   width: 100%;

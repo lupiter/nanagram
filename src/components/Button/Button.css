@@ -12,9 +12,9 @@
   text-decoration: none;
   
   /* Tape appearance - flat, no shadow */
-  background: rgba(255, 250, 240, 0.85);
+  background: var(--color-btn-default);
   border: none;
-  color: var(--gray-600);
+  color: var(--color-text);
   
   /* Jagged edges using mask - left edge */
   --tape-edge-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='100' preserveAspectRatio='none'%3E%3Cpath d='M4,0 L8,0 L8,100 L4,100 L6,95 L3,90 L5,85 L2,80 L6,75 L4,70 L7,65 L3,60 L5,55 L2,50 L6,45 L4,40 L7,35 L3,30 L5,25 L2,20 L6,15 L4,10 L7,5 Z' fill='black'/%3E%3C/svg%3E");
@@ -63,20 +63,20 @@
 
 /* Variants - different washi tape colors */
 .btn-default {
-  background-color: rgba(255, 250, 235, 0.9); /* Cream tape */
+  background-color: var(--color-btn-default);
 }
 
 .btn-primary {
-  background-color: rgba(130, 200, 255, 0.95); /* Brighter sky blue tape */
+  background-color: var(--color-btn-primary);
 }
 
 .btn-secondary {
-  background-color: rgba(230, 230, 215, 0.9); /* Off-white tape */
+  background-color: var(--color-btn-secondary);
 }
 
 .btn-danger {
-  background-color: rgba(255, 150, 170, 0.95); /* Deeper pink tape */
-  color: #8b0000; /* Dark red text for contrast */
+  background-color: var(--color-btn-danger);
+  color: var(--color-btn-danger-text);
 }
 
 /* Focus styles */

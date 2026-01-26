@@ -35,7 +35,7 @@ export default function ToggleGroup<T>({ value, onChange, options, name, title, 
               }}
               aria-label={typeof option.label === 'string' ? (option.ariaLabel ?? option.label) : option.ariaLabel}
             />
-            <span>{option.label}</span>
+            <span className="toggle-button-label">{option.label}</span>
           </label>
         ))}
       </div>

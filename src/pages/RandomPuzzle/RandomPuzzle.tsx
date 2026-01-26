@@ -39,7 +39,7 @@ export default function RandomPuzzle() {
 
   useEffect(() => {
     document.title = 'Random Puzzle - Nanna Gram';
-    setTitle({ title: 'Random Puzzle', subtitle: 'Generate a new challenge' });
+    setTitle({ title: 'Random Puzzle' });
   }, [setTitle]);
 
   const sizeOptions = useMemo(() => 

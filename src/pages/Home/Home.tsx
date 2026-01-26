@@ -9,8 +9,20 @@ import SolutionPreview from "../../components/SolutionPreview/SolutionPreview";
 import DifficultyStars from "../../components/DifficultyStars/DifficultyStars";
 import Button from "../../components/Button/Button";
 import ButtonGroup from "../../components/ButtonGroup/ButtonGroup";
-import LinkCard from "../../components/LinkCard/LinkCard";
 import { Icons } from "../../components/Icons/Icons";
+
+function HeaderActions() {
+  return (
+    <>
+      <Link to="/random" title="Random Puzzle" aria-label="Random Puzzle">
+        <Icons.Dice />
+      </Link>
+      <Link to="/manage" title="Manage Puzzles" aria-label="Manage Puzzles">
+        <Icons.Settings />
+      </Link>
+    </>
+  );
+}
 
 export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(
@@ -21,7 +33,11 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Nanna Gram";
-    setTitle({ title: "Nana Gram", subtitle: <Icons.Logo /> });
+    setTitle({
+      title: "Nana Gram",
+      icon: <Icons.Logo />,
+      actions: <HeaderActions />,
+    });
     setCompletedPuzzles(puzzleLibrary.getCompletedPuzzles());
     setSavedDesigns(designStorage.getAll());
   }, [setTitle]);
@@ -67,7 +83,7 @@ export default function Home() {
     
     return (
       <div key={design.id} className="design-item user-design">
-        <span className="user-badge" title="Your design"><Icons.Sparkle /></span>
+        <span className="user-badge" title="Your design"><Icons.PhotoCorner /></span>
         <Link
           to={`/play/${encoded}`}
           className="completed"
@@ -177,12 +193,6 @@ export default function Home() {
             </div>
           );
         })}
-
-        <ButtonGroup gap={4} justify="center" wrap className="special-links-container">
-          <LinkCard to="/random" icon={<Icons.Dice />}>Random Puzzle</LinkCard>
-          <LinkCard to="/play" icon={<Icons.Folder />}>Sketch, Share, Solve</LinkCard>
-          <LinkCard to="/library" icon={<Icons.Library />}>My Library</LinkCard>
-        </ButtonGroup>
       </div>
     </div>
   );

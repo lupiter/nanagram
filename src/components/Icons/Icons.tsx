@@ -3,7 +3,8 @@ import arrowRightSvg from "./svg/arrow-right.svg";
 import closeSvg from "./svg/close.svg";
 import filledSquareSvg from "./svg/filled-square.svg";
 import crossMarkSvg from "./svg/cross-mark.svg";
-import starSvg from "./svg/star.svg";
+import starFilledSvg from "./svg/star-filled.svg";
+import starEmptySvg from "./svg/star-empty.svg";
 import undoSvg from "./svg/undo.svg";
 import redoSvg from "./svg/redo.svg";
 import resetSvg from "./svg/reset.svg";
@@ -18,9 +19,10 @@ import folderSvg from "./svg/folder.svg";
 import librarySvg from "./svg/library.svg";
 import mergeSvg from "./svg/merge.svg";
 import editSvg from "./svg/edit.svg";
-import sparkleSvg from "./svg/sparkle.svg";
+import photoCornerSvg from "./svg/photo-corner.svg";
 import logoSvg from "./svg/logo.svg";
 import checkSvg from "./svg/check.svg";
+import settingsSvg from "./svg/settings.svg";
 import "./Icons.css";
 
 interface IconProps {
@@ -55,8 +57,12 @@ export class Icons {
     return <img src={crossMarkSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
-  static Star({ className, alt = "Star" }: IconProps = {}) {
-    return <img src={starSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+  static StarFilled({ className, alt = "Star" }: IconProps = {}) {
+    return <img src={starFilledSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+  }
+
+  static StarEmpty({ className, alt = "Star" }: IconProps = {}) {
+    return <img src={starEmptySvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
   static Undo({ className, alt = "Undo" }: IconProps = {}) {
@@ -115,8 +121,8 @@ export class Icons {
     return <img src={editSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
-  static Sparkle({ className, alt = "Custom" }: IconProps = {}) {
-    return <img src={sparkleSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+  static PhotoCorner({ className, alt = "Your design" }: IconProps = {}) {
+    return <img src={photoCornerSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
   static Logo({ className, alt = "Nana Gram" }: IconProps = {}) {
@@ -125,5 +131,9 @@ export class Icons {
 
   static Check({ className, alt = "Check" }: IconProps = {}) {
     return <img src={checkSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+  }
+
+  static Settings({ className, alt = "Settings" }: IconProps = {}) {
+    return <img src={settingsSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 }

@@ -8,6 +8,8 @@ interface PageTitleContextValue {
 interface PageTitleState {
   title: string;
   subtitle?: ReactNode;
+  icon?: ReactNode;
+  actions?: ReactNode;
 }
 
 const PageTitleContext = createContext<PageTitleContextValue | null>(null);

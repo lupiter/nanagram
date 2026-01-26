@@ -84,15 +84,6 @@
   justify-content: center;
 }
 
-.designer-link-icon .icon {
-  font-size: var(--text-4xl);
-  color: var(--color-text);
-  font-weight: 400;
-  width: var(--size-hint-area);
-  text-align: center;
-}
-
-
 .designer-link .puzzle-name {
   justify-self: flex-end;
   margin: var(--space-2);

@@ -94,4 +94,11 @@
 
   /* Overlay */
   --color-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Button colors (washi tape style) */
+  --color-btn-default: rgba(255, 255, 255, 0.7);
+  --color-btn-primary: rgba(130, 200, 255, 0.9);
+  --color-btn-secondary: rgba(220, 200, 160, 0.9);
+  --color-btn-danger: rgba(255, 130, 150, 0.9);
+  --color-btn-danger-text: #8b0000;
 }
