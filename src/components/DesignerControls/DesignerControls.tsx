@@ -4,12 +4,15 @@ import FileUploadButton from "../FileUploadButton/FileUploadButton";
 import FormField from "../FormField/FormField";
 import { Icons } from "../Icons/Icons";
 
+type SaveStatus = "idle" | "saved" | "updated" | "duplicate";
+
 interface DesignerControlsProps {
   puzzleName: string;
   hasFilledCells: boolean;
   hasUniqueSolution: boolean;
   showDevTools: boolean;
   isSketchFormat?: boolean;
+  saveStatus?: SaveStatus;
   onNameChange: (name: string) => void;
   onClear: () => void;
   onExport: () => void;
@@ -25,6 +28,7 @@ export default function DesignerControls({
   hasUniqueSolution,
   showDevTools,
   isSketchFormat,
+  saveStatus = "idle",
   onNameChange,
   onClear,
   onExport,
@@ -33,6 +37,43 @@ export default function DesignerControls({
   onDownloadSSS,
   onUploadSSS,
 }: DesignerControlsProps) {
+  // Determine save button appearance based on status
+  const getSaveButtonContent = () => {
+    switch (saveStatus) {
+      case "saved":
+      case "updated":
+        return <Icons.Check />;
+      case "duplicate":
+        return <Icons.Close />;
+      default:
+        return <Icons.Save />;
+    }
+  };
+
+  const getSaveButtonVariant = (): "default" | "primary" | "secondary" | "danger" => {
+    switch (saveStatus) {
+      case "saved":
+      case "updated":
+        return "primary";
+      case "duplicate":
+        return "danger";
+      default:
+        return "default";
+    }
+  };
+
+  const getSaveButtonTitle = () => {
+    switch (saveStatus) {
+      case "saved":
+        return "Saved!";
+      case "updated":
+        return "Updated!";
+      case "duplicate":
+        return "Already exists";
+      default:
+        return "Save to my designs";
+    }
+  };
   return (
     <ButtonGroup gap={4} align="center" wrap className="designer-controls">
       <FormField label="Name:" htmlFor="puzzle-name">
@@ -77,11 +118,12 @@ export default function DesignerControls({
           </FileUploadButton>
         )}
         <Button
+          variant={getSaveButtonVariant()}
           onClick={onSave}
-          disabled={!hasFilledCells}
-          title="Save to my designs"
+          disabled={!hasFilledCells || saveStatus !== "idle"}
+          title={getSaveButtonTitle()}
         >
-          <Icons.Save />
+          {getSaveButtonContent()}
         </Button>
         <Button
           variant="primary"

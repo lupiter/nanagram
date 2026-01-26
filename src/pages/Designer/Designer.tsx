@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDesigner } from "../../hooks/useDesigner";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -36,6 +36,10 @@ export default function Designer() {
   
   // Track if we're editing an existing design
   const [editingDesign, setEditingDesign] = useState<SavedDesign | null>(null);
+  
+  // Save feedback state: "idle" | "saved" | "updated" | "duplicate"
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "updated" | "duplicate">("idle");
+  const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Load design for editing on mount
   useEffect(() => {
@@ -113,6 +117,11 @@ export default function Designer() {
     const puzzleName = state.puzzleName.trim() || "Untitled";
     const difficulty = state.difficulty ?? 0;
     
+    // Clear any existing timeout
+    if (saveStatusTimeoutRef.current) {
+      clearTimeout(saveStatusTimeoutRef.current);
+    }
+    
     // If editing an existing design, update it
     if (editingDesign) {
       designStorage.update(editingDesign.id, {
@@ -122,14 +131,16 @@ export default function Designer() {
         difficulty,
         solution: state.grid,
       });
-      alert(`"${puzzleName}" updated!`);
+      setSaveStatus("updated");
+      saveStatusTimeoutRef.current = setTimeout(() => { setSaveStatus("idle"); }, 2000);
       return;
     }
     
     // Check for duplicate only when creating new
     const duplicate = designStorage.findDuplicate(state.grid);
     if (duplicate) {
-      alert(`This puzzle already exists as "${duplicate.name}"`);
+      setSaveStatus("duplicate");
+      saveStatusTimeoutRef.current = setTimeout(() => { setSaveStatus("idle"); }, 2000);
       return;
     }
     
@@ -143,7 +154,8 @@ export default function Designer() {
     
     // Start editing the newly saved design
     setEditingDesign(saved);
-    alert(`"${puzzleName}" saved to your designs!`);
+    setSaveStatus("saved");
+    saveStatusTimeoutRef.current = setTimeout(() => { setSaveStatus("idle"); }, 2000);
   }, [state, editingDesign]);
 
   // SSS format handlers
@@ -203,6 +215,7 @@ export default function Designer() {
         onExport={handleExport}
         onShare={handleShare}
         onSave={handleSave}
+        saveStatus={saveStatus}
         onDownloadSSS={handleDownloadSSS}
         onUploadSSS={handleUploadSSS}
       />

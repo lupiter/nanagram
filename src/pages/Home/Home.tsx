@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./Home.css";
 import { puzzleLibrary } from "../../services/PuzzleLibrary";
 import { usePageTitle } from "../../hooks/usePageTitle";
@@ -7,8 +7,6 @@ import { designStorage, SavedDesign } from "../../services/DesignStorage";
 import { puzzleCodec } from "../../services/PuzzleCodec";
 import SolutionPreview from "../../components/SolutionPreview/SolutionPreview";
 import DifficultyStars from "../../components/DifficultyStars/DifficultyStars";
-import Button from "../../components/Button/Button";
-import ButtonGroup from "../../components/ButtonGroup/ButtonGroup";
 import { Icons } from "../../components/Icons/Icons";
 
 function HeaderActions() {
@@ -59,22 +57,6 @@ export default function Home() {
     return completedPuzzles.has(`${category}-${String(index + 1)}`);
   };
 
-  const handleDeleteDesign = useCallback((id: string, name: string) => {
-    if (confirm(`Delete "${name}"?`)) {
-      designStorage.delete(id);
-      setSavedDesigns(designStorage.getAll());
-    }
-  }, []);
-
-  const handleShare = useCallback((design: SavedDesign) => {
-    const encoded = puzzleCodec.encode(design.name, design.solution, design.difficulty);
-    const url = `${window.location.origin}${window.location.pathname}#/play/${encoded}`;
-    navigator.clipboard.writeText(url).catch((err: unknown) => {
-      console.error("Failed to copy:", err);
-    });
-    alert("Link copied to clipboard!");
-  }, []);
-
   // Helper to render a user design card
   const renderDesignCard = (design: SavedDesign) => {
     const encoded = puzzleCodec.encode(design.name, design.solution, design.difficulty);
@@ -83,10 +65,16 @@ export default function Home() {
     
     return (
       <div key={design.id} className="design-item user-design">
-        <span className="user-badge" title="Your design"><Icons.PhotoCorner /></span>
+        <Link
+          to={`/designer/${designerSize}?edit=${design.id}`}
+          className="edit-badge"
+          title="Edit design"
+        >
+          <Icons.Edit />
+        </Link>
         <Link
           to={`/play/${encoded}`}
-          className="completed"
+          className="puzzle-link completed"
           title={`Play: ${design.name}`}
         >
           <SolutionPreview
@@ -99,30 +87,6 @@ export default function Home() {
             size="small"
           />
         </Link>
-        <ButtonGroup gap={1} justify="center" className="design-actions">
-          <Button
-            square
-            onClick={() => { handleShare(design); }}
-            title="Copy share link"
-          >
-            <Icons.Link />
-          </Button>
-          <Button
-            square
-            to={`/designer/${designerSize}?edit=${design.id}`}
-            title="Edit design"
-          >
-            <Icons.Edit />
-          </Button>
-          <Button
-            variant="danger"
-            square
-            onClick={() => { handleDeleteDesign(design.id, design.name); }}
-            title="Delete design"
-          >
-            <Icons.Close />
-          </Button>
-        </ButtonGroup>
       </div>
     );
   };
@@ -148,7 +112,7 @@ export default function Home() {
                     <Link
                       key={index}
                       to={`/puzzle/${category}/${String(index + 1)}`}
-                      className={completed ? "completed" : ""}
+                      className={`puzzle-link${completed ? " completed" : ""}`}
                       title={
                         completed ? puzzle.name : `Puzzle ${String(index + 1)}`
                       }
@@ -181,7 +145,7 @@ export default function Home() {
                 {userDesigns.map(renderDesignCard)}
                 <Link
                   to={designerPath}
-                  className="designer-link"
+                  className="puzzle-link designer-link"
                   title={`Design a ${category} puzzle`}
                 >
                   <span className="designer-link-icon">
