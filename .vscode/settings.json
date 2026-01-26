@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "title_assets.h": "c",
+        "metasprites.h": "c",
+        "menu_cursor_assets.h": "c"
+    },
+    "git.ignoreLimitWarning": true
+}

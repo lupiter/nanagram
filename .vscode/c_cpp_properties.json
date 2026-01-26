@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/gbdk/include"
+            ],
+            "defines": [
+                "__PORT_gbz80",
+                "__GBZ80__"
+            ],
+            "macFrameworkPath": [],
+            "compilerPath": "/opt/gbdk/bin/lcc",
+            "cStandard": "c99",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+} 
