@@ -438,7 +438,9 @@ describe("checkHints", () => {
     expect(result[1].used).toBe(false);
   });
 
-  it("should tick off the second hint if only that answer is filled, even if the first hint has not been answered yet", () => {
+  it("should NOT tick off a middle hint when the sequence could match multiple hints", () => {
+    // With hints [1, 1], a sequence at position 2 could be either hint
+    // because there's space on both sides. We can't determine which one it is.
     const cells = [
       CellState.EMPTY,
       CellState.EMPTY,
@@ -459,7 +461,38 @@ describe("checkHints", () => {
     ];
 
     const result = hintChecker.check(cells, hints, answer);
+    // Neither hint should be marked because the sequence could be either one
     expect(result[0].used).toBe(false);
-    expect(result[1].used).toBe(true);
+    expect(result[1].used).toBe(false);
+  });
+  
+  it("should tick off a unique hint when found, even in the middle", () => {
+    // With hints [1, 2, 1], if we find a sequence of 2, it can only be the middle hint
+    const cells = [
+      CellState.EMPTY,
+      CellState.EMPTY,
+      CellState.FILLED,
+      CellState.FILLED,
+      CellState.EMPTY,
+      CellState.EMPTY,
+    ];
+    const answer = [
+      CellState.FILLED,
+      CellState.EMPTY,
+      CellState.FILLED,
+      CellState.FILLED,
+      CellState.EMPTY,
+      CellState.FILLED,
+    ];
+    const hints = [
+      { hint: 1, used: false },
+      { hint: 2, used: false },
+      { hint: 1, used: false },
+    ];
+
+    const result = hintChecker.check(cells, hints, answer);
+    expect(result[0].used).toBe(false);
+    expect(result[1].used).toBe(true); // Only the 2 can be identified
+    expect(result[2].used).toBe(false);
   });
 }); 

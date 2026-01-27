@@ -42,26 +42,89 @@ export class HintChecker {
     return sequences;
   }
 
+  /** 
+   * Calculate minimum space needed for a range of hints.
+   * This is the sum of hint values plus gaps between them.
+   */
+  private minSpaceForHints(hints: Hint[], startIdx: number, endIdx: number): number {
+    if (startIdx > endIdx || startIdx < 0 || endIdx >= hints.length) {
+      return 0;
+    }
+    let space = 0;
+    for (let i = startIdx; i <= endIdx; i++) {
+      space += hints[i].hint;
+      if (i < endIdx) space += 1; // gap between sequences
+    }
+    return space;
+  }
+
+  /**
+   * Check if a sequence at position `start` with `length` could possibly be hint at index `hintIndex`.
+   * Uses positional constraints to determine if there's enough room for hints before/after.
+   */
+  private couldBeHint(
+    start: number, 
+    length: number, 
+    hintIndex: number, 
+    hints: Hint[], 
+    gridSize: number
+  ): boolean {
+    // Length must match
+    if (hints[hintIndex].hint !== length) {
+      return false;
+    }
+    
+    // Check if there's enough space before this position for earlier hints
+    const spaceNeededBefore = this.minSpaceForHints(hints, 0, hintIndex - 1);
+    if (start < spaceNeededBefore) {
+      return false;
+    }
+    
+    // Check if there's enough space after this position for later hints
+    const spaceNeededAfter = this.minSpaceForHints(hints, hintIndex + 1, hints.length - 1);
+    const spaceAvailableAfter = gridSize - start - length;
+    if (spaceAvailableAfter < spaceNeededAfter) {
+      return false;
+    }
+    
+    return true;
+  }
+
   /** Check hints against current cell state and mark used hints */
   check(cells: CellState[], hints: Hint[], answerCells: CellState[]): Hint[] {
     const newHints = [...hints];
+    const gridSize = cells.length;
     
     const answerSequences = this.findSequences(answerCells);
     const currentSequences = this.findSequences(cells);
     
-    // For each hint, check if its corresponding sequence in the answer is filled correctly
-    for (let hintIndex = 0; hintIndex < newHints.length; hintIndex++) {
-      const hint = newHints[hintIndex];
-      if (hint.used) continue; // Skip if already used
+    // For each current sequence, find which hints it could possibly match.
+    // If it can only match ONE hint AND that hint's answer position matches,
+    // mark that hint as used.
+    
+    for (const seq of currentSequences) {
+      // Find all hints this sequence could possibly be
+      const possibleHintIndices: number[] = [];
       
-      // Find the corresponding sequence in the answer for this hint
-      const answerSequence = answerSequences[hintIndex] as { start: number; length: number } | undefined;
-      if (answerSequence === undefined) continue;
+      for (let hintIndex = 0; hintIndex < newHints.length; hintIndex++) {
+        if (newHints[hintIndex].used) continue; // Skip already used hints
+        
+        if (this.couldBeHint(seq.start, seq.length, hintIndex, newHints, gridSize)) {
+          possibleHintIndices.push(hintIndex);
+        }
+      }
       
-      // Find a matching sequence in the current state
-      hint.used = currentSequences.some(seq => 
-        seq.start === answerSequence.start && seq.length === answerSequence.length
-      );
+      // If this sequence can only match one hint, check if it's correct
+      if (possibleHintIndices.length === 1) {
+        const hintIndex = possibleHintIndices[0];
+        const answerSequence = answerSequences[hintIndex] as { start: number; length: number } | undefined;
+        
+        if (answerSequence && 
+            seq.start === answerSequence.start && 
+            seq.length === answerSequence.length) {
+          newHints[hintIndex].used = true;
+        }
+      }
     }
 
     return newHints;
