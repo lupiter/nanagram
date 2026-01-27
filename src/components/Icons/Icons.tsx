@@ -125,7 +125,7 @@ export class Icons {
     return <img src={photoCornerSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
-  static Logo({ className, alt = "Nana Gram" }: IconProps = {}) {
+  static Logo({ className, alt = "Nanagram" }: IconProps = {}) {
     return <img src={logoSvg} alt={alt} className={`icon ${className ?? ""}`} />;
   }
 

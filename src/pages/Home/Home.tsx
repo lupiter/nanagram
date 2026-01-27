@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import "./Home.css";
 import { puzzleLibrary } from "../../services/PuzzleLibrary";
@@ -28,17 +28,18 @@ export default function Home() {
   );
   const [savedDesigns, setSavedDesigns] = useState<SavedDesign[]>([]);
   const { setTitle } = usePageTitle();
+  const location = useLocation();
 
   useEffect(() => {
     document.title = "Nanna Gram";
     setTitle({
-      title: "Nana Gram",
+      title: "Nanagram",
       icon: <Icons.Logo />,
       actions: <HeaderActions />,
     });
     setCompletedPuzzles(puzzleLibrary.getCompletedPuzzles());
     setSavedDesigns(designStorage.getAll());
-  }, [setTitle]);
+  }, [setTitle, location.key]);
 
   // Group saved designs by their size category
   const designsByCategory = useMemo(() => {
