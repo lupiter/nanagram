@@ -73,6 +73,7 @@
   /* Semantic colors - reference core palette */
   --color-text: var(--gray-600);
   --color-text-muted: var(--gray-500);
+  --color-text-disabled: var(--gray-300);
   --color-modal-bg: var(--paper);
   --color-bg: var(--white-300);
   --color-bg-light: var(--white-300);

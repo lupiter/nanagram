@@ -25,9 +25,8 @@
   white-space: nowrap;
 }
 
-.hint-numbers span.used {
-  color: var(--gray-400);
-  text-decoration: line-through;
+.hint-numbers del {
+  color: var(--color-text-disabled);
 }
 
 .hint-numbers.puzzle-size-10.horizontal {

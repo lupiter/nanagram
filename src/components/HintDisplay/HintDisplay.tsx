@@ -11,11 +11,13 @@ interface HintDisplayProps {
 export default function HintDisplay({ hints, isVertical = true, puzzleSize = 5 }: HintDisplayProps) {
   return (
     <div className={clsx('hint-numbers', isVertical ? 'vertical' : 'horizontal', `puzzle-size-${String(puzzleSize)}`)}>
-      {hints?.map((hint, i) => (
-        <span key={i} className={clsx({ used: hint.used })}>
-          {hint.hint}
-        </span>
-      ))}
+      {hints?.map((hint, i) => 
+        hint.used ? (
+          <del key={i}>{hint.hint}</del>
+        ) : (
+          <span key={i}>{hint.hint}</span>
+        )
+      )}
     </div>
   );
 } 
