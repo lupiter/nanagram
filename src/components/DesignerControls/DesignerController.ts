@@ -141,7 +141,7 @@ export class DesignerController {
     const name = state.puzzleName.trim() || "Untitled";
     const difficulty = state.difficulty ?? 0;
     const encoded = puzzleCodec.encode(name, state.grid, difficulty);
-    return `${window.location.origin}${window.location.pathname}#/play/${encoded}`;
+    return `${window.location.origin}/play/${encoded}`;
   }
 
   getStatusInfo(state: DesignerState): { message: string; variant: 'info' | 'success' | 'error'; difficulty: number | null } {

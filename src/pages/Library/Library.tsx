@@ -19,7 +19,7 @@ export default function Library() {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    document.title = "Manage Puzzles - Nanna Gram";
+    document.title = "Manage Puzzles - Nanagram";
     setTitle({ title: "Manage Puzzles" });
     setDesigns(designStorage.getAll());
   }, [setTitle]);
@@ -114,7 +114,7 @@ export default function Library() {
         grid: d.solution,
       }));
 
-      const result = sssFormat.addPuzzles(sssFile, puzzlesToAdd, "Nanna Gram", true);
+      const result = sssFormat.addPuzzles(sssFile, puzzlesToAdd, "Nanagram", true);
       sssFormat.download(result.file, file.name);
       showMessage(`Added ${String(result.added)} puzzles to SSS file (${String(result.skipped)} duplicates skipped)`);
     };
@@ -134,7 +134,7 @@ export default function Library() {
       grid: d.solution,
     }));
 
-    const result = sssFormat.addPuzzles(sssFormat.createEmptyFile(), puzzlesToAdd, "Nanna Gram", false);
+    const result = sssFormat.addPuzzles(sssFormat.createEmptyFile(), puzzlesToAdd, "Nanagram", false);
     sssFormat.download(result.file, "my-puzzles.json");
     showMessage(`Exported ${String(result.added)} puzzles as SSS file`);
   }, [designs]);

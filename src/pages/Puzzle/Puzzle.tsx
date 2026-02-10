@@ -70,16 +70,20 @@ export default function Puzzle() {
     return undefined;
   }, [source, category, id]);
 
+  // For library puzzles, use the original id for completion tracking
+  // For encoded puzzles, use the puzzleKey (which includes a hash of the encoded data)
+  const trackingId = source === "library" && id ? id : puzzleKey;
+  
   const { state, setState, controller } = usePuzzleGame({
     category: category ?? "play",
-    id: puzzleKey,
+    id: trackingId,
     puzzle: puzzle ?? { name: "Invalid", height: 1, width: 1, difficulty: 0, solution: [[CellState.EMPTY]] },
   });
 
   // Set page title with difficulty
   useEffect(() => {
     if (!puzzle) {
-      document.title = "Invalid Puzzle - Nanna Gram";
+      document.title = "Invalid Puzzle - Nanagram";
       setTitle({ title: "Invalid Puzzle" });
       return;
     }
@@ -100,11 +104,11 @@ export default function Puzzle() {
     );
 
     if (source === "library" && id) {
-      document.title = `${category ?? ""} #${id} - Nanna Gram`;
+      document.title = `${category ?? ""} #${id} - Nanagram`;
       setTitle({ title: `Puzzle ${id}`, subtitle });
     } else {
       const title = puzzle.name === "Random" ? "Random Puzzle" : "Shared Puzzle";
-      document.title = `${title} - Nanna Gram`;
+      document.title = `${title} - Nanagram`;
       setTitle({ title, subtitle });
     }
   }, [puzzle, source, category, id, setTitle]);

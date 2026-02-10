@@ -5,6 +5,7 @@ import FormField from "../FormField/FormField";
 import { Icons } from "../Icons/Icons";
 
 type SaveStatus = "idle" | "saved" | "updated" | "duplicate";
+type CopyStatus = "idle" | "copied";
 
 interface DesignerControlsProps {
   puzzleName: string;
@@ -13,6 +14,8 @@ interface DesignerControlsProps {
   showDevTools: boolean;
   isSketchFormat?: boolean;
   saveStatus?: SaveStatus;
+  shareStatus?: CopyStatus;
+  exportStatus?: CopyStatus;
   onNameChange: (name: string) => void;
   onClear: () => void;
   onExport: () => void;
@@ -29,6 +32,8 @@ export default function DesignerControls({
   showDevTools,
   isSketchFormat,
   saveStatus = "idle",
+  shareStatus = "idle",
+  exportStatus = "idle",
   onNameChange,
   onClear,
   onExport,
@@ -92,11 +97,12 @@ export default function DesignerControls({
         </Button>
         {showDevTools && (
           <Button
+            variant={exportStatus === "copied" ? "primary" : "default"}
             onClick={onExport}
-            disabled={!hasFilledCells}
-            title="Copy puzzle code to clipboard"
+            disabled={!hasFilledCells || exportStatus !== "idle"}
+            title={exportStatus === "copied" ? "Copied!" : "Copy puzzle code to clipboard"}
           >
-            <Icons.Copy /> Copy Code
+            {exportStatus === "copied" ? <Icons.Check /> : <Icons.Copy />} Copy Code
           </Button>
         )}
         {isSketchFormat && onDownloadSSS && (
@@ -128,10 +134,10 @@ export default function DesignerControls({
         <Button
           variant="primary"
           onClick={onShare}
-          disabled={!hasUniqueSolution}
-          title={hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share"}
+          disabled={!hasUniqueSolution || shareStatus !== "idle"}
+          title={shareStatus === "copied" ? "Link copied!" : (hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share")}
         >
-          <Icons.Link />
+          {shareStatus === "copied" ? <Icons.Check /> : <Icons.Link />}
         </Button>
       </ButtonGroup>
     </ButtonGroup>

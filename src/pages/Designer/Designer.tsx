@@ -41,6 +41,14 @@ export default function Designer() {
   const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "updated" | "duplicate">("idle");
   const saveStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
+  // Share feedback state
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
+  const shareStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  // Export feedback state
+  const [exportStatus, setExportStatus] = useState<"idle" | "copied">("idle");
+  const exportStatusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
   // Load design for editing on mount
   useEffect(() => {
     if (editId) {
@@ -53,7 +61,7 @@ export default function Designer() {
   }, [editId, controller, setState]);
 
   useEffect(() => {
-    document.title = "Designer - Nanna Gram";
+    document.title = "Designer - Nanagram";
     const subtitle = isSketchFormat 
       ? "Sketch, Share, Solve" 
       : `${String(state.height)}×${String(state.width)}`;
@@ -101,16 +109,36 @@ export default function Designer() {
 
   const handleExport = useCallback(() => {
     const json = controller.exportJson(state);
-    navigator.clipboard.writeText(json).catch((err: unknown) => {
-      console.error("Failed to copy:", err);
-    });
+    
+    if (exportStatusTimeoutRef.current) {
+      clearTimeout(exportStatusTimeoutRef.current);
+    }
+    
+    navigator.clipboard.writeText(json)
+      .then(() => {
+        setExportStatus("copied");
+        exportStatusTimeoutRef.current = setTimeout(() => { setExportStatus("idle"); }, 2000);
+      })
+      .catch((err: unknown) => {
+        console.error("Failed to copy:", err);
+      });
   }, [controller, state]);
 
   const handleShare = useCallback(() => {
     const url = controller.getShareUrl(state);
-    navigator.clipboard.writeText(url).catch((err: unknown) => {
-      console.error("Failed to copy:", err);
-    });
+    
+    if (shareStatusTimeoutRef.current) {
+      clearTimeout(shareStatusTimeoutRef.current);
+    }
+    
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        setShareStatus("copied");
+        shareStatusTimeoutRef.current = setTimeout(() => { setShareStatus("idle"); }, 2000);
+      })
+      .catch((err: unknown) => {
+        console.error("Failed to copy:", err);
+      });
   }, [controller, state]);
 
   const handleSave = useCallback(() => {
@@ -216,6 +244,8 @@ export default function Designer() {
         onShare={handleShare}
         onSave={handleSave}
         saveStatus={saveStatus}
+        shareStatus={shareStatus}
+        exportStatus={exportStatus}
         onDownloadSSS={handleDownloadSSS}
         onUploadSSS={handleUploadSSS}
       />

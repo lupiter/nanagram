@@ -31,7 +31,7 @@ export default function Home() {
   const location = useLocation();
 
   useEffect(() => {
-    document.title = "Nanna Gram";
+    document.title = "Nanagram";
     setTitle({
       title: "Nanagram",
       icon: <Icons.Logo />,

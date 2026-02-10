@@ -38,7 +38,7 @@ export default function RandomPuzzle() {
   const selectedSize = VALID_SIZES[sizeIndex];
 
   useEffect(() => {
-    document.title = 'Random Puzzle - Nanna Gram';
+    document.title = 'Random Puzzle - Nanagram';
     setTitle({ title: 'Random Puzzle' });
   }, [setTitle]);
 

@@ -5,12 +5,12 @@ import "./Button.css";
 
 type ButtonVariant = "default" | "primary" | "secondary" | "danger";
 
-type BaseButtonProps = {
+interface BaseButtonProps {
   variant?: ButtonVariant;
   square?: boolean;
   children: ReactNode;
   className?: string;
-};
+}
 
 type ButtonAsButton = BaseButtonProps &
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps> & {
