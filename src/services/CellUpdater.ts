@@ -39,8 +39,28 @@ export class CellUpdater {
         // Cross out the cell instead
         draft[row][col] = CellState.CROSSED_OUT;
       } else {
-        // Normal update logic
-        if (cell === CellState.EMPTY || cell === toolToUse) {
+        // Assisted mode: do not allow changing filled cells (no un-fill, no fill→cross)
+        if (mode === GameMode.Assisted && cell === CellState.FILLED) {
+          // No-op: keep cell filled
+        } else if (
+          mode === GameMode.Assisted &&
+          cell === CellState.CROSSED_OUT &&
+          toolToUse === CellState.CROSSED_OUT
+        ) {
+          // Assisted mode: always allow un-cross if the cross is wrong (solution says filled)
+          const solutionCell = puzzle[row][col];
+          if (solutionCell === CellState.FILLED) {
+            draft[row][col] = CellState.EMPTY;
+          } else {
+            // Correct cross: allow un-cross only if row and column are not complete
+            const rowComplete = puzzleService.isRowOrColumnComplete(puzzle, draft, true, row);
+            const colComplete = puzzleService.isRowOrColumnComplete(puzzle, draft, false, col);
+            if (!rowComplete && !colComplete) {
+              draft[row][col] = CellState.EMPTY;
+            }
+          }
+        } else if (cell === CellState.EMPTY || cell === toolToUse) {
+          // Normal update logic
           draft[row][col] = cell === toolToUse ? CellState.EMPTY : toolToUse;
         }
       }
