@@ -152,7 +152,7 @@ export default function Home() {
                   <span className="designer-link-icon">
                     <span className="icon"><Icons.Edit /></span>
                   </span>
-                  <span className="puzzle-name">{`Make your own`}</span>
+                  <span className="puzzle-name">{`Create`}</span>
                 </Link>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import Button from "../Button/Button";
+import ButtonGroup from "../ButtonGroup/ButtonGroup";
 import { Icons } from "../Icons/Icons";
 
 interface ActionButtonsProps {
@@ -11,7 +12,7 @@ interface ActionButtonsProps {
 
 export default function ActionButtons({ canUndo, canRedo, onUndo, onRedo, onReset }: ActionButtonsProps) {
   return (
-    <div className="action-buttons">
+    <ButtonGroup gap={1} justify="center" align="center">
       <Button onClick={onUndo} disabled={!canUndo} aria-label="Undo" title="Undo (Ctrl+Z)">
         <Icons.Undo />
       </Button>
@@ -21,7 +22,7 @@ export default function ActionButtons({ canUndo, canRedo, onUndo, onRedo, onRese
       <Button onClick={onReset} aria-label="Reset puzzle" variant="danger">
         <Icons.Reset />
       </Button>
-    </div>
+    </ButtonGroup>
   );
 }
 

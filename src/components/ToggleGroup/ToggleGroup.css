@@ -55,6 +55,10 @@
   background: var(--gray-300);
 }
 
+.toggle-button:has(input[type="radio"]:checked) {
+  color: var(--color-on-alt-bg);
+}
+
 .toggle-button input[type="radio"]:checked + .toggle-button-label {
   transform: translateY(var(--space-1));
   box-shadow: var(--shadow-inset);

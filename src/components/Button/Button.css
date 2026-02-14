@@ -13,9 +13,19 @@
   
   /* Tape appearance - flat, no shadow */
   background: var(--color-btn-default);
-  border: none;
+  border: var(--btn-border-width, 0) solid var(--btn-border-color, transparent);
   color: var(--color-text);
-  
+}
+
+/* High-contrast: drop tape mask so button is a plain rectangle with visible border */
+html[data-theme="high-contrast-dark"] .btn:not(.btn-square),
+html[data-theme="high-contrast-light"] .btn:not(.btn-square) {
+  mask-image: none;
+  -webkit-mask-image: none;
+  border-radius: var(--radius-sm);
+}
+
+.btn {
   /* Jagged edges using mask - left edge */
   --tape-edge-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='100' preserveAspectRatio='none'%3E%3Cpath d='M4,0 L8,0 L8,100 L4,100 L6,95 L3,90 L5,85 L2,80 L6,75 L4,70 L7,65 L3,60 L5,55 L2,50 L6,45 L4,40 L7,35 L3,30 L5,25 L2,20 L6,15 L4,10 L7,5 Z' fill='black'/%3E%3C/svg%3E");
   /* Right edge - mirrored (x coordinates flipped: 8-x) */
@@ -51,6 +61,12 @@
   cursor: not-allowed;
 }
 
+/* High-contrast: disabled buttons use dashed border */
+html[data-theme="high-contrast-dark"] .btn:disabled,
+html[data-theme="high-contrast-light"] .btn:disabled {
+  border-style: dashed;
+}
+
 /* Square buttons (for icons) */
 .btn-square {
   padding: var(--space-2);
@@ -68,6 +84,7 @@
 
 .btn-primary {
   background-color: var(--color-btn-primary);
+  color: var(--color-on-primary);
 }
 
 .btn-secondary {

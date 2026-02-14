@@ -82,6 +82,8 @@
   --color-border: var(--gray-300);
   --color-primary: var(--blue);
   --color-primary-hover: var(--blue-dark);
+  --color-on-primary: var(--white);
+  --color-on-alt-bg: var(--color-text);
   --color-success: var(--green);
   --color-success-bg: var(--green-light);
   --color-danger: var(--red);
@@ -102,4 +104,169 @@
   --color-btn-secondary: rgba(220, 200, 160, 0.9);
   --color-btn-danger: rgba(255, 130, 150, 0.9);
   --color-btn-danger-text: #8b0000;
+
+  /* Page background image (themes may set to none) */
+  --bg-image: url('/background.svg');
+}
+
+/* Dark theme */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --white: #fff;
+  --black: #000;
+  --white-300: rgba(255, 255, 255, 0.15);
+  --white-500: rgba(255, 255, 255, 0.4);
+  --gray-100: rgba(255, 255, 255, 0.06);
+  --gray-200: rgba(255, 255, 255, 0.12);
+  --gray-300: rgba(255, 255, 255, 0.2);
+  --gray-400: rgba(255, 255, 255, 0.4);
+  --gray-500: rgba(255, 255, 255, 0.6);
+  --gray-600: rgba(255, 255, 255, 0.9);
+  --blue: #5ba3e8;
+  --blue-dark: #7eb8f0;
+  --green: #4ade80;
+  --green-light: rgba(74, 222, 128, 0.2);
+  --red: #f87171;
+  --paper: #2d2a3e;
+
+  --color-text: var(--gray-600);
+  --color-text-muted: var(--gray-500);
+  --color-text-disabled: var(--gray-400);
+  --color-modal-bg: #1e1d2a;
+  --color-bg: var(--white-300);
+  --color-bg-light: var(--white-300);
+  --color-bg-light-hover: var(--white-500);
+  --color-bg-subtle: var(--gray-100);
+  --color-border: var(--gray-300);
+  --color-primary: var(--blue);
+  --color-primary-hover: var(--blue-dark);
+  --color-on-primary: var(--white);
+  --color-on-alt-bg: var(--white);
+  --color-success: var(--green);
+  --color-success-bg: var(--green-light);
+  --color-danger: var(--red);
+  --color-filled: var(--white);
+  --color-empty: var(--gray-100);
+
+  --shadow-sm: 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 var(--space-1) var(--space-2) rgba(0, 0, 0, 0.4);
+  --shadow-inset: inset 0 var(--space-1) var(--space-1) rgba(0, 0, 0, 0.2);
+  --color-overlay: rgba(0, 0, 0, 0.7);
+
+  --color-btn-default: rgba(255, 255, 255, 0.15);
+  --color-btn-primary: rgba(91, 163, 232, 0.5);
+  --color-btn-secondary: rgba(180, 160, 120, 0.4);
+  --color-btn-danger: rgba(248, 113, 113, 0.5);
+  --color-btn-danger-text: #fca5a5;
+
+  --bg-image: none;
+}
+
+/* High-contrast dark (white on black) – black and white only */
+html[data-theme="high-contrast-dark"] {
+  color-scheme: dark;
+  --white: #fff;
+  --black: #000;
+  --white-300: #000;
+  --white-500: #000;
+  --gray-100: #000;
+  --gray-200: #000;
+  --gray-300: #fff;
+  --gray-400: #fff;
+  --gray-500: #fff;
+  --gray-600: #fff;
+  --blue: #fff;
+  --blue-dark: #fff;
+  --green: #fff;
+  --green-light: #000;
+  --red: #fff;
+  --paper: #000;
+
+  --color-text: #fff;
+  --color-text-muted: #fff;
+  --color-text-disabled: #fff;
+  --color-modal-bg: #000;
+  --color-bg: #000;
+  --color-bg-light: #000;
+  --color-bg-light-hover: #000;
+  --color-bg-subtle: #000;
+  --color-border: #fff;
+  --color-primary: #fff;
+  --color-primary-hover: #fff;
+  --color-on-primary: #000;
+  --color-on-alt-bg: #000;
+  --color-success: #fff;
+  --color-success-bg: #000;
+  --color-danger: #fff;
+  --color-filled: #fff;
+  --color-empty: #000;
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-inset: none;
+  --color-overlay: #000;
+
+  --color-btn-default: #000;
+  --color-btn-primary: #fff;
+  --color-btn-secondary: #000;
+  --color-btn-danger: #fff;
+  --color-btn-danger-text: #000;
+  --btn-border-width: 1px;
+  --btn-border-color: #fff;
+
+  --bg-image: none;
+}
+
+/* High-contrast light (black on white) – black and white only */
+html[data-theme="high-contrast-light"] {
+  --white: #fff;
+  --black: #000;
+  --white-300: #fff;
+  --white-500: #fff;
+  --gray-100: #fff;
+  --gray-200: #fff;
+  --gray-300: #000;
+  --gray-400: #000;
+  --gray-500: #000;
+  --gray-600: #000;
+  --blue: #000;
+  --blue-dark: #000;
+  --green: #000;
+  --green-light: #fff;
+  --red: #000;
+  --paper: #fff;
+
+  --color-text: #000;
+  --color-text-muted: #000;
+  --color-text-disabled: #000;
+  --color-modal-bg: #fff;
+  --color-bg: #fff;
+  --color-bg-light: #fff;
+  --color-bg-light-hover: #fff;
+  --color-bg-subtle: #fff;
+  --color-border: #000;
+  --color-primary: #000;
+  --color-primary-hover: #000;
+  --color-on-primary: #fff;
+  --color-on-alt-bg: #fff;
+  --color-success: #000;
+  --color-success-bg: #fff;
+  --color-danger: #000;
+  --color-filled: #000;
+  --color-empty: #fff;
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-inset: none;
+  --color-overlay: #000;
+
+  --color-btn-default: #fff;
+  --color-btn-primary: #000;
+  --color-btn-secondary: #fff;
+  --color-btn-danger: #000;
+  --color-btn-danger-text: #fff;
+  --btn-border-width: 1px;
+  --btn-border-color: #000;
+
+  --bg-image: none;
 }

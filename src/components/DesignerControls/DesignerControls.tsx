@@ -91,7 +91,7 @@ export default function DesignerControls({
         />
       </FormField>
 
-      <ButtonGroup gap={3}>
+      <ButtonGroup gap={1}>
         <Button variant="danger" onClick={onClear} aria-label="clear" title="Clear puzzle">
           <Icons.Trash />
         </Button>

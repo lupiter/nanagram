@@ -53,9 +53,8 @@ html, body {
   margin: 0;
   padding: 0;
   /* Same background on both html and body for cross-browser overscroll support */
-  /* Safari uses body, Chrome/Firefox use html */
-  background-color: var(--color-modal-bg); /* Fallback - matches background.svg base color */
-  background-image: url('/background.svg');
+  background-color: var(--color-modal-bg);
+  background-image: var(--bg-image);
   background-repeat: repeat;
 }
 

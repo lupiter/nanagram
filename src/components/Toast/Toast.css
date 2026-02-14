@@ -4,7 +4,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: var(--color-primary);
-  color: var(--white);
+  color: var(--color-on-primary);
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);

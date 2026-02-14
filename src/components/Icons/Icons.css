@@ -4,3 +4,23 @@
   vertical-align: middle;
   display: inline-block;
 }
+
+/* Dark themes: invert so dark-icon SVGs appear light and visible */
+html[data-theme="dark"] .icon,
+html[data-theme="high-contrast-dark"] .icon {
+  filter: invert(1);
+}
+
+/* High-contrast dark: primary, danger, and selected toggle have white/light bg – use dark icon (cancel invert) */
+html[data-theme="high-contrast-dark"] .btn-primary .icon,
+html[data-theme="high-contrast-dark"] .btn-danger .icon,
+html[data-theme="high-contrast-dark"] .toggle-button:has(input[type="radio"]:checked) .icon {
+  filter: none;
+}
+
+/* High-contrast light: primary, danger, and selected toggle have black/dark bg – use light icon (default stays dark-on-white) */
+html[data-theme="high-contrast-light"] .btn-primary .icon,
+html[data-theme="high-contrast-light"] .btn-danger .icon,
+html[data-theme="high-contrast-light"] .toggle-button:has(input[type="radio"]:checked) .icon {
+  filter: invert(1);
+}

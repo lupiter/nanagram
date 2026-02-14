@@ -62,7 +62,7 @@ nav a:hover {
 
 main {
   flex: 1;
-  padding: var(--space-4);
+  padding: var(--space-2);
   display: flex;
   flex-direction: column;
   align-items: center;

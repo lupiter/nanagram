@@ -12,11 +12,11 @@
   gap: var(--space-4);
   justify-content: center;
   flex-direction: column;
+  padding: var(--space-2);
 }
 
 .puzzle-category {
   background: var(--color-bg-subtle);
-  padding: var(--space-4);
   border-radius: var(--radius-lg);
 }
 
@@ -29,7 +29,8 @@
 .puzzle-links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-2);
+  justify-content: center;
 }
 
 .puzzle-link {
@@ -37,8 +38,8 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  min-height: calc(var(--size-touch-target) + var(--space-1) * 2 + var(--text-xs));
-  min-width: var(--size-touch-target);
+  min-height: calc(var(--size-hint-area) + var(--space-1) * 2 + var(--text-xs));
+  min-width: var(--size-hint-area);
   background: var(--color-bg);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -109,11 +110,11 @@
 /* Puzzle number and stars for incomplete puzzles */
 .puzzle-link:not(.completed):not(.designer-link) {
   flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-2);
+  /* gap: var(--space-1); */
+  justify-content: space-between;
 }
 
-.puzzle-link.completed .difficulty-stars {
+.puzzle-link .difficulty-stars {
   margin-bottom: var(--space-2);
 }
 
@@ -121,8 +122,12 @@
   font-size: var(--text-lg);
   min-width: var(--size-hint-area);
   min-height: var(--size-hint-area);
-  text-align: center;
+  font-weight: 600;text-align: center;
   font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* User design items in category sections */
