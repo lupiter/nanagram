@@ -90,9 +90,10 @@ export class HintChecker {
     return true;
   }
 
-  /** Check hints against current cell state and mark used hints */
+  /** Check hints against current cell state and mark used hints.
+   * Recomputes from scratch so clues are only marked complete when correct and fully satisfied. */
   check(cells: CellState[], hints: Hint[], answerCells: CellState[]): Hint[] {
-    const newHints = [...hints];
+    const newHints = hints.map(h => ({ hint: h.hint, used: false }));
     const gridSize = cells.length;
     
     const answerSequences = this.findSequences(answerCells);

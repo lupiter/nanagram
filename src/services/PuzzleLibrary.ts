@@ -68,13 +68,15 @@ export class PuzzleLibrary {
       return { category, id: String(currentIndex + 1) };
     }
 
-    // Move to next category
+    // Move to next category, skipping any that have no puzzles
     const categories = this.getCategories();
     const categoryIndex = categories.indexOf(category);
 
-    if (categoryIndex < categories.length - 1) {
-      const nextCategory = categories[categoryIndex + 1];
-      return { category: nextCategory, id: '1' };
+    for (let i = categoryIndex + 1; i < categories.length; i++) {
+      const nextCategory = categories[i];
+      if (this.getPuzzleCount(nextCategory) > 0) {
+        return { category: nextCategory, id: '1' };
+      }
     }
 
     return null;
@@ -89,14 +91,16 @@ export class PuzzleLibrary {
       return { category, id: String(currentIndex - 1) };
     }
 
-    // Move to previous category
+    // Move to previous category, skipping any that have no puzzles
     const categories = this.getCategories();
     const categoryIndex = categories.indexOf(category);
 
-    if (categoryIndex > 0) {
-      const prevCategory = categories[categoryIndex - 1];
+    for (let i = categoryIndex - 1; i >= 0; i--) {
+      const prevCategory = categories[i];
       const prevCategoryCount = this.getPuzzleCount(prevCategory);
-      return { category: prevCategory, id: String(prevCategoryCount) };
+      if (prevCategoryCount > 0) {
+        return { category: prevCategory, id: String(prevCategoryCount) };
+      }
     }
 
     return null;

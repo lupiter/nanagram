@@ -10,12 +10,21 @@ export function createInitialState(
   savedGrid?: GameState | null,
   savedMode?: GameMode | null
 ): PuzzleState {
-  const grid = savedGrid ?? puzzleService.createEmptyGameState(solution[0].length, solution.length);
+  const rowHints = puzzleService.deriveRowHints(solution);
+  const columnHints = puzzleService.deriveColumnHints(solution);
+  let grid = savedGrid ?? puzzleService.createEmptyGameState(solution[0].length, solution.length);
+
+  // Autofill rows/columns with no clues (all cells in that line are crosses)
+  grid = grid.map((row, i) =>
+    row.map((cell, j) =>
+      rowHints[i].length === 0 || columnHints[j].length === 0 ? CellState.CROSSED_OUT : cell
+    )
+  );
 
   return {
     grid,
-    rowHints: puzzleService.deriveRowHints(solution),
-    columnHints: puzzleService.deriveColumnHints(solution),
+    rowHints,
+    columnHints,
     tool: CellState.FILLED,
     mode: savedMode ?? GameMode.Assisted,
     isSolved: false,
