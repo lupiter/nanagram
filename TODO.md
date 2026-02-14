@@ -59,7 +59,7 @@ Ordered plan for current issues and features.
 
 - win scrren on random puzzles should have button to generate another of the same size. maybe use url params to the random page? and if all supplied it generates imediately and redirects to play the puzzle
 
-## 11. Make hint spacing more sane
+## 11. Make hint spacing more sane ✓
 
 - Space allocated to hints is hard-coded. Would be better if it was dynamically sized
 - Hints should be sticky positioned somehow

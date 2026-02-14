@@ -1,7 +1,9 @@
 .nonogram-grid-container {
   max-width: calc(100vw - var(--space-8));
-  overflow-x: auto;
-  padding: 0 var(--space-4);
+  max-height: min(80vh, 900px);
+  overflow: auto;
+  padding: 0 var(--space-4) 0 0;
+  margin: 0 0 0 var(--space-4);
 }
 
 /* Nonogram Grid Table */
@@ -41,18 +43,62 @@ table.nonogram-grid tbody tr:nth-child(odd) th {
   background-color: var(--gray-200);
 }
 
-table.nonogram-grid thead tr th:first-child {
-  background: transparent;
-}
 
 /* Header specific styles */
 table.nonogram-grid th {
-  min-width: var(--size-hint-area);
-  min-height: calc(var(--size-cell) + var(--border-width) * 2);
   text-align: right;
   vertical-align: middle;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+/* Corner cell only: no content, same token sizing as hint cells */
+table.nonogram-grid thead th:first-child {
+  min-width: calc(var(--max-row-hints, var(--hint-count-fallback)) * var(--hint-slot-width));
+  min-height: calc(var(--max-col-hints, var(--hint-count-fallback)) * var(--hint-slot-height));
+}
+
+/* Row header cells: width from .hint-numbers.horizontal, height matches row */
+table.nonogram-grid tbody th {
+  min-height: calc(var(--size-cell) + var(--border-width) * 2);
+}
+
+/* Column header cells: height from .hint-numbers.vertical, width matches cell */
+table.nonogram-grid th[role="columnheader"] {
+  min-width: calc(var(--size-cell) + var(--border-width) * 2);
+}
+
+/* Sticky hints when grid is scrolled */
+table.nonogram-grid thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-empty);
+  box-shadow: 0 var(--border-width) 0 var(--color-border);
+}
+
+table.nonogram-grid thead th:nth-child(even) {
+  background-color: var(--gray-200);
+}
+
+table.nonogram-grid tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: var(--color-empty);
+  box-shadow: var(--border-width) 0 0 var(--color-border);
+}
+
+table.nonogram-grid tbody tr:nth-child(odd) th {
+  background-color: var(--gray-200);
+}
+
+/* Corner: sticky top+left, opaque so column clues don’t show through when scrolling */
+table.nonogram-grid thead tr th:first-child {
+  left: 0;
+  z-index: 2;
+  background: var(--paper);
+  box-shadow: var(--border-width) 0 0 var(--color-border), 0 var(--border-width) 0 var(--color-border);
 }
 
 table.nonogram-grid th span {
@@ -67,9 +113,8 @@ table.nonogram-grid th[role="rowheader"] {
   padding: 0 var(--base-size);
 }
 
-table.nonogram-grid thead th {
+table.nonogram-grid th[role="columnheader"] {
   min-width: calc(var(--size-cell) + var(--border-width) * 2);
-  min-height: calc(var(--size-cell) + var(--border-width) * 2);
   text-align: center;
   vertical-align: bottom;
 }

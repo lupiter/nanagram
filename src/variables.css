@@ -34,6 +34,11 @@
   --size-cell: calc(var(--base-size) * 5);      /* 30px - grid cell */
   --size-card-min: calc(var(--base-size) * 30);   /* 120px - card min-width */
   --size-hint-area: calc(var(--base-size) * 25);  /* 100px - hint min-width */
+
+  /* Hint strip sizing (font-relative; used with --max-row-hints / --max-col-hints) */
+  --hint-slot-width: 1.5ch;
+  --hint-slot-height: 1.25em;
+  --hint-count-fallback: 5;
   --size-input-min: calc(var(--base-size) * 45);  /* 180px - input min-width */
   --size-nav-title: calc(var(--base-size) * 50);  /* 200px - nav title width */
   --size-category-min: calc(var(--base-size) * 75); /* 300px - category card min */

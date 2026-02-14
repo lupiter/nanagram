@@ -1,3 +1,4 @@
+import { useMemo, type CSSProperties } from "react";
 import { CellState } from "../../types/nonogram";
 import { NonogramGridProps } from "../../types/puzzle";
 import HintDisplay from "../HintDisplay/HintDisplay";
@@ -13,15 +14,33 @@ export default function NonogramGrid({
   onCellMouseEnter,
   errorCell,
 }: NonogramGridProps) {
+  const hintDimensions = useMemo(() => {
+    const maxRowHints = rowHints.length > 0
+      ? Math.max(...rowHints.map((h) => h.length))
+      : 0;
+    const maxColHints = columnHints.length > 0
+      ? Math.max(...columnHints.map((h) => h.length))
+      : 0;
+    return { maxRowHints, maxColHints };
+  }, [rowHints, columnHints]);
+
+  const containerStyle = useMemo(
+    (): CSSProperties => ({
+      "--max-row-hints": String(Math.max(1, hintDimensions.maxRowHints)),
+      "--max-col-hints": String(Math.max(1, hintDimensions.maxColHints)),
+    } as CSSProperties),
+    [hintDimensions]
+  );
+
   return (
-    <div className="nonogram-grid-container">
+    <div className="nonogram-grid-container" style={containerStyle}>
       <table className="nonogram-grid" role="grid">
         <thead>
           <tr>
             <th></th>
             {columnHints.map((hints, colIndex) => (
               <th key={colIndex} role="columnheader">
-                <HintDisplay hints={hints} isVertical={true} puzzleSize={grid.length} />
+                <HintDisplay hints={hints} isVertical={true} />
               </th>
             ))}
           </tr>
@@ -30,7 +49,7 @@ export default function NonogramGrid({
           {grid.map((row, rowIndex) => (
             <tr key={rowIndex} role="row">
               <th role="rowheader">
-                <HintDisplay hints={rowHints[rowIndex]} isVertical={false} puzzleSize={grid.length}  />
+                <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
               </th>
               {row.map((cell, colIndex) => (
                 <td
