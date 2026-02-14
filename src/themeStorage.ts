@@ -1,9 +1,17 @@
 export const THEME_BASE_KEY = 'nanagram-theme-base'
 export const THEME_HIGH_CONTRAST_KEY = 'nanagram-theme-high-contrast'
 
-export type ThemeBase = 'light' | 'dark'
+export type ThemeBase = 'light' | 'dark' | 'auto'
 
-export const THEME_BASES: ThemeBase[] = ['light', 'dark']
+export const THEME_BASES: ThemeBase[] = ['light', 'dark', 'auto']
+
+/** Resolved to light or dark when base is 'auto' (uses prefers-color-scheme). */
+export function getResolvedThemeBase(): 'light' | 'dark' {
+  const stored = getStoredThemeBase()
+  if (stored !== 'auto') return stored
+  if (typeof window === 'undefined' || !window.matchMedia) return 'light'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 export const PLAY_MODE_STORAGE_KEY = 'nanagram-game-mode'
 
@@ -42,7 +50,7 @@ const THEME_COLOR: Record<ThemeId, string> = {
   'high-contrast-light': '#ffffff',
 }
 
-function themeIdFrom(base: ThemeBase, highContrast: boolean): ThemeId {
+function themeIdFrom(base: 'light' | 'dark', highContrast: boolean): ThemeId {
   if (highContrast) return base === 'dark' ? 'high-contrast-dark' : 'high-contrast-light'
   return base
 }
@@ -50,7 +58,8 @@ function themeIdFrom(base: ThemeBase, highContrast: boolean): ThemeId {
 export function getStoredThemeBase(): ThemeBase {
   if (typeof localStorage === 'undefined') return 'light'
   const stored = localStorage.getItem(THEME_BASE_KEY)
-  return stored === 'dark' ? 'dark' : 'light'
+  if (stored === 'dark' || stored === 'auto') return stored
+  return 'light'
 }
 
 export function getStoredThemeHighContrast(): boolean {
@@ -77,10 +86,19 @@ function migrateThemeFromLegacy(): void {
 
 export function applyTheme(): void {
   migrateThemeFromLegacy()
-  const base = getStoredThemeBase()
+  const resolvedBase = getResolvedThemeBase()
   const highContrast = getStoredThemeHighContrast()
-  const theme = themeIdFrom(base, highContrast)
+  const theme = themeIdFrom(resolvedBase, highContrast)
   document.documentElement.setAttribute('data-theme', theme)
   const meta = document.querySelector('meta[name="theme-color"]')
   if (meta) meta.setAttribute('content', THEME_COLOR[theme])
+}
+
+/** Call applyTheme when system preference (prefers-color-scheme) changes. Call once at app init. */
+export function subscribeToSystemTheme(): void {
+  if (typeof window === 'undefined' || !window.matchMedia) return
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  media.addEventListener('change', () => {
+    if (getStoredThemeBase() === 'auto') applyTheme()
+  })
 }

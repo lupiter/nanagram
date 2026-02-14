@@ -2,10 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { applyTheme, applyCellSize } from './themeStorage'
+import { applyTheme, applyCellSize, subscribeToSystemTheme } from './themeStorage'
 
 applyTheme()
 applyCellSize()
+subscribeToSystemTheme()
 
 const rootElement = document.getElementById('root')
 if (!rootElement) {

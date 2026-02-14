@@ -88,6 +88,7 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
         options={[
           { value: "light" as ThemeBase, label: "Light" },
           { value: "dark" as ThemeBase, label: "Dark" },
+          { value: "auto" as ThemeBase, label: "Auto" },
         ]}
       />
       <ToggleGroup

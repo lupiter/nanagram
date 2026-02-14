@@ -71,3 +71,8 @@ Ordered plan for current issues and features.
 ## 13. Zoom ✓
 
 We want to let the user pick the grid size, i.e. set the value for --size-cell. This should be in the settings screen. We probably want to let them pick from a few preset values, like base-size * 3, 4, 5, 6, 7. With a default of the current value of 5. Maybe call them XS, S, M, L, XL.
+
+
+## 14. Auto light/dark ✓
+
+Use something (some api? surely apple made one) to work out what theme the user prefers. Add an extra option to theme for auto, so it's light/dark/auto and then if auto switch between light and dark according to browser api thing
