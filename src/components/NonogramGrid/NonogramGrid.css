@@ -142,7 +142,12 @@ table.nonogram-grid input[type="checkbox"]:indeterminate {
   background-color: var(--color-empty);
 }
 
+/* No focus ring on mouse focus; show only for keyboard (focus-visible) */
 table.nonogram-grid input[type="checkbox"]:focus {
+  outline: none;
+}
+
+table.nonogram-grid input[type="checkbox"]:focus-visible {
   outline: calc(var(--base-size) * 0.5) solid var(--color-primary);
   outline-offset: calc(var(--base-size) * -0.5);
 }
