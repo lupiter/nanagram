@@ -60,5 +60,5 @@ Ordered plan for current issues and features.
 ## Other
 
 - **Focus rings:** Hide the focus ring when a square is crossed (it looks weird). Show focus rings only when the user is using keyboard navigation (e.g. detect :focus-visible or pointer vs keyboard).
-- Fix the issue with drag in rows.
-- More starter puzzles.
+- Work out how to horizontally centre puzzles
+- Hints should be sticky positioned somehow

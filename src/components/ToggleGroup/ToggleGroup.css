@@ -1,5 +1,5 @@
 .toggle-group-container {
-  margin: var(--space-2) 0;
+  margin: 0;
 }
 
 .toggle-group {
@@ -11,6 +11,7 @@
   font-weight: bold;
   margin-bottom: var(--space-1);
   color: var(--color-text);
+  text-align: left;
 }
 
 .toggle-button {
