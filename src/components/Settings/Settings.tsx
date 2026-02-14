@@ -6,9 +6,13 @@ import {
   THEME_HIGH_CONTRAST_KEY,
   ThemeBase,
   PLAY_MODE_STORAGE_KEY,
+  CELL_SIZE_STORAGE_KEY,
   applyTheme,
+  applyCellSize,
   getStoredThemeBase,
   getStoredThemeHighContrast,
+  getStoredCellSizeMultiplier,
+  type CellSizeMultiplier,
 } from "../../themeStorage";
 import "./Settings.css";
 
@@ -27,12 +31,14 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
   const [themeBase, setThemeBase] = useState<ThemeBase>(getStoredThemeBase);
   const [highContrast, setHighContrast] = useState<boolean>(getStoredThemeHighContrast);
   const [playMode, setPlayMode] = useState<GameMode>(getStoredPlayMode);
+  const [cellSize, setCellSize] = useState<CellSizeMultiplier>(getStoredCellSizeMultiplier);
 
   // Sync from storage when component mounts or becomes visible (e.g. modal opened)
   useEffect(() => {
     setThemeBase(getStoredThemeBase());
     setHighContrast(getStoredThemeHighContrast());
     setPlayMode(getStoredPlayMode());
+    setCellSize(getStoredCellSizeMultiplier());
   }, []);
 
   const handleThemeBaseChange = useCallback((value: ThemeBase) => {
@@ -55,6 +61,12 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
     },
     [onPlayModeChange]
   );
+
+  const handleCellSizeChange = useCallback((value: CellSizeMultiplier) => {
+    setCellSize(value);
+    localStorage.setItem(CELL_SIZE_STORAGE_KEY, String(value));
+    applyCellSize();
+  }, []);
 
   return (
     <div className="settings">
@@ -86,6 +98,19 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
         options={[
           { value: false, label: "Off" },
           { value: true, label: "On" },
+        ]}
+      />
+      <ToggleGroup
+        name="grid-size"
+        title="Grid size"
+        value={cellSize}
+        onChange={handleCellSizeChange}
+        options={[
+          { value: 3 as CellSizeMultiplier, label: "XS" },
+          { value: 4 as CellSizeMultiplier, label: "S" },
+          { value: 5 as CellSizeMultiplier, label: "M" },
+          { value: 6 as CellSizeMultiplier, label: "L" },
+          { value: 7 as CellSizeMultiplier, label: "XL" },
         ]}
       />
     </div>

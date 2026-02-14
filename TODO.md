@@ -68,6 +68,6 @@ Ordered plan for current issues and features.
 
 - **Focus rings:** Hide the focus ring when a square is crossed (it looks weird). Show focus rings only when the user is using keyboard navigation (e.g. detect :focus-visible or pointer vs keyboard).
 
-## 13. Zoom
+## 13. Zoom ✓
 
 We want to let the user pick the grid size, i.e. set the value for --size-cell. This should be in the settings screen. We probably want to let them pick from a few preset values, like base-size * 3, 4, 5, 6, 7. With a default of the current value of 5. Maybe call them XS, S, M, L, XL.

@@ -132,6 +132,7 @@ table.nonogram-grid input[type="checkbox"] {
   cursor: pointer;
   position: relative;
   transition: background-color 0.2s;
+  border-radius: var(--radius-sm);
 }
 
 table.nonogram-grid input[type="checkbox"]:checked {
