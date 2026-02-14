@@ -70,6 +70,18 @@ export default function Puzzle() {
     return undefined;
   }, [source, category, id]);
 
+  // For random (encoded) puzzles, pass size and difficulty so win screen can offer "Another puzzle"
+  const randomAgainParams = useMemo(() => {
+    if (source === "encoded" && puzzle?.name === "Random" && puzzle) {
+      return {
+        width: puzzle.width,
+        height: puzzle.height,
+        difficulty: puzzle.difficulty,
+      };
+    }
+    return null;
+  }, [source, puzzle]);
+
   // For library puzzles, use the original id for completion tracking
   // For encoded puzzles, use the puzzleKey (which includes a hash of the encoded data)
   const trackingId = source === "library" && id ? id : puzzleKey;
@@ -120,6 +132,7 @@ export default function Puzzle() {
       setState={setState}
       controller={controller}
       nextPuzzle={nextPuzzle}
+      randomAgainParams={randomAgainParams}
     />
   );
 }

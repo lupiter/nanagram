@@ -55,16 +55,18 @@ Ordered plan for current issues and features.
 - When the user has filled a block that **abuts the start** and matches earlier clues, auto-add a cross after that block.
   - Example: clues `1,2,3`, first four cells filled (satisfying 1 and 2) → add a cross **after** that block.
 
-## 10. More puzzles please
+## 10. More puzzles please ✓
 
 - win scrren on random puzzles should have button to generate another of the same size. maybe use url params to the random page? and if all supplied it generates imediately and redirects to play the puzzle
 
+## 11. Make hint spacing more sane
 
+- Space allocated to hints is hard-coded. Would be better if it was dynamically sized
+- Hints should be sticky positioned somehow
 
 ---
 
 ## Other
 
 - **Focus rings:** Hide the focus ring when a square is crossed (it looks weird). Show focus rings only when the user is using keyboard navigation (e.g. detect :focus-visible or pointer vs keyboard).
-- Work out how to horizontally centre puzzles
-- Hints should be sticky positioned somehow
+

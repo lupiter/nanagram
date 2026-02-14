@@ -7,9 +7,16 @@ import SolutionPreview from "../SolutionPreview/SolutionPreview";
 import { Icons } from "../Icons/Icons";
 import "./VictoryPopup.css";
 
+interface RandomAgainParams {
+  width: number;
+  height: number;
+  difficulty: number;
+}
+
 interface VictoryPopupProps {
   onClose: () => void;
   nextPuzzle: { category: string; id: string } | null;
+  randomAgainParams?: RandomAgainParams | null;
   puzzleName: string;
   solution: PuzzleSolutionData;
 }
@@ -17,6 +24,7 @@ interface VictoryPopupProps {
 export default function VictoryPopup({
   onClose,
   nextPuzzle,
+  randomAgainParams = null,
   puzzleName,
   solution,
 }: VictoryPopupProps) {
@@ -29,10 +37,23 @@ export default function VictoryPopup({
     }
   };
 
+  const handleAnotherPuzzle = () => {
+    if (randomAgainParams) {
+      const { width, height, difficulty } = randomAgainParams;
+      void navigate(
+        `/random?width=${encodeURIComponent(width)}&height=${encodeURIComponent(height)}&difficulty=${encodeURIComponent(difficulty)}`
+      );
+      onClose();
+    }
+  };
+
   const handleGoHome = () => {
     void navigate("/");
     onClose();
   };
+
+  const showNext = nextPuzzle ?? null;
+  const showAnother = randomAgainParams ?? null;
 
   return (
     <Modal isOpen={true} onClose={onClose} title="Congratulations" className="victory-modal">
@@ -45,9 +66,14 @@ export default function VictoryPopup({
           <Button onClick={handleGoHome} aria-label="Go to home page">
             Home
           </Button>
-          {nextPuzzle && (
+          {showNext && (
             <Button variant="primary" onClick={handleNextPuzzle} aria-label="Go to next puzzle">
               Next Puzzle <Icons.ArrowRight />
+            </Button>
+          )}
+          {showAnother && (
+            <Button variant="primary" onClick={handleAnotherPuzzle} aria-label="Generate another puzzle of same size">
+              Another puzzle <Icons.ArrowRight />
             </Button>
           )}
         </ButtonGroup>

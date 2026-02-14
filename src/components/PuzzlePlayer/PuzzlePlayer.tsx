@@ -17,12 +17,19 @@ interface NextPuzzleInfo {
   id: string;
 }
 
+export interface RandomAgainParams {
+  width: number;
+  height: number;
+  difficulty: number;
+}
+
 interface PuzzlePlayerProps {
   puzzle: PuzzleDefinition | null;
   state: PuzzleState;
   setState: React.Dispatch<React.SetStateAction<PuzzleState>>;
   controller: PuzzleController;
   nextPuzzle?: NextPuzzleInfo | null;
+  randomAgainParams?: RandomAgainParams | null;
 }
 
 export default function PuzzlePlayer({
@@ -31,6 +38,7 @@ export default function PuzzlePlayer({
   setState,
   controller,
   nextPuzzle = null,
+  randomAgainParams = null,
 }: PuzzlePlayerProps) {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -142,6 +150,7 @@ export default function PuzzlePlayer({
         <VictoryPopup
           onClose={handleCloseVictory}
           nextPuzzle={nextPuzzle}
+          randomAgainParams={randomAgainParams}
           puzzleName={puzzle.name}
           solution={puzzle.solution}
         />
