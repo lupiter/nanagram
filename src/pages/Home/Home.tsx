@@ -15,7 +15,7 @@ function HeaderActions() {
       <Link to="/random" title="Random Puzzle" aria-label="Random Puzzle">
         <Icons.Dice />
       </Link>
-      <Link to="/manage" title="Manage Puzzles" aria-label="Manage Puzzles">
+      <Link to="/manage" title="Settings & Data" aria-label="Settings & Data">
         <Icons.Settings />
       </Link>
     </>

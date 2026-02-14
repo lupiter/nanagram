@@ -1,13 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { GameMode, PuzzleState } from "../../types/puzzle";
 import { CellState, PuzzleDefinition } from "../../types/nonogram";
 import { PuzzleController } from "../NonogramGrid/PuzzleController";
-import ModeSelector from "../ModeSelector/ModeSelector";
 import ToolSelector from "../ToolSelector/ToolSelector";
 import ActionButtons from "../ActionButtons/ActionButtons";
 import VictoryPopup from "../VictoryPopup/VictoryPopup";
 import NonogramGrid from "../NonogramGrid/NonogramGrid";
+import Modal from "../Modal/Modal";
+import Settings from "../Settings/Settings";
 import { Icons } from "../Icons/Icons";
 import "./PuzzlePlayer.css";
 
@@ -66,13 +67,6 @@ export default function PuzzlePlayer({
     [controller, setState]
   );
 
-  const handleModeChange = useCallback(
-    (mode: GameMode) => {
-      setState((s) => controller.setMode(s, mode));
-    },
-    [controller, setState]
-  );
-
   const handleToolChange = useCallback(
     (tool: CellState) => {
       setState((s) => controller.setTool(s, tool));
@@ -96,6 +90,14 @@ export default function PuzzlePlayer({
     setState((s) => controller.setShowVictory(s, false));
   }, [controller, setState]);
 
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const handleSettingsPlayModeChange = useCallback(
+    (mode: GameMode) => {
+      setState((s) => controller.setMode(s, mode));
+    },
+    [controller, setState]
+  );
+
   if (!puzzle) {
     return (
       <div className="puzzle-player">
@@ -109,7 +111,6 @@ export default function PuzzlePlayer({
   return (
     <div className="puzzle-player">
       <div className="puzzle-player-controls">
-        <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
         <ToolSelector tool={state.tool} onToolChange={handleToolChange} />
         <ActionButtons
           canUndo={controller.canUndo(state)}
@@ -117,8 +118,16 @@ export default function PuzzlePlayer({
           onUndo={handleUndo}
           onRedo={handleRedo}
           onReset={handleReset}
+          onSettingsClick={() => setSettingsOpen(true)}
         />
       </div>
+      <Modal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        title="Settings"
+      >
+        <Settings onPlayModeChange={handleSettingsPlayModeChange} />
+      </Modal>
       <NonogramGrid
         grid={state.grid}
         rowHints={state.rowHints}

@@ -6,6 +6,7 @@ import { PuzzleState } from "../components/NonogramGrid/PuzzleState";
 import { PuzzleController } from "../components/NonogramGrid/PuzzleController";
 import { puzzleLibrary } from "../services/PuzzleLibrary";
 import { errorSound } from "../services/ErrorSound";
+import { PLAY_MODE_STORAGE_KEY } from "../themeStorage";
 
 interface UsePuzzleGameProps {
   category: string;
@@ -21,14 +22,14 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
 
   const [state, setState] = useState<PuzzleState>(() => {
     const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
-    const savedMode = localStorage.getItem("gameMode") as GameMode | null;
+    const savedMode = localStorage.getItem(PLAY_MODE_STORAGE_KEY) as GameMode | null;
     return controller.createInitialState(savedGrid, savedMode);
   });
 
   // Reset state when puzzle changes
   useEffect(() => {
     const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
-    const savedMode = localStorage.getItem("gameMode") as GameMode | null;
+    const savedMode = localStorage.getItem(PLAY_MODE_STORAGE_KEY) as GameMode | null;
     setState(controller.createInitialState(savedGrid, savedMode));
   }, [controller, category, id]);
 
@@ -64,7 +65,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
 
   // Save mode to localStorage when it changes
   useEffect(() => {
-    localStorage.setItem("gameMode", state.mode);
+    localStorage.setItem(PLAY_MODE_STORAGE_KEY, state.mode);
   }, [state.mode]);
 
   // Global mouse up handler for drag

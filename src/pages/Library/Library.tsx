@@ -10,6 +10,7 @@ import PuzzleCard from "../../components/PuzzleCard/PuzzleCard";
 import PageContainer from "../../components/PageContainer/PageContainer";
 import CardGrid from "../../components/CardGrid/CardGrid";
 import Toast from "../../components/Toast/Toast";
+import Settings from "../../components/Settings/Settings";
 import { Icons } from "../../components/Icons/Icons";
 import "./Library.css";
 
@@ -19,8 +20,8 @@ export default function Library() {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    document.title = "Manage Puzzles - Nanagram";
-    setTitle({ title: "Manage Puzzles" });
+    document.title = "Settings & Data - Nanagram";
+    setTitle({ title: "Settings & Data" });
     setDesigns(designStorage.getAll());
   }, [setTitle]);
 
@@ -144,6 +145,11 @@ export default function Library() {
   return (
     <PageContainer>
       <Toast message={message} visible={!!message} />
+
+      <section className="panel library-section">
+        <h2>Settings</h2>
+        <Settings />
+      </section>
 
       <section className="panel library-section">
         <h2>My Designs ({designs.length})</h2>
