@@ -21,6 +21,23 @@ export function createInitialState(
     )
   );
 
+  const mode = savedMode ?? GameMode.Assisted;
+  const height = grid.length;
+  const width = grid[0].length;
+
+  // Assisted mode only: autofill rows/columns where the single clue equals line length
+  if (mode === GameMode.Assisted) {
+    grid = grid.map((row, i) =>
+      row.map((cell, j) => {
+        const rowFull =
+          rowHints[i].length === 1 && rowHints[i][0].hint === width;
+        const colFull =
+          columnHints[j].length === 1 && columnHints[j][0].hint === height;
+        return rowFull || colFull ? CellState.FILLED : cell;
+      })
+    );
+  }
+
   return {
     grid,
     rowHints,

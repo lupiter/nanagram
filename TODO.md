@@ -44,16 +44,22 @@ Ordered plan for current issues and features.
 
 - When loading a puzzle, if a row or column has **no clues**, autofill that row/column with **crosses**.
 
-## 8. Assisted mode: autofill full row/column clues
+## 8. Assisted mode: autofill full row/column clues ✓
 
 - **Assisted mode only**: if the clue for a row or column equals the puzzle size (e.g. 5 in 5×5, 15 in 15×15), autofill that row/column with **filled** squares.
 
-## 9. Assisted mode: auto-add crosses at boundaries
+## 9. Assisted mode: auto-add crosses at boundaries ✓
 
 - When the user has filled all cells for a clue and that block **abuts the end** of the row/column, auto-add a **cross** before/after as appropriate.
   - Example: clues `1,2`, last two cells in the row filled → add a cross **before** that block.
 - When the user has filled a block that **abuts the start** and matches earlier clues, auto-add a cross after that block.
   - Example: clues `1,2,3`, first four cells filled (satisfying 1 and 2) → add a cross **after** that block.
+
+## 10. More puzzles please
+
+- win scrren on random puzzles should have button to generate another of the same size. maybe use url params to the random page? and if all supplied it generates imediately and redirects to play the puzzle
+
+
 
 ---
 
@@ -62,4 +68,3 @@ Ordered plan for current issues and features.
 - **Focus rings:** Hide the focus ring when a square is crossed (it looks weird). Show focus rings only when the user is using keyboard navigation (e.g. detect :focus-visible or pointer vs keyboard).
 - Work out how to horizontally centre puzzles
 - Hints should be sticky positioned somehow
-- win scrren on random puzzles should have button to generate another of the same size. maybe use url params to the random page? and if all supplied it generates imediately and redirects to play the puzzle

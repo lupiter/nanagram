@@ -4,9 +4,68 @@
 
 import { produce } from "immer";
 import { CellState } from "../types/nonogram";
+import type { Hint } from "../types/nonogram";
 import { GameMode, UpdateCellOptions, UpdateCellResult } from "../types/puzzle";
 import { hintChecker } from "./HintChecker";
 import { puzzleService } from "./Puzzle";
+
+function findFilledBlocks(line: number[]): { start: number; length: number }[] {
+  const blocks: { start: number; length: number }[] = [];
+  let start = -1;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === CellState.FILLED) {
+      if (start === -1) start = i;
+    } else if (start !== -1) {
+      blocks.push({ start, length: i - start });
+      start = -1;
+    }
+  }
+  if (start !== -1) blocks.push({ start, length: line.length - start });
+  return blocks;
+}
+
+/**
+ * In assisted mode, add a cross before a block at the end or after a block at the start
+ * when the block matches the last or first k clue(s).
+ */
+function addBoundaryCrosses(
+  line: number[],
+  hints: Hint[],
+  setCell: (index: number, value: number) => void
+): void {
+  if (hints.length === 0) return;
+  const blocks = findFilledBlocks(line);
+  if (blocks.length === 0) return;
+
+  const last = blocks[blocks.length - 1];
+  if (last.start + last.length === line.length) {
+    let sum = 0;
+    for (let k = 1; k <= hints.length; k++) {
+      sum += hints[hints.length - k].hint;
+      if (sum === last.length && last.start > 0 && line[last.start - 1] === CellState.EMPTY) {
+        setCell(last.start - 1, CellState.CROSSED_OUT);
+        break;
+      }
+      if (sum > last.length) break;
+    }
+  }
+
+  const first = blocks[0];
+  if (first.start === 0) {
+    let sum = 0;
+    for (let k = 0; k < hints.length; k++) {
+      sum += hints[k].hint;
+      if (sum === first.length) {
+        const idx = first.length;
+        if (idx < line.length && line[idx] === CellState.EMPTY) {
+          setCell(idx, CellState.CROSSED_OUT);
+        }
+        break;
+      }
+      if (sum > first.length) break;
+    }
+  }
+}
 
 /**
  * CellUpdater - Singleton for updating cells
@@ -86,6 +145,16 @@ export class CellUpdater {
             }
           }
         }
+
+        // Auto-add boundary crosses: cross before block at end, or after block at start, when block matches clues
+        const rowLine = draft[row] as number[];
+        addBoundaryCrosses(rowLine, rowHints[row], j => {
+          if (draft[row][j] === CellState.EMPTY) draft[row][j] = CellState.CROSSED_OUT;
+        });
+        const colLine = draft.map(r => r[col]) as number[];
+        addBoundaryCrosses(colLine, columnHints[col], i => {
+          if (draft[i][col] === CellState.EMPTY) draft[i][col] = CellState.CROSSED_OUT;
+        });
       }
     });
 
