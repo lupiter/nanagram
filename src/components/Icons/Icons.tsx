@@ -20,7 +20,6 @@ import librarySvg from "./svg/library.svg";
 import mergeSvg from "./svg/merge.svg";
 import editSvg from "./svg/edit.svg";
 import photoCornerSvg from "./svg/photo-corner.svg";
-import logoSvg from "./svg/logo.svg";
 import checkSvg from "./svg/check.svg";
 import settingsSvg from "./svg/settings.svg";
 import "./Icons.css";
@@ -126,7 +125,7 @@ export class Icons {
   }
 
   static Logo({ className, alt = "Nanagram" }: IconProps = {}) {
-    return <img src={logoSvg} alt={alt} className={`icon ${className ?? ""}`} />;
+    return <img src="/logo.png" alt={alt} className={`icon ${className ?? ""}`} />;
   }
 
   static Check({ className, alt = "Check" }: IconProps = {}) {

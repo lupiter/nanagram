@@ -1,7 +1,7 @@
 nav {
   display: flex;
   flex-direction: row;
-  padding: var(--space-4) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border-bottom: var(--border-width) solid var(--color-border);
   align-items: center;
 }
@@ -38,6 +38,11 @@ nav {
 .nav-icon .icon {
   width: var(--text-xl);
   height: var(--text-xl);
+}
+
+.nav-center .nav-icon .icon {
+  width: var(--text-2xl);
+  height: var(--text-2xl);
 }
 
 nav h1 {
