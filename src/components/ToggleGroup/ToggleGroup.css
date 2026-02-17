@@ -68,7 +68,8 @@
 
 .toggle-button-label {
   display: inline-block;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2);
+  display: flex;
   width: 100%;
   text-align: center;
   transition: all 0.2s ease;

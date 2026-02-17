@@ -12,12 +12,6 @@
   gap: var(--space-4);
   justify-content: center;
   flex-direction: column;
-  padding: var(--space-2);
-}
-
-.puzzle-category {
-  background: var(--color-bg-subtle);
-  border-radius: var(--radius-lg);
 }
 
 .puzzle-category h2 {

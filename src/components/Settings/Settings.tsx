@@ -24,7 +24,9 @@ interface SettingsProps {
 function getStoredPlayMode(): GameMode {
   if (typeof localStorage === "undefined") return GameMode.Assisted;
   const stored = localStorage.getItem(PLAY_MODE_STORAGE_KEY);
-  return stored === GameMode.Free ? GameMode.Free : GameMode.Assisted;
+  if (stored === GameMode.Free) return GameMode.Free;
+  if (stored === GameMode.Correction) return GameMode.Correction;
+  return GameMode.Assisted;
 }
 
 export default function Settings({ onPlayModeChange }: SettingsProps) {
@@ -77,6 +79,7 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
         onChange={handlePlayModeChange}
         options={[
           { value: GameMode.Free, label: "Free" },
+          { value: GameMode.Correction, label: "Correction" },
           { value: GameMode.Assisted, label: "Assisted" },
         ]}
       />

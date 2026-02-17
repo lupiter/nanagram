@@ -2,7 +2,9 @@ import { CellState as NonogramCellState, PuzzleSolutionData, Hint, GameState } f
 
 export enum GameMode {
   Free = 'free',
-  Assisted = 'assisted'
+  Assisted = 'assisted',
+  /** Like assisted but only corrects wrong fills; never auto-fills or auto-crosses (including on load). */
+  Correction = 'correction'
 }
 
 /** Decoded puzzle from URL */

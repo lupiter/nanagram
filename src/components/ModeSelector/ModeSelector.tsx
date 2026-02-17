@@ -14,6 +14,7 @@ export default function ModeSelector({ mode, onModeChange }: ModeSelectorProps) 
         onChange={onModeChange}
         options={[
           { value: GameMode.Free, label: "Free" },
+          { value: GameMode.Correction, label: "Correction" },
           { value: GameMode.Assisted, label: "Assisted" },
         ]}
         name="mode"

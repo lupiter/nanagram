@@ -1,5 +1,8 @@
 .settings {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--space-6);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }

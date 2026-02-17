@@ -54,6 +54,35 @@ describe('updateCell', () => {
     expect(result.errorCell).toEqual([1, 1]);
   });
 
+  it('should cross out invalid cell in correction mode (fix wrong fill only)', () => {
+    const result = cellUpdater.update(createDefaultOptions({
+      mode: GameMode.Correction
+    }));
+
+    expect(result.newGrid[1][1]).toBe(NonogramCellState.CROSSED_OUT);
+    expect(result.errorCell).toEqual([1, 1]);
+  });
+
+  it('should not auto-cross remaining cells in completed row in correction mode', () => {
+    const puzzle = createSolutionGrid(3, 3);
+    puzzle[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
+    const grid = createEmptyGrid(3, 3);
+    grid[1][0] = NonogramCellState.FILLED;
+    grid[1][1] = NonogramCellState.FILLED;
+
+    const result = cellUpdater.update(createDefaultOptions({
+      grid,
+      puzzle,
+      row: 1,
+      col: 2,
+      mode: GameMode.Correction
+    }));
+
+    expect(result.newGrid[1][2]).toBe(NonogramCellState.FILLED);
+    expect(result.newGrid[1].filter(c => c === NonogramCellState.EMPTY).length).toBe(0);
+    expect(result.newGrid.flat().filter(c => c === NonogramCellState.CROSSED_OUT).length).toBe(0);
+  });
+
   it('should toggle filled cell back to empty', () => {
     const grid = createEmptyGrid(3, 3);
     grid[1][1] = NonogramCellState.FILLED;

@@ -146,7 +146,7 @@ export default function Library() {
     <PageContainer>
       <Toast message={message} visible={!!message} />
 
-      <section className="panel library-section">
+      <section className="panel settings-section">
         <h2>Settings</h2>
         <Settings />
       </section>

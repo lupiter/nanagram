@@ -87,9 +87,9 @@ export class CellUpdater {
     const newGrid = produce(grid, draft => {
       const cell = draft[row][col];
 
-      // In assisted mode, check if the move is valid
+      // Assisted and Correction: fix wrong fills (cell should be empty)
       if (
-        mode === GameMode.Assisted &&
+        (mode === GameMode.Assisted || mode === GameMode.Correction) &&
         toolToUse === CellState.FILLED &&
         puzzle[row][col] === CellState.EMPTY
       ) {
@@ -98,11 +98,11 @@ export class CellUpdater {
         // Cross out the cell instead
         draft[row][col] = CellState.CROSSED_OUT;
       } else {
-        // Assisted mode: do not allow changing filled cells (no un-fill, no fill→cross)
+        // Assisted only: do not allow changing filled cells (no un-fill, no fill→cross)
         if (mode === GameMode.Assisted && cell === CellState.FILLED) {
           // No-op: keep cell filled
         } else if (
-          mode === GameMode.Assisted &&
+          (mode === GameMode.Assisted || mode === GameMode.Correction) &&
           cell === CellState.CROSSED_OUT &&
           toolToUse === CellState.CROSSED_OUT
         ) {
@@ -124,7 +124,7 @@ export class CellUpdater {
         }
       }
 
-      // In assisted mode, check if we need to auto-cross out cells
+      // Assisted only: auto-cross when row/column complete and boundary crosses
       if (mode === GameMode.Assisted) {
         // Check if the row is complete
         if (puzzleService.isRowOrColumnComplete(puzzle, draft, true, row)) {

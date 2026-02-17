@@ -14,16 +14,18 @@ export function createInitialState(
   const columnHints = puzzleService.deriveColumnHints(solution);
   let grid = savedGrid ?? puzzleService.createEmptyGameState(solution[0].length, solution.length);
 
-  // Autofill rows/columns with no clues (all cells in that line are crosses)
-  grid = grid.map((row, i) =>
-    row.map((cell, j) =>
-      rowHints[i].length === 0 || columnHints[j].length === 0 ? CellState.CROSSED_OUT : cell
-    )
-  );
-
   const mode = savedMode ?? GameMode.Assisted;
   const height = grid.length;
   const width = grid[0].length;
+
+  // Autofill rows/columns with no clues (crosses) – not in Correction mode
+  if (mode !== GameMode.Correction) {
+    grid = grid.map((row, i) =>
+      row.map((cell, j) =>
+        rowHints[i].length === 0 || columnHints[j].length === 0 ? CellState.CROSSED_OUT : cell
+      )
+    );
+  }
 
   // Assisted mode only: autofill rows/columns where the single clue equals line length
   if (mode === GameMode.Assisted) {
