@@ -137,27 +137,35 @@
 
 .edit-badge {
   position: absolute;
-  top: calc(-1 * var(--space-2));
-  right: calc(-1 * var(--space-2));
+  top: calc(-1 * var(--space-1));
+  right: calc(-1 * var(--space-1));
   z-index: 10;
-  background: var(--color-bg);
-  border: var(--border-width) solid var(--color-border);
-  width: var(--size-touch-target);
-  height: var(--size-touch-target);
-  border-radius: 50%;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
   transition: all 0.15s ease;
 }
 
-.edit-badge:hover {
-  background: var(--color-bg-light-hover);
-  transform: scale(1.05);
+.edit-badge svg {
+  width: var(--size-touch-target);
+  height: var(--size-touch-target);
+  border: 1px solid var(--color-border);
+  border-width: 1px 1px 0 0;
+  border-radius: var(--radius-sm);
 }
 
-.edit-badge .icon {
-  width: calc(var(--size-touch-target) * 0.5);
-  height: calc(var(--size-touch-target) * 0.5);
+.edit-badge .corner-under {
+  fill: var(--color-btn-secondary);
+}
+
+.edit-badge .corner-over {
+  fill: var(--color-btn-default);
+  stroke: var(--color-border);
+  stroke-width: 1px;
+}
+
+.edit-badge:hover {
+  transform: scale(1.05);
 }

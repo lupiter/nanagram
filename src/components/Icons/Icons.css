@@ -5,9 +5,9 @@
   display: inline-block;
 }
 
-/* Dark themes: invert so dark-icon SVGs appear light and visible */
-html[data-theme="dark"] .icon,
-html[data-theme="high-contrast-dark"] .icon {
+/* Dark themes: invert so dark-icon SVGs appear light and visible (logo stays as-is) */
+html[data-theme="dark"] .icon:not(.icon-logo),
+html[data-theme="high-contrast-dark"] .icon:not(.icon-logo) {
   filter: invert(1);
 }
 

@@ -71,7 +71,12 @@ export default function Home() {
           className="edit-badge"
           title="Edit design"
         >
-          <Icons.Edit />
+          <svg viewBox="0 0 44 44">
+            <path d="M0,4 0,0 4,4 z" className="corner-under-top corner-under"/>
+            <path d="M0,0 44,0 44,44 z" className="corner-over"/>
+            <path d="M44,44 40,44 40,40 z" className="corner-under-bottom corner-under"/>
+            <Icons.EditSvg x={24} y={4} />
+          </svg>
         </Link>
         <Link
           to={`/play/${encoded}`}

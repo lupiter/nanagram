@@ -59,6 +59,26 @@ export class HintChecker {
   }
 
   /**
+   * Check whether the cells before `start` contain filled blocks that exactly match
+   * hints 0..hintIndex-1. If there are no filled cells before us, only hintIndex 0 is valid.
+   */
+  private precedingCellsMatchHints(
+    cells: CellState[],
+    start: number,
+    hints: Hint[],
+    hintIndex: number
+  ): boolean {
+    if (hintIndex <= 0) return true;
+    const preceding = cells.slice(0, start);
+    const blocks = this.findSequences(preceding);
+    if (blocks.length !== hintIndex) return false;
+    for (let i = 0; i < hintIndex; i++) {
+      if (blocks[i].length !== hints[i].hint) return false;
+    }
+    return true;
+  }
+
+  /**
    * Check if a sequence at position `start` with `length` could possibly be hint at index `hintIndex`.
    * Uses positional constraints to determine if there's enough room for hints before/after.
    */
@@ -104,7 +124,7 @@ export class HintChecker {
     // mark that hint as used.
     
     for (const seq of currentSequences) {
-      // Find all hints this sequence could possibly be
+      // Find all hints this sequence could possibly be (by position/size constraints)
       const possibleHintIndices: number[] = [];
       
       for (let hintIndex = 0; hintIndex < newHints.length; hintIndex++) {
@@ -114,16 +134,52 @@ export class HintChecker {
           possibleHintIndices.push(hintIndex);
         }
       }
-      
-      // If this sequence can only match one hint, check if it's correct
-      if (possibleHintIndices.length === 1) {
-        const hintIndex = possibleHintIndices[0];
-        const answerSequence = answerSequences[hintIndex] as { start: number; length: number } | undefined;
-        
-        if (answerSequence && 
-            seq.start === answerSequence.start && 
-            seq.length === answerSequence.length) {
-          newHints[hintIndex].used = true;
+
+      // Disambiguate: when there are filled blocks before us, they must match earlier hints.
+      // When there are none, we can still rule out hint k if our start is before the minimum
+      // start for hint k (e.g. start=1 with hints [1,1] → we can't be hint 1, so we're hint 0).
+      const precedingBlocks = this.findSequences(cells.slice(0, seq.start));
+      let validIndices: number[];
+      if (precedingBlocks.length === 0) {
+        // No blocks before us: we can only be hint k if there is room for hints 0..k-1 plus a gap.
+        // So hint k's minimum start is minSpaceForHints(0..k-1) + 1 (gap). At start=1 with [1,1], we can't be hint 1.
+        validIndices = possibleHintIndices.filter((hintIndex) => {
+          if (hintIndex === 0) return true;
+          const minStart = this.minSpaceForHints(newHints, 0, hintIndex - 1) + 1;
+          return seq.start >= minStart;
+        });
+      } else {
+        validIndices = possibleHintIndices.filter((hintIndex) =>
+          this.precedingCellsMatchHints(cells, seq.start, newHints, hintIndex)
+        );
+      }
+
+      // Mark only when we can determine which hint this block is:
+      // (1) uniquely by room/preceding (validIndices.length === 1), or
+      // (2) pinned to an edge: no empty cells to one side, so we know we're the Nth block (N = precedingBlocks.length).
+      let hintIndexToMark: number | null = null;
+      if (validIndices.length === 1) {
+        hintIndexToMark = validIndices[0];
+      } else {
+        const noEmptyLeft = seq.start === 0 || !cells.slice(0, seq.start).some((c) => c === CellState.EMPTY);
+        const noEmptyRight =
+          seq.start + seq.length >= gridSize ||
+          !cells.slice(seq.start + seq.length).some((c) => c === CellState.EMPTY);
+        if (noEmptyLeft || noEmptyRight) {
+          const pinnedHintIndex = precedingBlocks.length;
+          if (pinnedHintIndex < newHints.length && validIndices.includes(pinnedHintIndex)) {
+            hintIndexToMark = pinnedHintIndex;
+          }
+        }
+      }
+      if (hintIndexToMark != null && !newHints[hintIndexToMark].used) {
+        const answerSequence = answerSequences[hintIndexToMark] as { start: number; length: number } | undefined;
+        if (
+          answerSequence != null &&
+          seq.start === answerSequence.start &&
+          seq.length === answerSequence.length
+        ) {
+          newHints[hintIndexToMark].used = true;
         }
       }
     }

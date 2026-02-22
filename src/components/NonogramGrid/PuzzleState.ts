@@ -1,6 +1,7 @@
 import { GameMode, HistoryEntry, PuzzleState } from "../../types/puzzle";
 import { GameState, CellState, PuzzleSolutionData } from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
+import { hintChecker } from "../../services/HintChecker";
 
 // Re-export for convenience
 export type { HistoryEntry, PuzzleState };
@@ -40,10 +41,20 @@ export function createInitialState(
     );
   }
 
+  // Always recompute used flags from current grid (e.g. when loading saved progress)
+  const checkedRowHints = grid.map((row, i) =>
+    hintChecker.check(row, rowHints[i], solution[i])
+  );
+  const checkedColumnHints = grid[0].map((_, col) => {
+    const column = grid.map((r) => r[col]);
+    const answerColumn = solution.map((r) => r[col]);
+    return hintChecker.check(column, columnHints[col], answerColumn);
+  });
+
   return {
     grid,
-    rowHints,
-    columnHints,
+    rowHints: checkedRowHints,
+    columnHints: checkedColumnHints,
     tool: CellState.FILLED,
     mode: savedMode ?? GameMode.Assisted,
     isSolved: false,
