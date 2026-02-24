@@ -13,6 +13,8 @@ export default function NonogramGrid({
   onCellMouseDown,
   onCellMouseEnter,
   errorCell,
+  minRowHintSlots,
+  minColHintSlots,
 }: NonogramGridProps) {
   const hintDimensions = useMemo(() => {
     const maxRowHints = rowHints.length > 0
@@ -26,10 +28,14 @@ export default function NonogramGrid({
 
   const containerStyle = useMemo(
     (): CSSProperties => ({
-      "--max-row-hints": String(Math.max(1, hintDimensions.maxRowHints)),
-      "--max-col-hints": String(Math.max(1, hintDimensions.maxColHints)),
+      "--max-row-hints": String(
+        Math.max(1, hintDimensions.maxRowHints, minRowHintSlots ?? 0)
+      ),
+      "--max-col-hints": String(
+        Math.max(1, hintDimensions.maxColHints, minColHintSlots ?? 0)
+      ),
     } as CSSProperties),
-    [hintDimensions]
+    [hintDimensions, minRowHintSlots, minColHintSlots]
   );
 
   return (

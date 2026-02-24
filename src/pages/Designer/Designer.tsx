@@ -258,6 +258,8 @@ export default function Designer() {
           onCellClick={handleCellClick}
           onCellMouseDown={handleMouseDown}
           onCellMouseEnter={handleMouseEnter}
+          minRowHintSlots={state.width}
+          minColHintSlots={state.height}
         />
       </div>
 

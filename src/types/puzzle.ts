@@ -106,4 +106,8 @@ export interface NonogramGridProps {
   onCellMouseDown?: (row: number, col: number, e: React.MouseEvent) => void;
   onCellMouseEnter?: (row: number, col: number) => void;
   errorCell?: [number, number] | null;
+  /** When set (e.g. in designer), reserves at least this many slots so layout does not reflow as clues change. */
+  minRowHintSlots?: number;
+  /** When set (e.g. in designer), reserves at least this many slots so layout does not reflow as clues change. */
+  minColHintSlots?: number;
 }
