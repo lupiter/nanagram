@@ -1,7 +1,8 @@
+import puzzle1 from './puzzle1.json';
+import puzzle2 from './puzzle2.json';
+
 import { PuzzleDefinition } from '../../types/nonogram';
 
-// No pre-defined puzzles yet for 10x15 size
-// Use the random puzzle generator to create 10x15 puzzles
-const puzzles: PuzzleDefinition[] = [];
+const puzzles = [puzzle1, puzzle2] as PuzzleDefinition[];
 
-export default puzzles;
+export default puzzles.sort((a, b) => a.difficulty - b.difficulty);
