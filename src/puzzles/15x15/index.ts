@@ -5,9 +5,10 @@ import puzzle4 from './puzzle4.json';
 import puzzle5 from './puzzle5.json';
 import puzzle6 from './puzzle6.json';
 import puzzle7 from './puzzle7.json';
+import puzzle8 from './puzzle8.json';
 
 import { PuzzleDefinition } from '../../types/nonogram';
 
-const puzzles = [puzzle1, puzzle2, puzzle3, puzzle4, puzzle5, puzzle6, puzzle7] as PuzzleDefinition[];
+const puzzles = [puzzle1, puzzle2, puzzle3, puzzle4, puzzle5, puzzle6, puzzle7, puzzle8] as PuzzleDefinition[];
 
 export default puzzles.sort((a, b) => a.difficulty - b.difficulty);
