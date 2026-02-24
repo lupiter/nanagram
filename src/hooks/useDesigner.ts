@@ -19,9 +19,13 @@ export function useDesigner(height: number, width?: number) {
 
     setState(s => controller.setChecking(s, true));
 
+    const gridBeingValidated = state.grid;
     const timer = setTimeout(() => {
-      const result = puzzleService.checkPuzzleHasUniqueSolution(state.grid);
-      setState(s => controller.setUniqueSolution(s, result));
+      const result = puzzleService.checkPuzzleHasUniqueSolution(gridBeingValidated);
+      setState(s => {
+        if (s.grid !== gridBeingValidated) return s;
+        return controller.setUniqueSolution(s, result);
+      });
     }, 300);
 
     return () => { clearTimeout(timer); };
