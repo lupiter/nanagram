@@ -10,8 +10,8 @@ export default function NonogramGrid({
   columnHints,
   onCellClick,
   onCellRightClick,
-  onCellMouseDown,
-  onCellMouseEnter,
+  onCellPointerDown,
+  onCellPointerEnter,
   errorCell,
   minRowHintSlots,
   minColHintSlots,
@@ -61,10 +61,10 @@ export default function NonogramGrid({
                 <td
                   key={`${String(rowIndex)}-${String(colIndex)}`}
                   role="gridcell"
-                  onMouseEnter={
-                    onCellMouseEnter
+                  onPointerEnter={
+                    onCellPointerEnter
                       ? () => {
-                          onCellMouseEnter(rowIndex, colIndex);
+                          onCellPointerEnter(rowIndex, colIndex);
                         }
                       : undefined
                   }
@@ -83,10 +83,10 @@ export default function NonogramGrid({
                           }
                         : undefined
                     }
-                    onMouseDown={
-                      onCellMouseDown
+                    onPointerDown={
+                      onCellPointerDown
                         ? (e) => {
-                            onCellMouseDown(rowIndex, colIndex, e);
+                            onCellPointerDown(rowIndex, colIndex, e);
                           }
                         : undefined
                     }

@@ -81,15 +81,15 @@ export default function Designer() {
     [controller, setState]
   );
 
-  const handleMouseDown = useCallback(
-    (row: number, col: number, e: React.MouseEvent) => {
+  const handlePointerDown = useCallback(
+    (row: number, col: number, e: React.PointerEvent) => {
       if (e.button === 2) return; // Ignore right click
       setState((s) => controller.startDrag(s, row, col));
     },
     [controller, setState]
   );
 
-  const handleMouseEnter = useCallback(
+  const handlePointerEnter = useCallback(
     (row: number, col: number) => {
       setState((s) => controller.continueDrag(s, row, col));
     },
@@ -256,8 +256,8 @@ export default function Designer() {
           rowHints={state.rowHints}
           columnHints={state.columnHints}
           onCellClick={handleCellClick}
-          onCellMouseDown={handleMouseDown}
-          onCellMouseEnter={handleMouseEnter}
+          onCellPointerDown={handlePointerDown}
+          onCellPointerEnter={handlePointerEnter}
           minRowHintSlots={state.width}
           minColHintSlots={state.height}
         />

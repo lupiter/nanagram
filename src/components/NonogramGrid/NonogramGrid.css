@@ -12,6 +12,8 @@ table.nonogram-grid {
   margin: 0 auto;
   background-color: transparent;
   user-select: none;
+  /* Prevent touch scroll so drag-to-fill works on iPad/touch devices */
+  touch-action: none;
 }
 
 /* Table cells */

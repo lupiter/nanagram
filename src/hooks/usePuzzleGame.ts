@@ -68,9 +68,9 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     localStorage.setItem(PLAY_MODE_STORAGE_KEY, state.mode);
   }, [state.mode]);
 
-  // Global mouse up handler for drag
+  // Global pointer up/cancel handler for drag (works for mouse and touch)
   useEffect(() => {
-    const handleGlobalMouseUp = () => {
+    const handleGlobalPointerUp = () => {
       // Use requestAnimationFrame to delay endDrag until after onChange fires
       requestAnimationFrame(() => {
         setState(s => {
@@ -81,8 +81,12 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
         });
       });
     };
-    window.addEventListener("mouseup", handleGlobalMouseUp);
-    return () => { window.removeEventListener("mouseup", handleGlobalMouseUp); };
+    window.addEventListener("pointerup", handleGlobalPointerUp);
+    window.addEventListener("pointercancel", handleGlobalPointerUp);
+    return () => {
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
+      window.removeEventListener("pointercancel", handleGlobalPointerUp);
+    };
   }, [controller]);
 
   // Keyboard shortcuts - registered once, uses ref for latest state
