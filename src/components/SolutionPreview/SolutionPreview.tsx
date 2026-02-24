@@ -11,15 +11,16 @@ const roundToOneDecimal = (value: number) => {
 };
 
 export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPreviewProps) {
-  const gridSize = solution.length;
-  const cellSize = Math.max(2, roundToOneDecimal(maxSize / gridSize));
+  const rows = solution.length;
+  const cols = solution[0]?.length ?? rows;
+  const cellSize = Math.max(2, roundToOneDecimal(maxSize / Math.max(rows, cols)));
 
   return (
     <div 
       className="solution-preview"
       style={{
-        gridTemplateColumns: `repeat(${String(gridSize)}, ${String(cellSize)}px)`,
-        gridTemplateRows: `repeat(${String(gridSize)}, ${String(cellSize)}px)`,
+        gridTemplateColumns: `repeat(${String(cols)}, ${String(cellSize)}px)`,
+        gridTemplateRows: `repeat(${String(rows)}, ${String(cellSize)}px)`,
       }}
     >
       {solution.flatMap((row, rowIndex) =>
