@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { GameMode } from "../types/puzzle";
 import { GameState } from "../types/nonogram";
 import { PuzzleDefinition } from "../types/nonogram";
@@ -25,6 +25,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     const savedMode = localStorage.getItem(PLAY_MODE_STORAGE_KEY) as GameMode | null;
     return controller.createInitialState(savedGrid, savedMode);
   });
+  const dragJustEndedCellsRef = useRef<Set<string> | null>(null);
 
   // Reset state when puzzle changes
   useEffect(() => {
@@ -75,6 +76,11 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       requestAnimationFrame(() => {
         setState(s => {
           if (s.isDragging) {
+            const cells = new Set<string>();
+            s.draggedCells.forEach((cols, r) =>
+              cols.forEach(c => cells.add(`${String(r)},${String(c)}`))
+            );
+            dragJustEndedCellsRef.current = cells;
             return controller.endDrag(s);
           }
           return s;
@@ -105,5 +111,5 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     return () => { window.removeEventListener("keydown", handleKeyDown); };
   }, [controller]);
 
-  return { state, setState, controller };
+  return { state, setState, controller, dragJustEndedCellsRef };
 }

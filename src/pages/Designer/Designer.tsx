@@ -28,7 +28,7 @@ export default function Designer() {
   const [searchParams] = useSearchParams();
   const showDevTools = searchParams.get("dev") === "true";
   const editId = searchParams.get("edit");
-  const { state, setState, controller } = useDesigner(size, width);
+  const { state, setState, controller, dragJustEndedCellsRef } = useDesigner(size, width);
   const { setTitle } = usePageTitle();
   
   // State for SSS file operations
@@ -62,15 +62,20 @@ export default function Designer() {
 
   useEffect(() => {
     document.title = "Designer - Nanagram";
-    const subtitle = isSketchFormat 
-      ? "Sketch, Share, Solve" 
-      : `${String(state.height)}×${String(state.width)}`;
+    const subtitle = `${String(state.height)}×${String(state.width)}`;
     setTitle({ title: "Designer", subtitle });
-  }, [setTitle, state.height, state.width, isSketchFormat]);
+  }, [setTitle, state.height, state.width]);
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
-      // Skip if already handled by drag start
+      const key = `${String(row)},${String(col)}`;
+      if (dragJustEndedCellsRef.current?.has(key)) {
+        dragJustEndedCellsRef.current.delete(key);
+        if (dragJustEndedCellsRef.current.size === 0) {
+          dragJustEndedCellsRef.current = null;
+        }
+        return;
+      }
       setState((s) => {
         if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
           return s;
@@ -78,7 +83,7 @@ export default function Designer() {
         return controller.toggleCell(s, row, col);
       });
     },
-    [controller, setState]
+    [controller, setState, dragJustEndedCellsRef]
   );
 
   const handlePointerDown = useCallback(

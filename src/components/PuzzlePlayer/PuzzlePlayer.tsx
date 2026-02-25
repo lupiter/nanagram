@@ -30,6 +30,8 @@ interface PuzzlePlayerProps {
   controller: PuzzleController;
   nextPuzzle?: NextPuzzleInfo | null;
   randomAgainParams?: RandomAgainParams | null;
+  /** When set, clicks on these cells (row,col keys) are ignored once (synthetic click after tap). */
+  dragJustEndedCellsRef?: React.MutableRefObject<Set<string> | null>;
 }
 
 export default function PuzzlePlayer({
@@ -39,9 +41,18 @@ export default function PuzzlePlayer({
   controller,
   nextPuzzle = null,
   randomAgainParams = null,
+  dragJustEndedCellsRef,
 }: PuzzlePlayerProps) {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
+      const key = `${String(row)},${String(col)}`;
+      if (dragJustEndedCellsRef?.current?.has(key)) {
+        dragJustEndedCellsRef.current.delete(key);
+        if (dragJustEndedCellsRef.current.size === 0) {
+          dragJustEndedCellsRef.current = null;
+        }
+        return;
+      }
       setState((s) => {
         if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
           return s;
@@ -49,7 +60,7 @@ export default function PuzzlePlayer({
         return controller.updateCell(s, row, col);
       });
     },
-    [controller, setState]
+    [controller, setState, dragJustEndedCellsRef]
   );
 
   const handleRightClick = useCallback(
