@@ -26,6 +26,8 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     return controller.createInitialState(savedGrid, savedMode);
   });
   const dragJustEndedCellsRef = useRef<Set<string> | null>(null);
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   // Reset state when puzzle changes
   useEffect(() => {
@@ -69,18 +71,22 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     localStorage.setItem(PLAY_MODE_STORAGE_KEY, state.mode);
   }, [state.mode]);
 
-  // Global pointer up/cancel handler for drag (works for mouse and touch)
+  // Global pointer up/cancel handler for drag (works for mouse and touch).
+  // Set dragJustEndedCellsRef synchronously so the synthetic click on iPad Safari
+  // (which can fire before rAF) is ignored.
   useEffect(() => {
     const handleGlobalPointerUp = () => {
-      // Use requestAnimationFrame to delay endDrag until after onChange fires
+      const s = stateRef.current;
+      if (s.isDragging) {
+        const cells = new Set<string>();
+        s.draggedCells.forEach((cols, r) =>
+          cols.forEach(c => cells.add(`${String(r)},${String(c)}`))
+        );
+        dragJustEndedCellsRef.current = cells;
+      }
       requestAnimationFrame(() => {
         setState(s => {
           if (s.isDragging) {
-            const cells = new Set<string>();
-            s.draggedCells.forEach((cols, r) =>
-              cols.forEach(c => cells.add(`${String(r)},${String(c)}`))
-            );
-            dragJustEndedCellsRef.current = cells;
             return controller.endDrag(s);
           }
           return s;

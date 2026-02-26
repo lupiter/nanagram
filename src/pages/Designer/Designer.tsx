@@ -89,6 +89,7 @@ export default function Designer() {
   const handlePointerDown = useCallback(
     (row: number, col: number, e: React.PointerEvent) => {
       if (e.button === 2) return; // Ignore right click
+      e.preventDefault(); // Prevent synthetic click (iPad Safari/Pencil fires it before our pointerup)
       setState((s) => controller.startDrag(s, row, col));
     },
     [controller, setState]
