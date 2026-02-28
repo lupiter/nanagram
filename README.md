@@ -112,6 +112,21 @@ export const puzzle1 = [
 ];
 ```
 
+## Homescreen / bookmark icons
+
+When users add the app to their home screen (iOS or Android), the icon comes from:
+
+- **iOS**: `public/apple-touch-icon.png` (180×180 PNG).
+- **Android**: The app manifest references `public/icon.svg` and the PNGs `public/android-chrome-192.png` and `public/android-chrome-512.png`.
+
+The icon is generated from `public/logo.png`. Regenerate the PNGs after changing the logo:
+
+```bash
+npm run icons
+```
+
+This resizes `logo.png` to 180×180, 192×192, and 512×512. Requires ImageMagick (`magick`). For a rect-based vector `icon.svg` (e.g. for scaling to any size), run `npm run icon-svg` first, then `cd public && magick icon.svg -resize ...` as needed.
+
 ## Known Limitations
 
 - No progress saving (refreshing loses puzzle state)
