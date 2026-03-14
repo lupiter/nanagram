@@ -1,104 +1,109 @@
-export const THEME_BASE_KEY = 'nanagram-theme-base'
-export const THEME_HIGH_CONTRAST_KEY = 'nanagram-theme-high-contrast'
+export const THEME_BASE_KEY = "nanagram-theme-base";
+export const THEME_HIGH_CONTRAST_KEY = "nanagram-theme-high-contrast";
 
-export type ThemeBase = 'light' | 'dark' | 'auto'
+export type ThemeBase = "light" | "dark" | "auto";
 
-export const THEME_BASES: ThemeBase[] = ['light', 'dark', 'auto']
+export const THEME_BASES: ThemeBase[] = ["light", "dark", "auto"];
 
 /** Resolved to light or dark when base is 'auto' (uses prefers-color-scheme). */
-export function getResolvedThemeBase(): 'light' | 'dark' {
-  const stored = getStoredThemeBase()
-  if (stored !== 'auto') return stored
-  if (typeof window === 'undefined' || !window.matchMedia) return 'light'
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+export function getResolvedThemeBase(): "light" | "dark" {
+  const stored = getStoredThemeBase();
+  if (stored !== "auto") return stored;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (typeof window === "undefined" || !window.matchMedia) return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
-export const PLAY_MODE_STORAGE_KEY = 'nanagram-game-mode'
+export const PLAY_MODE_STORAGE_KEY = "nanagram-game-mode";
 
-export const CELL_SIZE_STORAGE_KEY = 'nanagram-cell-size'
+export const CELL_SIZE_STORAGE_KEY = "nanagram-cell-size";
 
 /** Grid cell size = base-size × this multiplier (3–7). Default 5 (M). */
-export type CellSizeMultiplier = 3 | 4 | 5 | 6 | 7
+export type CellSizeMultiplier = 3 | 4 | 5 | 6 | 7;
 
-const CELL_SIZE_MULTIPLIER_DEFAULT: CellSizeMultiplier = 5
+const CELL_SIZE_MULTIPLIER_DEFAULT: CellSizeMultiplier = 5;
 
 export function getStoredCellSizeMultiplier(): CellSizeMultiplier {
-  if (typeof localStorage === 'undefined') return CELL_SIZE_MULTIPLIER_DEFAULT
-  const n = Number(localStorage.getItem(CELL_SIZE_STORAGE_KEY))
-  if (n >= 3 && n <= 7) return n as CellSizeMultiplier
-  return CELL_SIZE_MULTIPLIER_DEFAULT
+  if (typeof localStorage === "undefined") return CELL_SIZE_MULTIPLIER_DEFAULT;
+  const n = Number(localStorage.getItem(CELL_SIZE_STORAGE_KEY));
+  if (n >= 3 && n <= 7 && !Number.isNaN(n)) return n as CellSizeMultiplier;
+  return CELL_SIZE_MULTIPLIER_DEFAULT;
 }
 
 export function applyCellSize(): void {
-  const multiplier = getStoredCellSizeMultiplier()
+  const multiplier = getStoredCellSizeMultiplier();
   document.documentElement.style.setProperty(
-    '--size-cell',
-    `calc(var(--base-size) * ${multiplier})`
-  )
+    "--size-cell",
+    `calc(var(--base-size) * ${String(multiplier)})`,
+  );
 }
 
 export type ThemeId =
-  | 'light'
-  | 'dark'
-  | 'high-contrast-dark'
-  | 'high-contrast-light'
+  | "light"
+  | "dark"
+  | "high-contrast-dark"
+  | "high-contrast-light";
 
 const THEME_COLOR: Record<ThemeId, string> = {
-  light: '#f0dac5',
-  dark: '#1e1d2a',
-  'high-contrast-dark': '#000000',
-  'high-contrast-light': '#ffffff',
-}
+  light: "#f0dac5",
+  dark: "#1e1d2a",
+  "high-contrast-dark": "#000000",
+  "high-contrast-light": "#ffffff",
+};
 
-function themeIdFrom(base: 'light' | 'dark', highContrast: boolean): ThemeId {
-  if (highContrast) return base === 'dark' ? 'high-contrast-dark' : 'high-contrast-light'
-  return base
+function themeIdFrom(base: "light" | "dark", highContrast: boolean): ThemeId {
+  if (highContrast)
+    return base === "dark" ? "high-contrast-dark" : "high-contrast-light";
+  return base;
 }
 
 export function getStoredThemeBase(): ThemeBase {
-  if (typeof localStorage === 'undefined') return 'light'
-  const stored = localStorage.getItem(THEME_BASE_KEY)
-  if (stored === 'dark' || stored === 'auto') return stored
-  return 'light'
+  if (typeof localStorage === "undefined") return "light";
+  const stored = localStorage.getItem(THEME_BASE_KEY);
+  if (stored === "dark" || stored === "auto") return stored;
+  return "light";
 }
 
 export function getStoredThemeHighContrast(): boolean {
-  if (typeof localStorage === 'undefined') return false
-  return localStorage.getItem(THEME_HIGH_CONTRAST_KEY) === 'true'
+  if (typeof localStorage === "undefined") return false;
+  return localStorage.getItem(THEME_HIGH_CONTRAST_KEY) === "true";
 }
 
 /** Migrate from legacy single-key theme if present */
 function migrateThemeFromLegacy(): void {
-  const legacy = localStorage.getItem('nanagram-theme')
-  if (!legacy) return
-  if (legacy === 'dark' || legacy === 'light') {
-    localStorage.setItem(THEME_BASE_KEY, legacy)
-    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, 'false')
-  } else if (legacy === 'high-contrast-dark') {
-    localStorage.setItem(THEME_BASE_KEY, 'dark')
-    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, 'true')
-  } else if (legacy === 'high-contrast-light') {
-    localStorage.setItem(THEME_BASE_KEY, 'light')
-    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, 'true')
+  const legacy = localStorage.getItem("nanagram-theme");
+  if (!legacy) return;
+  if (legacy === "dark" || legacy === "light") {
+    localStorage.setItem(THEME_BASE_KEY, legacy);
+    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, "false");
+  } else if (legacy === "high-contrast-dark") {
+    localStorage.setItem(THEME_BASE_KEY, "dark");
+    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, "true");
+  } else if (legacy === "high-contrast-light") {
+    localStorage.setItem(THEME_BASE_KEY, "light");
+    localStorage.setItem(THEME_HIGH_CONTRAST_KEY, "true");
   }
-  localStorage.removeItem('nanagram-theme')
+  localStorage.removeItem("nanagram-theme");
 }
 
 export function applyTheme(): void {
-  migrateThemeFromLegacy()
-  const resolvedBase = getResolvedThemeBase()
-  const highContrast = getStoredThemeHighContrast()
-  const theme = themeIdFrom(resolvedBase, highContrast)
-  document.documentElement.setAttribute('data-theme', theme)
-  const meta = document.querySelector('meta[name="theme-color"]')
-  if (meta) meta.setAttribute('content', THEME_COLOR[theme])
+  migrateThemeFromLegacy();
+  const resolvedBase = getResolvedThemeBase();
+  const highContrast = getStoredThemeHighContrast();
+  const theme = themeIdFrom(resolvedBase, highContrast);
+  document.documentElement.setAttribute("data-theme", theme);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", THEME_COLOR[theme]);
 }
 
 /** Call applyTheme when system preference (prefers-color-scheme) changes. Call once at app init. */
 export function subscribeToSystemTheme(): void {
-  if (typeof window === 'undefined' || !window.matchMedia) return
-  const media = window.matchMedia('(prefers-color-scheme: dark)')
-  media.addEventListener('change', () => {
-    if (getStoredThemeBase() === 'auto') applyTheme()
-  })
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (typeof window === "undefined" || !window.matchMedia) return;
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", () => {
+    if (getStoredThemeBase() === "auto") applyTheme();
+  });
 }

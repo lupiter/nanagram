@@ -1,9 +1,7 @@
-
-
 export enum CellState {
   EMPTY = 0,
   FILLED = 1,
-  CROSSED_OUT = 2
+  CROSSED_OUT = 2,
 }
 
 export type Cell = CellState.EMPTY | CellState.FILLED | CellState.CROSSED_OUT;

@@ -10,13 +10,19 @@ const roundToOneDecimal = (value: number) => {
   return Math.round(value * 10) / 10;
 };
 
-export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPreviewProps) {
+export default function SolutionPreview({
+  solution,
+  maxSize = 200,
+}: SolutionPreviewProps) {
   const rows = solution.length;
   const cols = solution[0]?.length ?? rows;
-  const cellSize = Math.max(2, roundToOneDecimal(maxSize / Math.max(rows, cols)));
+  const cellSize = Math.max(
+    2,
+    roundToOneDecimal(maxSize / Math.max(rows, cols)),
+  );
 
   return (
-    <div 
+    <div
       className="solution-preview"
       style={{
         gridTemplateColumns: `repeat(${String(cols)}, ${String(cellSize)}px)`,
@@ -29,9 +35,8 @@ export default function SolutionPreview({ solution, maxSize = 200 }: SolutionPre
             key={`${String(rowIndex)}-${String(colIndex)}`}
             className={cell === CellState.FILLED ? "cell filled" : "cell"}
           />
-        ))
+        )),
       )}
     </div>
   );
 }
-

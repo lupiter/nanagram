@@ -21,21 +21,43 @@ export default function ActionButtons({
 }: ActionButtonsProps) {
   return (
     <ButtonGroup gap={1} justify="center" align="center">
-      <Button square onClick={onUndo} disabled={!canUndo} aria-label="Undo" title="Undo (Ctrl+Z)">
+      <Button
+        square
+        onClick={onUndo}
+        disabled={!canUndo}
+        aria-label="Undo"
+        title="Undo (Ctrl+Z)"
+      >
         <Icons.Undo />
       </Button>
-      <Button square onClick={onRedo} disabled={!canRedo} aria-label="Redo" title="Redo (Ctrl+Shift+Z)">
+      <Button
+        square
+        onClick={onRedo}
+        disabled={!canRedo}
+        aria-label="Redo"
+        title="Redo (Ctrl+Shift+Z)"
+      >
         <Icons.Redo />
       </Button>
-      <Button square onClick={onReset} aria-label="Reset puzzle" variant="danger">
+      <Button
+        square
+        onClick={onReset}
+        aria-label="Reset puzzle"
+        variant="danger"
+      >
         <Icons.Reset />
       </Button>
       {onSettingsClick && (
-        <Button square variant="secondary" onClick={onSettingsClick} aria-label="Settings" title="Settings">
+        <Button
+          square
+          variant="secondary"
+          onClick={onSettingsClick}
+          aria-label="Settings"
+          title="Settings"
+        >
           <Icons.Settings />
         </Button>
       )}
     </ButtonGroup>
   );
 }
-

@@ -33,7 +33,7 @@ export default function FileUploadButton({
       // Reset so the same file can be selected again
       e.target.value = "";
     },
-    [onFileSelect]
+    [onFileSelect],
   );
 
   return (

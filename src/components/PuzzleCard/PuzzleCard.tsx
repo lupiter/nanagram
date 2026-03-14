@@ -23,7 +23,11 @@ export default function PuzzleCard({
   previewSize = 80,
   className,
 }: PuzzleCardProps) {
-  const cardClass = clsx('puzzle-card', { 'puzzle-card-clickable': onClick }, className);
+  const cardClass = clsx(
+    "puzzle-card",
+    { "puzzle-card-clickable": onClick },
+    className,
+  );
 
   if (onClick) {
     return (

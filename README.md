@@ -96,6 +96,7 @@ src/
 ## Adding New Puzzles
 
 Puzzles are stored in `src/puzzles/{size}/` directories. Each puzzle is a 2D array where:
+
 - `0` = empty cell (should not be filled)
 - `1` = filled cell (part of the solution)
 

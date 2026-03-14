@@ -25,7 +25,7 @@ class NonogramSolverCore {
 
   constructor(
     private rowsValues: number[][],
-    private colsValues: number[][]
+    private colsValues: number[][],
   ) {
     this.noOfRows = this.rowsValues.length;
     this.rowsDone = Array.from({ length: this.noOfRows }, () => 0);
@@ -33,23 +33,36 @@ class NonogramSolverCore {
     this.colsDone = Array.from({ length: this.noOfCols }, () => 0);
     this.solved = false;
     this.board = Array.from({ length: this.noOfRows }, () =>
-      Array.from({ length: this.noOfCols }, () => 0)
+      Array.from({ length: this.noOfCols }, () => 0),
     );
 
-    this.rowsPossibilities = this.createPossibilities(this.rowsValues, this.noOfCols);
-    this.colsPossibilities = this.createPossibilities(this.colsValues, this.noOfRows);
+    this.rowsPossibilities = this.createPossibilities(
+      this.rowsValues,
+      this.noOfCols,
+    );
+    this.colsPossibilities = this.createPossibilities(
+      this.colsValues,
+      this.noOfRows,
+    );
   }
 
   solve(): number[][] {
     let iterationsWithoutProgress = 0;
-    while (!this.solved && iterationsWithoutProgress < this.noOfRows * this.noOfCols) {
+    while (
+      !this.solved &&
+      iterationsWithoutProgress < this.noOfRows * this.noOfCols
+    ) {
       const lowestRows = this.selectIndexNotDone(this.rowsPossibilities, true);
       const lowestCols = this.selectIndexNotDone(this.colsPossibilities, false);
-      const lowest = [...lowestRows, ...lowestCols].sort((a, b) => a.count - b.count);
+      const lowest = [...lowestRows, ...lowestCols].sort(
+        (a, b) => a.count - b.count,
+      );
 
       for (const { index, isRow } of lowest) {
         if (!this.checkDone(isRow, index)) {
-          const values = isRow ? this.rowsPossibilities[index] : this.colsPossibilities[index];
+          const values = isRow
+            ? this.rowsPossibilities[index]
+            : this.colsPossibilities[index];
           const sameInd = this.getOnlyOneOption(values);
 
           for (const { pos, val } of sameInd) {
@@ -62,11 +75,15 @@ class NonogramSolverCore {
 
               if (isRow) {
                 this.colsPossibilities[colIndex] = this.removePossibilities(
-                  this.colsPossibilities[colIndex], rowIndex, val
+                  this.colsPossibilities[colIndex],
+                  rowIndex,
+                  val,
                 );
               } else {
                 this.rowsPossibilities[rowIndex] = this.removePossibilities(
-                  this.rowsPossibilities[rowIndex], colIndex, val
+                  this.rowsPossibilities[rowIndex],
+                  colIndex,
+                  val,
                 );
               }
             }
@@ -97,10 +114,17 @@ class NonogramSolverCore {
     return result;
   }
 
-  private createPossibilitiesForHint(nEmpty: number, groups: number, ones: number[][]): number[][] {
+  private createPossibilitiesForHint(
+    nEmpty: number,
+    groups: number,
+    ones: number[][],
+  ): number[][] {
     const resOpts: number[][] = [];
     for (const p of this.combinations(groups + nEmpty, groups)) {
-      const selected: number[] = Array.from({ length: groups + nEmpty }, () => -1);
+      const selected: number[] = Array.from(
+        { length: groups + nEmpty },
+        () => -1,
+      );
       let onesIdx = 0;
       for (const val of p) {
         selected[val] = onesIdx;
@@ -120,7 +144,10 @@ class NonogramSolverCore {
     return resOpts;
   }
 
-  private createPossibilities(values: number[][], noOfOther: number): number[][][] {
+  private createPossibilities(
+    values: number[][],
+    noOfOther: number,
+  ): number[][][] {
     const possibilities: number[][][] = [];
     for (const v of values) {
       const groups = v.length;
@@ -132,7 +159,10 @@ class NonogramSolverCore {
     return possibilities;
   }
 
-  private selectIndexNotDone(possibilities: number[][][], isRow: boolean): { index: number; count: number; isRow: boolean }[] {
+  private selectIndexNotDone(
+    possibilities: number[][][],
+    isRow: boolean,
+  ): { index: number; count: number; isRow: boolean }[] {
     const doneArray = isRow ? this.rowsDone : this.colsDone;
     return possibilities
       .map((p, i) => ({ index: i, count: p.length, isRow }))
@@ -153,7 +183,11 @@ class NonogramSolverCore {
     return result;
   }
 
-  private removePossibilities(possibilities: number[][], i: number, val: number): number[][] {
+  private removePossibilities(
+    possibilities: number[][],
+    i: number,
+    val: number,
+  ): number[][] {
     return possibilities.filter((p) => p[i] === val);
   }
 
@@ -204,7 +238,7 @@ export class Puzzle {
   /** Creates an empty game state for a puzzle of given dimensions */
   createEmptyGameState(width: number, height: number): GameState {
     return Array.from({ length: height }, () =>
-      Array.from({ length: width }, () => CellState.EMPTY)
+      Array.from({ length: width }, () => CellState.EMPTY),
     );
   }
 
@@ -281,7 +315,10 @@ export class Puzzle {
     const height = solution.length;
     const width = solution[0]?.length ?? 0;
 
-    if (gameState.length !== height || gameState.some((row) => row.length !== width)) {
+    if (
+      gameState.length !== height ||
+      gameState.some((row) => row.length !== width)
+    ) {
       return false;
     }
 
@@ -291,7 +328,8 @@ export class Puzzle {
         const solutionCell = solution[i][j];
 
         if (
-          (gameCell === CellState.CROSSED_OUT && solutionCell === CellState.FILLED) ||
+          (gameCell === CellState.CROSSED_OUT &&
+            solutionCell === CellState.FILLED) ||
           (gameCell === CellState.FILLED && solutionCell === CellState.EMPTY) ||
           (gameCell === CellState.EMPTY && solutionCell === CellState.FILLED)
         ) {
@@ -308,10 +346,12 @@ export class Puzzle {
     solution: PuzzleSolutionData,
     gameState: GameState,
     isRow: boolean,
-    index: number
+    index: number,
   ): boolean {
-    const line = isRow ? gameState[index] : gameState.map(row => row[index]);
-    const solutionLine = isRow ? solution[index] : solution.map(row => row[index]);
+    const line = isRow ? gameState[index] : gameState.map((row) => row[index]);
+    const solutionLine = isRow
+      ? solution[index]
+      : solution.map((row) => row[index]);
 
     for (let i = 0; i < line.length; i++) {
       if (line[i] === CellState.EMPTY && solutionLine[i] === CellState.FILLED) {
@@ -331,8 +371,12 @@ export class Puzzle {
     }
 
     const solutions: Cell[][] = [];
-    
-    const placeHints = (hintIndex: number, startPos: number, currentSolution: Cell[]): void => {
+
+    const placeHints = (
+      hintIndex: number,
+      startPos: number,
+      currentSolution: Cell[],
+    ): void => {
       if (hintIndex >= hints.length) {
         const solution = [...currentSolution];
         while (solution.length < size) {
@@ -344,7 +388,10 @@ export class Puzzle {
 
       const hint = hints[hintIndex];
       const remainingHints = hints.slice(hintIndex + 1);
-      const minSpaceNeeded = remainingHints.reduce((acc, h) => acc + h.hint + 1, 0);
+      const minSpaceNeeded = remainingHints.reduce(
+        (acc, h) => acc + h.hint + 1,
+        0,
+      );
       const maxStartPos = size - hint.hint - minSpaceNeeded;
 
       for (let pos = startPos; pos <= maxStartPos; pos++) {
@@ -380,8 +427,12 @@ export class Puzzle {
 
   /** Check if a puzzle has a unique solution */
   checkPuzzleHasUniqueSolution(solution: PuzzleSolutionData): boolean {
-    const rowHints = this.deriveRowHints(solution).map((row) => row.map((hint) => hint.hint));
-    const columnHints = this.deriveColumnHints(solution).map((column) => column.map((hint) => hint.hint));
+    const rowHints = this.deriveRowHints(solution).map((row) =>
+      row.map((hint) => hint.hint),
+    );
+    const columnHints = this.deriveColumnHints(solution).map((column) =>
+      column.map((hint) => hint.hint),
+    );
 
     const solvedBoard = this.solve(rowHints, columnHints);
     return this.checkSolution(solution, solvedBoard);

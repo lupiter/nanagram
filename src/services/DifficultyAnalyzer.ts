@@ -1,6 +1,6 @@
 /**
  * DifficultyAnalyzer - Estimates puzzle difficulty based on solver behavior
- * 
+ *
  * Metrics used:
  * 1. First pass progress - How many cells solved in the first iteration
  * 2. Total iterations - How many passes the solver needs
@@ -8,9 +8,9 @@
  * 4. Possibility reduction rate - How quickly possibilities narrow down
  */
 
-import { PuzzleSolutionData } from '../types/nonogram';
-import { DifficultyMetrics } from '../types/puzzle';
-import { puzzleService } from './Puzzle';
+import { PuzzleSolutionData } from "../types/nonogram";
+import { DifficultyMetrics } from "../types/puzzle";
+import { puzzleService } from "./Puzzle";
 
 /**
  * Internal analyzer that tracks difficulty metrics during solving
@@ -24,14 +24,14 @@ class DifficultyAnalyzerCore {
   private board: number[][];
   private rowsPossibilities: number[][][];
   private colsPossibilities: number[][][];
-  
+
   // Metrics
   private cellsSolvedPerIteration: number[] = [];
   private initialPossibilityCounts: number[] = [];
 
   constructor(
     private rowsValues: number[][],
-    private colsValues: number[][]
+    private colsValues: number[][],
   ) {
     this.noOfRows = this.rowsValues.length;
     this.noOfCols = this.colsValues.length;
@@ -39,12 +39,18 @@ class DifficultyAnalyzerCore {
     this.colsDone = Array.from({ length: this.noOfCols }, () => 0);
     this.solved = false;
     this.board = Array.from({ length: this.noOfRows }, () =>
-      Array.from({ length: this.noOfCols }, () => 0)
+      Array.from({ length: this.noOfCols }, () => 0),
     );
 
-    this.rowsPossibilities = this.createPossibilities(this.rowsValues, this.noOfCols);
-    this.colsPossibilities = this.createPossibilities(this.colsValues, this.noOfRows);
-    
+    this.rowsPossibilities = this.createPossibilities(
+      this.rowsValues,
+      this.noOfCols,
+    );
+    this.colsPossibilities = this.createPossibilities(
+      this.colsValues,
+      this.noOfRows,
+    );
+
     // Track initial possibilities
     for (const rp of this.rowsPossibilities) {
       this.initialPossibilityCounts.push(rp.length);
@@ -60,44 +66,49 @@ class DifficultyAnalyzerCore {
    */
   countInitialForcedCells(): number {
     let forced = 0;
-    
+
     // Check each row independently
     for (const possibilities of this.rowsPossibilities) {
       if (possibilities.length === 0) continue;
       const length = possibilities[0].length;
       for (let col = 0; col < length; col++) {
-        const values = possibilities.map(p => p[col]);
+        const values = possibilities.map((p) => p[col]);
         if (new Set(values).size === 1) {
           forced++;
         }
       }
     }
-    
+
     // Check each column independently
     for (const possibilities of this.colsPossibilities) {
       if (possibilities.length === 0) continue;
       const length = possibilities[0].length;
       for (let row = 0; row < length; row++) {
-        const values = possibilities.map(p => p[row]);
+        const values = possibilities.map((p) => p[row]);
         if (new Set(values).size === 1) {
           forced++;
         }
       }
     }
-    
+
     // Divide by 2 because each cell is counted in both row and column
     return Math.floor(forced / 2);
   }
 
   solve(): void {
     let iterationsWithoutProgress = 0;
-    
-    while (!this.solved && iterationsWithoutProgress < this.noOfRows * this.noOfCols) {
+
+    while (
+      !this.solved &&
+      iterationsWithoutProgress < this.noOfRows * this.noOfCols
+    ) {
       const cellsBefore = this.countSolvedCells();
-      
+
       const lowestRows = this.selectIndexNotDone(this.rowsPossibilities, true);
       const lowestCols = this.selectIndexNotDone(this.colsPossibilities, false);
-      const lowest = [...lowestRows, ...lowestCols].sort((a, b) => a.count - b.count);
+      const lowest = [...lowestRows, ...lowestCols].sort(
+        (a, b) => a.count - b.count,
+      );
 
       for (const { index, isRow } of lowest) {
         if (!this.checkDone(isRow, index)) {
@@ -119,13 +130,13 @@ class DifficultyAnalyzerCore {
                 this.colsPossibilities[colIndex] = this.removePossibilities(
                   this.colsPossibilities[colIndex],
                   rowIndex,
-                  val
+                  val,
                 );
               } else {
                 this.rowsPossibilities[rowIndex] = this.removePossibilities(
                   this.rowsPossibilities[rowIndex],
                   colIndex,
-                  val
+                  val,
                 );
               }
             }
@@ -133,10 +144,10 @@ class DifficultyAnalyzerCore {
           this.updateDone(isRow, index);
         }
       }
-      
+
       const cellsAfter = this.countSolvedCells();
       this.cellsSolvedPerIteration.push(cellsAfter - cellsBefore);
-      
+
       this.checkSolved();
       iterationsWithoutProgress++;
     }
@@ -157,18 +168,19 @@ class DifficultyAnalyzerCore {
     const firstPassCells = this.cellsSolvedPerIteration[0] || 0;
     const iterations = this.cellsSolvedPerIteration.length;
     const initialForcedCells = this.countInitialForcedCells();
-    const avgPossibilities = this.initialPossibilityCounts.reduce((a, b) => a + b, 0) / 
-                             this.initialPossibilityCounts.length;
-    
+    const avgPossibilities =
+      this.initialPossibilityCounts.reduce((a, b) => a + b, 0) /
+      this.initialPossibilityCounts.length;
+
     // Calculate difficulty based on multiple factors
     const difficulty = this.calculateDifficulty(
       firstPassCells,
       totalCells,
       iterations,
       initialForcedCells,
-      avgPossibilities
+      avgPossibilities,
     );
-    
+
     return {
       difficulty,
       firstPassCells,
@@ -185,48 +197,51 @@ class DifficultyAnalyzerCore {
     totalCells: number,
     iterations: number,
     initialForcedCells: number,
-    avgPossibilities: number
+    avgPossibilities: number,
   ): number {
     // Factor 1: First pass progress (higher = easier)
     const firstPassRatio = firstPassCells / totalCells;
     const firstPassScore = 1 - firstPassRatio; // 0 = easy, 1 = hard
-    
+
     // Factor 2: Iterations needed (more = harder)
     const size = Math.sqrt(totalCells);
     const expectedIterations = size * 0.5;
-    const iterationScore = Math.min(1, (iterations - 1) / (expectedIterations * 2));
-    
+    const iterationScore = Math.min(
+      1,
+      (iterations - 1) / (expectedIterations * 2),
+    );
+
     // Factor 3: Initial forced cells (more = easier)
     const forcedRatio = initialForcedCells / totalCells;
     const forcedScore = 1 - forcedRatio; // 0 = easy, 1 = hard
-    
+
     // Factor 4: Average possibilities (more = harder)
     const possibilityScore = Math.min(1, Math.log10(avgPossibilities + 1) / 3);
-    
+
     // Weighted combination
     const weights = {
       firstPass: 0.35,
       iterations: 0.25,
       forced: 0.25,
-      possibilities: 0.15
+      possibilities: 0.15,
     };
-    
-    const rawScore = 
+
+    const rawScore =
       firstPassScore * weights.firstPass +
       iterationScore * weights.iterations +
       forcedScore * weights.forced +
       possibilityScore * weights.possibilities;
-    
+
     // Map to 1-5 scale
     if (rawScore < 0.15) return 1;
-    if (rawScore < 0.30) return 2;
-    if (rawScore < 0.50) return 3;
-    if (rawScore < 0.70) return 4;
+    if (rawScore < 0.3) return 2;
+    if (rawScore < 0.5) return 3;
+    if (rawScore < 0.7) return 4;
     return 5;
   }
 
   // --- Helper methods ---
-  
+
   private combinations(n: number, k: number): number[][] {
     const result: number[][] = [];
     const combine = (start: number, combo: number[]): void => {
@@ -244,10 +259,17 @@ class DifficultyAnalyzerCore {
     return result;
   }
 
-  private createPossibilitiesForHint(nEmpty: number, groups: number, ones: number[][]): number[][] {
+  private createPossibilitiesForHint(
+    nEmpty: number,
+    groups: number,
+    ones: number[][],
+  ): number[][] {
     const resOpts: number[][] = [];
     for (const p of this.combinations(groups + nEmpty, groups)) {
-      const selected: number[] = Array.from({ length: groups + nEmpty }, () => -1);
+      const selected: number[] = Array.from(
+        { length: groups + nEmpty },
+        () => -1,
+      );
       let onesIdx = 0;
       for (const val of p) {
         selected[val] = onesIdx;
@@ -267,11 +289,16 @@ class DifficultyAnalyzerCore {
     return resOpts;
   }
 
-  private createPossibilities(values: number[][], noOfOther: number): number[][][] {
+  private createPossibilities(
+    values: number[][],
+    noOfOther: number,
+  ): number[][][] {
     const possibilities: number[][][] = [];
     for (const v of values) {
       if (v.length === 0 || (v.length === 1 && v[0] === 0)) {
-        possibilities.push([Array.from({ length: noOfOther }, (): number => -1)]);
+        possibilities.push([
+          Array.from({ length: noOfOther }, (): number => -1),
+        ]);
         continue;
       }
       const groups = v.length;
@@ -283,7 +310,10 @@ class DifficultyAnalyzerCore {
     return possibilities;
   }
 
-  private selectIndexNotDone(possibilities: number[][][], isRow: boolean): { index: number; count: number; isRow: boolean }[] {
+  private selectIndexNotDone(
+    possibilities: number[][][],
+    isRow: boolean,
+  ): { index: number; count: number; isRow: boolean }[] {
     const doneArray = isRow ? this.rowsDone : this.colsDone;
     return possibilities
       .map((p, i) => ({ index: i, count: p.length, isRow }))
@@ -304,7 +334,11 @@ class DifficultyAnalyzerCore {
     return result;
   }
 
-  private removePossibilities(possibilities: number[][], i: number, val: number): number[][] {
+  private removePossibilities(
+    possibilities: number[][],
+    i: number,
+    val: number,
+  ): number[][] {
     return possibilities.filter((p) => p[i] === val);
   }
 
@@ -344,16 +378,27 @@ export class DifficultyAnalyzer {
 
   /** Analyze the difficulty of a puzzle solution and get full metrics */
   analyze(solution: PuzzleSolutionData): DifficultyMetrics {
-    const rowHints = puzzleService.deriveRowHints(solution).map(row => row.map(h => h.hint));
-    const colHints = puzzleService.deriveColumnHints(solution).map(col => col.map(h => h.hint));
-    
+    const rowHints = puzzleService
+      .deriveRowHints(solution)
+      .map((row) => row.map((h) => h.hint));
+    const colHints = puzzleService
+      .deriveColumnHints(solution)
+      .map((col) => col.map((h) => h.hint));
+
     // Handle empty hints (all-empty rows/columns)
-    const processedRowHints = rowHints.map(hints => hints.length === 0 ? [0] : hints);
-    const processedColHints = colHints.map(hints => hints.length === 0 ? [0] : hints);
-    
-    const analyzer = new DifficultyAnalyzerCore(processedRowHints, processedColHints);
+    const processedRowHints = rowHints.map((hints) =>
+      hints.length === 0 ? [0] : hints,
+    );
+    const processedColHints = colHints.map((hints) =>
+      hints.length === 0 ? [0] : hints,
+    );
+
+    const analyzer = new DifficultyAnalyzerCore(
+      processedRowHints,
+      processedColHints,
+    );
     analyzer.solve();
-    
+
     return analyzer.getMetrics();
   }
 

@@ -24,7 +24,7 @@ function HeaderActions() {
 
 export default function Home() {
   const [completedPuzzles, setCompletedPuzzles] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
   const [savedDesigns, setSavedDesigns] = useState<SavedDesign[]>([]);
   const { setTitle } = usePageTitle();
@@ -60,10 +60,16 @@ export default function Home() {
 
   // Helper to render a user design card
   const renderDesignCard = (design: SavedDesign) => {
-    const encoded = puzzleCodec.encode(design.name, design.solution, design.difficulty);
+    const encoded = puzzleCodec.encode(
+      design.name,
+      design.solution,
+      design.difficulty,
+    );
     const isNonSquare = design.height !== design.width;
-    const designerSize = isNonSquare ? `${String(design.height)}x${String(design.width)}` : String(design.height);
-    
+    const designerSize = isNonSquare
+      ? `${String(design.height)}x${String(design.width)}`
+      : String(design.height);
+
     return (
       <div key={design.id} className="design-item user-design">
         <Link
@@ -72,9 +78,15 @@ export default function Home() {
           title="Edit design"
         >
           <svg viewBox="0 0 44 44">
-            <path d="M0,4 0,0 4,4 z" className="corner-under-top corner-under"/>
-            <path d="M0,0 44,0 44,44 z" className="corner-over"/>
-            <path d="M44,44 40,44 40,40 z" className="corner-under-bottom corner-under"/>
+            <path
+              d="M0,4 0,0 4,4 z"
+              className="corner-under-top corner-under"
+            />
+            <path d="M0,0 44,0 44,44 z" className="corner-over" />
+            <path
+              d="M44,44 40,44 40,40 z"
+              className="corner-under-bottom corner-under"
+            />
             <Icons.EditSvg x={24} y={4} />
           </svg>
         </Link>
@@ -83,15 +95,9 @@ export default function Home() {
           className="puzzle-link completed"
           title={`Play: ${design.name}`}
         >
-          <SolutionPreview
-            solution={design.solution}
-            maxSize={100}
-          />
+          <SolutionPreview solution={design.solution} maxSize={100} />
           <span className="puzzle-name">{design.name}</span>
-          <DifficultyStars
-            difficulty={design.difficulty}
-            size="small"
-          />
+          <DifficultyStars difficulty={design.difficulty} size="small" />
         </Link>
       </div>
     );
@@ -104,10 +110,12 @@ export default function Home() {
           // Extract size from category (e.g., "5x5" -> 5, "10x15" -> "10x15")
           const parts = category.split("x");
           const isNonSquare = parts[0] !== parts[1];
-          const designerPath = isNonSquare ? `/designer/${category}` : `/designer/${parts[0]}`;
+          const designerPath = isNonSquare
+            ? `/designer/${category}`
+            : `/designer/${parts[0]}`;
           // Get user designs for this category
           const userDesigns = designsByCategory[category] ?? [];
-          
+
           return (
             <div key={category} className="puzzle-category">
               <h2>{category}</h2>
@@ -155,7 +163,9 @@ export default function Home() {
                   title={`Design a ${category} puzzle`}
                 >
                   <span className="designer-link-icon">
-                    <span className="icon"><Icons.Edit /></span>
+                    <span className="icon">
+                      <Icons.Edit />
+                    </span>
                   </span>
                   <span className="puzzle-name">{`Create`}</span>
                 </Link>

@@ -8,16 +8,29 @@ export default function DesignerInfo() {
 
   return (
     <div className="designer-info">
-      <Button onClick={() => { setIsOpen(true); }} aria-label="Show help information">
+      <Button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+        aria-label="Show help information"
+      >
         ℹ︎ Help
       </Button>
-      <Modal isOpen={isOpen} onClose={() => { setIsOpen(false); }} title="Help">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+        title="Help"
+      >
         <div className="info-content">
-          <p>Click cells to toggle filled/unfilled. The hints update automatically.</p>
+          <p>
+            Click cells to toggle filled/unfilled. The hints update
+            automatically.
+          </p>
           <p>A valid puzzle must have exactly one unique solution.</p>
         </div>
       </Modal>
     </div>
   );
 }
-

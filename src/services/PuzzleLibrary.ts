@@ -1,16 +1,16 @@
 /**
  * PuzzleLibrary - Manages puzzle definitions, completion tracking, and progress
- * 
+ *
  * Handles loading built-in puzzles and persisting user progress to localStorage.
  */
 
-import { PuzzleDefinition } from '../types/nonogram';
-import { PuzzleLocation } from '../types/puzzle';
-import puzzles5x5 from '../puzzles/5x5';
-import puzzles10x10 from '../puzzles/10x10';
-import puzzles10x15 from '../puzzles/10x15';
-import puzzles15x15 from '../puzzles/15x15';
-import puzzles20x20 from '../puzzles/20x20';
+import { PuzzleDefinition } from "../types/nonogram";
+import { PuzzleLocation } from "../types/puzzle";
+import puzzles5x5 from "../puzzles/5x5";
+import puzzles10x10 from "../puzzles/10x10";
+import puzzles10x15 from "../puzzles/10x15";
+import puzzles15x15 from "../puzzles/15x15";
+import puzzles20x20 from "../puzzles/20x20";
 
 // Re-export types for convenience
 export type { PuzzleLocation };
@@ -18,16 +18,16 @@ export type { PuzzleLocation };
 export class PuzzleLibrary {
   private static instance: PuzzleLibrary;
 
-  private readonly completedKey = 'nonogram-completed';
-  private readonly progressKeyPrefix = 'nonogram-progress-';
+  private readonly completedKey = "nonogram-completed";
+  private readonly progressKeyPrefix = "nonogram-progress-";
 
   /** Map of category to puzzle definitions */
   readonly puzzleMap = {
-    '5x5': puzzles5x5,
-    '10x10': puzzles10x10,
-    '10x15': puzzles10x15,
-    '15x15': puzzles15x15,
-    '20x20': puzzles20x20,
+    "5x5": puzzles5x5,
+    "10x10": puzzles10x10,
+    "10x15": puzzles10x15,
+    "15x15": puzzles15x15,
+    "20x20": puzzles20x20,
   } as const;
 
   /** Get the singleton instance */
@@ -75,7 +75,7 @@ export class PuzzleLibrary {
     for (let i = categoryIndex + 1; i < categories.length; i++) {
       const nextCategory = categories[i];
       if (this.getPuzzleCount(nextCategory) > 0) {
-        return { category: nextCategory, id: '1' };
+        return { category: nextCategory, id: "1" };
       }
     }
 
@@ -83,7 +83,10 @@ export class PuzzleLibrary {
   }
 
   /** Get previous puzzle location, or null if at the beginning */
-  getPreviousPuzzle(category: string, currentId: string): PuzzleLocation | null {
+  getPreviousPuzzle(
+    category: string,
+    currentId: string,
+  ): PuzzleLocation | null {
     const currentIndex = parseInt(currentId);
 
     // Check if there's a previous puzzle in the same category
@@ -140,7 +143,10 @@ export class PuzzleLibrary {
 
   /** Save puzzle progress */
   saveProgress(category: string, id: string, grid: number[][]): void {
-    localStorage.setItem(this.getProgressKey(category, id), JSON.stringify(grid));
+    localStorage.setItem(
+      this.getProgressKey(category, id),
+      JSON.stringify(grid),
+    );
   }
 
   /** Load puzzle progress, or null if none saved */

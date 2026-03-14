@@ -1,10 +1,15 @@
-import { CellState as NonogramCellState, PuzzleSolutionData, Hint, GameState } from './nonogram';
+import {
+  CellState as NonogramCellState,
+  PuzzleSolutionData,
+  Hint,
+  GameState,
+} from "./nonogram";
 
 export enum GameMode {
-  Free = 'free',
-  Assisted = 'assisted',
+  Free = "free",
+  Assisted = "assisted",
   /** Like assisted but only corrects wrong fills; never auto-fills or auto-crosses (including on load). */
-  Correction = 'correction'
+  Correction = "correction",
 }
 
 /** Decoded puzzle from URL */
@@ -28,13 +33,13 @@ export interface PuzzleLocation {
 
 /** Difficulty analysis metrics */
 export interface DifficultyMetrics {
-  difficulty: number;           // 1-5 rating
-  firstPassCells: number;       // Cells solved in first pass
-  totalCells: number;           // Total cells in puzzle
-  firstPassPercent: number;     // Percentage solved in first pass
-  iterations: number;           // Total solver iterations needed
-  initialForcedCells: number;   // Cells forced by single-line analysis alone
-  avgPossibilities: number;     // Average initial possibilities per line
+  difficulty: number; // 1-5 rating
+  firstPassCells: number; // Cells solved in first pass
+  totalCells: number; // Total cells in puzzle
+  firstPassPercent: number; // Percentage solved in first pass
+  iterations: number; // Total solver iterations needed
+  initialForcedCells: number; // Cells forced by single-line analysis alone
+  avgPossibilities: number; // Average initial possibilities per line
 }
 
 /** Options for updating a cell */

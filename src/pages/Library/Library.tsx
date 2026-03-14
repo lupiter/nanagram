@@ -27,7 +27,9 @@ export default function Library() {
 
   const showMessage = (msg: string) => {
     setMessage(msg);
-    setTimeout(() => { setMessage(""); }, 3000);
+    setTimeout(() => {
+      setMessage("");
+    }, 3000);
   };
 
   // Export all designs as JSON
@@ -49,7 +51,9 @@ export default function Library() {
       if (parsed) {
         const result = designStorage.import(parsed, true);
         setDesigns(designStorage.getAll());
-        showMessage(`Imported ${String(result.imported)} designs (${String(result.skipped)} duplicates skipped)`);
+        showMessage(
+          `Imported ${String(result.imported)} designs (${String(result.skipped)} duplicates skipped)`,
+        );
       } else {
         showMessage("Invalid file format");
       }
@@ -86,61 +90,84 @@ export default function Library() {
 
       const result = designStorage.import(newDesigns, true);
       setDesigns(designStorage.getAll());
-      showMessage(`Imported ${String(result.imported)} puzzles from SSS file (${String(result.skipped)} duplicates skipped)`);
+      showMessage(
+        `Imported ${String(result.imported)} puzzles from SSS file (${String(result.skipped)} duplicates skipped)`,
+      );
     };
     reader.readAsText(file);
   }, []);
 
   // Merge 10x15 designs into an SSS file
-  const handleMergeToSSS = useCallback((file: File) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      const sssFile = sssFormat.parse(content);
-      if (!sssFile) {
-        showMessage("Invalid SSS file format");
-        return;
-      }
+  const handleMergeToSSS = useCallback(
+    (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        const sssFile = sssFormat.parse(content);
+        if (!sssFile) {
+          showMessage("Invalid SSS file format");
+          return;
+        }
 
-      // Filter to only 10x15 designs
-      const designs10x15 = designs.filter(d => d.height === 10 && d.width === 15);
-      if (designs10x15.length === 0) {
-        showMessage("No 10×15 designs to add");
-        return;
-      }
+        // Filter to only 10x15 designs
+        const designs10x15 = designs.filter(
+          (d) => d.height === 10 && d.width === 15,
+        );
+        if (designs10x15.length === 0) {
+          showMessage("No 10×15 designs to add");
+          return;
+        }
 
-      // Add designs to SSS file
-      const puzzlesToAdd = designs10x15.map(d => ({
-        title: d.name,
-        grid: d.solution,
-      }));
+        // Add designs to SSS file
+        const puzzlesToAdd = designs10x15.map((d) => ({
+          title: d.name,
+          grid: d.solution,
+        }));
 
-      const result = sssFormat.addPuzzles(sssFile, puzzlesToAdd, "Nanagram", true);
-      sssFormat.download(result.file, file.name);
-      showMessage(`Added ${String(result.added)} puzzles to SSS file (${String(result.skipped)} duplicates skipped)`);
-    };
-    reader.readAsText(file);
-  }, [designs]);
+        const result = sssFormat.addPuzzles(
+          sssFile,
+          puzzlesToAdd,
+          "Nanagram",
+          true,
+        );
+        sssFormat.download(result.file, file.name);
+        showMessage(
+          `Added ${String(result.added)} puzzles to SSS file (${String(result.skipped)} duplicates skipped)`,
+        );
+      };
+      reader.readAsText(file);
+    },
+    [designs],
+  );
 
   // Export 10x15 designs as new SSS file
   const handleExportAsSSS = useCallback(() => {
-    const designs10x15 = designs.filter(d => d.height === 10 && d.width === 15);
+    const designs10x15 = designs.filter(
+      (d) => d.height === 10 && d.width === 15,
+    );
     if (designs10x15.length === 0) {
       showMessage("No 10×15 designs to export");
       return;
     }
 
-    const puzzlesToAdd = designs10x15.map(d => ({
+    const puzzlesToAdd = designs10x15.map((d) => ({
       title: d.name,
       grid: d.solution,
     }));
 
-    const result = sssFormat.addPuzzles(sssFormat.createEmptyFile(), puzzlesToAdd, "Nanagram", false);
+    const result = sssFormat.addPuzzles(
+      sssFormat.createEmptyFile(),
+      puzzlesToAdd,
+      "Nanagram",
+      false,
+    );
     sssFormat.download(result.file, "my-puzzles.json");
     showMessage(`Exported ${String(result.added)} puzzles as SSS file`);
   }, [designs]);
 
-  const designs10x15Count = designs.filter(d => d.height === 10 && d.width === 15).length;
+  const designs10x15Count = designs.filter(
+    (d) => d.height === 10 && d.width === 15,
+  ).length;
 
   return (
     <PageContainer>
@@ -154,7 +181,9 @@ export default function Library() {
       <section className="panel library-section">
         <h2>My Designs ({designs.length})</h2>
         {designs.length === 0 ? (
-          <p className="text-muted">No saved designs yet. Create some in the Designer!</p>
+          <p className="text-muted">
+            No saved designs yet. Create some in the Designer!
+          </p>
         ) : (
           <CardGrid minCardWidth={100}>
             {designs.map((design) => (
@@ -187,8 +216,13 @@ export default function Library() {
 
           <ButtonGroup column gap={2} className="action-group">
             <h3>Sketch, Share, Solve Format</h3>
-            <p className="text-muted-sm">10×15 puzzles only ({designs10x15Count} available)</p>
-            <Button onClick={handleExportAsSSS} disabled={designs10x15Count === 0}>
+            <p className="text-muted-sm">
+              10×15 puzzles only ({designs10x15Count} available)
+            </p>
+            <Button
+              onClick={handleExportAsSSS}
+              disabled={designs10x15Count === 0}
+            >
               <Icons.Download /> Export as SSS File
             </Button>
             <FileUploadButton onFileSelect={handleImportSSS}>

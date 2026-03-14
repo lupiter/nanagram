@@ -13,7 +13,9 @@
     "test": "jest",
     "validate-puzzle": "tsx scripts/validate-puzzle.ts",
     "generate-puzzles": "tsx scripts/generate-puzzles.ts",
-    "icons": "cd public && magick logo.png -resize 180x180 apple-touch-icon.png && magick logo.png -resize 192x192 android-chrome-192.png && magick logo.png -resize 512x512 android-chrome-512.png"
+    "icons": "cd public && magick logo.png -resize 180x180 apple-touch-icon.png && magick logo.png -resize 192x192 android-chrome-192.png && magick logo.png -resize 512x512 android-chrome-512.png",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -37,6 +39,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.5.2",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",

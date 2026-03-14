@@ -17,7 +17,7 @@ export class ErrorSound {
       const AudioContextConstructor = window.AudioContext;
       this.audioContext = new AudioContextConstructor();
     }
-    if (this.audioContext.state === 'suspended') {
+    if (this.audioContext.state === "suspended") {
       await this.audioContext.resume();
     }
     this.isInitialized = true;
@@ -47,7 +47,7 @@ export class ErrorSound {
     // Set frequencies for a quick error tone (C major chord)
     oscillator1.frequency.value = 261.63; // C4
     oscillator2.frequency.value = 329.63; // E4
-    oscillator3.frequency.value = 392.00; // G4
+    oscillator3.frequency.value = 392.0; // G4
 
     // Set gain envelope
     gainNode.gain.setValueAtTime(0, context.currentTime);

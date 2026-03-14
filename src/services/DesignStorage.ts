@@ -1,6 +1,6 @@
 /**
  * DesignStorage - Manages saved puzzle designs in localStorage
- * 
+ *
  * Singleton for CRUD operations on user-created puzzle designs.
  */
 
@@ -46,7 +46,7 @@ export class DesignStorage {
   /** Get a single design by ID */
   getById(id: string): SavedDesign | null {
     const designs = this.getAll();
-    return designs.find(d => d.id === id) ?? null;
+    return designs.find((d) => d.id === id) ?? null;
   }
 
   /** Save a new design (returns the saved design with ID) */
@@ -63,9 +63,12 @@ export class DesignStorage {
   }
 
   /** Update an existing design */
-  update(id: string, updates: Partial<Omit<SavedDesign, "id" | "createdAt">>): SavedDesign | null {
+  update(
+    id: string,
+    updates: Partial<Omit<SavedDesign, "id" | "createdAt">>,
+  ): SavedDesign | null {
     const designs = this.getAll();
-    const index = designs.findIndex(d => d.id === id);
+    const index = designs.findIndex((d) => d.id === id);
     if (index === -1) return null;
 
     designs[index] = { ...designs[index], ...updates };
@@ -76,7 +79,7 @@ export class DesignStorage {
   /** Delete a design by ID */
   delete(id: string): boolean {
     const designs = this.getAll();
-    const filtered = designs.filter(d => d.id !== id);
+    const filtered = designs.filter((d) => d.id !== id);
     if (filtered.length === designs.length) return false;
 
     this.persist(filtered);
@@ -87,7 +90,9 @@ export class DesignStorage {
   findDuplicate(solution: PuzzleSolutionData): SavedDesign | null {
     const designs = this.getAll();
     const solutionStr = JSON.stringify(solution);
-    return designs.find(d => JSON.stringify(d.solution) === solutionStr) ?? null;
+    return (
+      designs.find((d) => JSON.stringify(d.solution) === solutionStr) ?? null
+    );
   }
 
   /** Import designs with optional deduplication */
@@ -99,7 +104,9 @@ export class DesignStorage {
     for (const design of newDesigns) {
       if (deduplicate) {
         const solutionStr = JSON.stringify(design.solution);
-        const isDuplicate = existing.some(d => JSON.stringify(d.solution) === solutionStr);
+        const isDuplicate = existing.some(
+          (d) => JSON.stringify(d.solution) === solutionStr,
+        );
         if (isDuplicate) {
           skipped++;
           continue;
@@ -123,17 +130,24 @@ export class DesignStorage {
   /** Export all designs as JSON string */
   exportAsJson(): string {
     const designs = this.getAll();
-    return JSON.stringify({
-      version: 1,
-      exportedAt: new Date().toISOString(),
-      designs,
-    }, null, 2);
+    return JSON.stringify(
+      {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        designs,
+      },
+      null,
+      2,
+    );
   }
 
   /** Parse exported JSON and return designs */
   parseExportedJson(json: string): SavedDesign[] | null {
     try {
-      const data = JSON.parse(json) as { version: number; designs: SavedDesign[] };
+      const data = JSON.parse(json) as {
+        version: number;
+        designs: SavedDesign[];
+      };
       if (data.version === 1 && Array.isArray(data.designs)) {
         return data.designs;
       }

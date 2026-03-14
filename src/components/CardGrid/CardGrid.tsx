@@ -14,8 +14,12 @@ export default function CardGrid({
 }: CardGridProps) {
   return (
     <div
-      className={clsx('card-grid', className)}
-      style={{ "--card-min-width": `${String(minCardWidth)}px` } as React.CSSProperties}
+      className={clsx("card-grid", className)}
+      style={
+        {
+          "--card-min-width": `${String(minCardWidth)}px`,
+        } as React.CSSProperties
+      }
     >
       {children}
     </div>

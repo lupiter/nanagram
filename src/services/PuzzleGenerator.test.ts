@@ -65,9 +65,11 @@ describe("PuzzleGenerator", () => {
       const puzzle = puzzleGenerator.generate(5, 1, 100);
 
       expect(puzzle).not.toBeNull();
-      const filledCount = puzzle?.solution
-        .flat()
-        .filter((cell: number) => cell === (CellState.FILLED as number)).length ?? 0;
+      const filledCount =
+        puzzle?.solution
+          .flat()
+          .filter((cell: number) => cell === (CellState.FILLED as number))
+          .length ?? 0;
 
       // With 40-60% fill probability, we should have some filled cells
       expect(filledCount).toBeGreaterThan(0);
@@ -96,7 +98,13 @@ describe("PuzzleGenerator", () => {
       const height = 5;
       const width = 5;
 
-      const puzzle = await puzzleGenerator.generateAsync(height, 1, 100, undefined, width);
+      const puzzle = await puzzleGenerator.generateAsync(
+        height,
+        1,
+        100,
+        undefined,
+        width,
+      );
 
       expect(puzzle).not.toBeNull();
       expect(puzzle?.solution.length).toBe(height);
@@ -117,7 +125,9 @@ describe("PuzzleGenerator", () => {
 
     it("should call progress callback", async () => {
       const progressCalls: number[] = [];
-      const onProgress = (attempt: number) => { progressCalls.push(attempt); };
+      const onProgress = (attempt: number) => {
+        progressCalls.push(attempt);
+      };
 
       await puzzleGenerator.generateAsync(5, 1, 50, onProgress);
 

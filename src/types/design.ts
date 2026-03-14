@@ -35,4 +35,5 @@ export interface DesignerState {
   isDragging: boolean;
   dragMode: SolutionCell | null;
   draggedCells: Map<number, Set<number>>;
+  autoCheckEnabled: boolean;
 }

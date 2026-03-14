@@ -44,7 +44,6 @@ table.nonogram-grid tbody tr:nth-child(odd) th {
   background-color: var(--gray-200);
 }
 
-
 /* Header specific styles */
 table.nonogram-grid th {
   text-align: right;
@@ -55,8 +54,12 @@ table.nonogram-grid th {
 
 /* Corner cell only: no content, same token sizing as hint cells */
 table.nonogram-grid thead th:first-child {
-  min-width: calc(var(--max-row-hints, var(--hint-count-fallback)) * var(--hint-slot-width));
-  min-height: calc(var(--max-col-hints, var(--hint-count-fallback)) * var(--hint-slot-height));
+  min-width: calc(
+    var(--max-row-hints, var(--hint-count-fallback)) * var(--hint-slot-width)
+  );
+  min-height: calc(
+    var(--max-col-hints, var(--hint-count-fallback)) * var(--hint-slot-height)
+  );
 }
 
 /* Row header cells: width from .hint-numbers.horizontal, height matches row */
@@ -99,7 +102,9 @@ table.nonogram-grid thead tr th:first-child {
   left: 0;
   z-index: 2;
   background: var(--paper);
-  box-shadow: var(--border-width) 0 0 var(--color-border), 0 var(--border-width) 0 var(--color-border);
+  box-shadow:
+    var(--border-width) 0 0 var(--color-border),
+    0 var(--border-width) 0 var(--color-border);
 }
 
 table.nonogram-grid th span {
@@ -157,7 +162,7 @@ table.nonogram-grid input[type="checkbox"]:focus-visible {
 /* Checkbox X mark for crossed out state */
 table.nonogram-grid input[type="checkbox"]::before,
 table.nonogram-grid input[type="checkbox"]::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   height: calc(var(--base-size) * 0.5);
@@ -205,9 +210,16 @@ table.nonogram-grid tbody tr td:last-child {
 
 /* Error animation */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(calc(var(--base-size) * -1.25)); }
-  75% { transform: translateX(calc(var(--base-size) * 1.25)); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(calc(var(--base-size) * -1.25));
+  }
+  75% {
+    transform: translateX(calc(var(--base-size) * 1.25));
+  }
 }
 
 .shake {

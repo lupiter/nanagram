@@ -1,7 +1,7 @@
-import DifficultyStars from '../DifficultyStars/DifficultyStars';
-import StatusMessage from '../StatusMessage/StatusMessage';
+import DifficultyStars from "../DifficultyStars/DifficultyStars";
+import StatusMessage from "../StatusMessage/StatusMessage";
 
-type StatusVariant = 'info' | 'success' | 'error';
+type StatusVariant = "info" | "success" | "error";
 
 interface SolutionStatusProps {
   message: string;
@@ -9,7 +9,11 @@ interface SolutionStatusProps {
   difficulty?: number | null;
 }
 
-export default function SolutionStatus({ message, variant, difficulty }: SolutionStatusProps) {
+export default function SolutionStatus({
+  message,
+  variant,
+  difficulty,
+}: SolutionStatusProps) {
   return (
     <StatusMessage variant={variant} size="lg">
       {message}
@@ -21,4 +25,3 @@ export default function SolutionStatus({ message, variant, difficulty }: Solutio
     </StatusMessage>
   );
 }
-

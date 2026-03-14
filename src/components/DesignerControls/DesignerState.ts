@@ -1,4 +1,8 @@
-import { CellState, PuzzleSolutionData, SolutionCell } from "../../types/nonogram";
+import {
+  CellState,
+  PuzzleSolutionData,
+  SolutionCell,
+} from "../../types/nonogram";
 import { DesignerState } from "../../types/design";
 import { puzzleService } from "../../services/Puzzle";
 
@@ -6,13 +10,19 @@ import { puzzleService } from "../../services/Puzzle";
 export type { DesignerState };
 
 /** Creates an empty solution grid (all cells empty) */
-export function createEmptySolutionGrid(height: number, width: number): PuzzleSolutionData {
+export function createEmptySolutionGrid(
+  height: number,
+  width: number,
+): PuzzleSolutionData {
   return Array.from({ length: height }, () =>
-    Array.from({ length: width }, () => CellState.EMPTY as SolutionCell)
+    Array.from({ length: width }, () => CellState.EMPTY as SolutionCell),
   );
 }
 
-export function createInitialDesignerState(height: number, width: number): DesignerState {
+export function createInitialDesignerState(
+  height: number,
+  width: number,
+): DesignerState {
   const grid = createEmptySolutionGrid(height, width);
   return {
     height,
@@ -27,6 +37,6 @@ export function createInitialDesignerState(height: number, width: number): Desig
     isDragging: false,
     dragMode: null,
     draggedCells: new Map(),
+    autoCheckEnabled: true,
   };
 }
-

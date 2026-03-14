@@ -9,11 +9,13 @@ export type { HistoryEntry, PuzzleState };
 export function createInitialState(
   solution: PuzzleSolutionData,
   savedGrid?: GameState | null,
-  savedMode?: GameMode | null
+  savedMode?: GameMode | null,
 ): PuzzleState {
   const rowHints = puzzleService.deriveRowHints(solution);
   const columnHints = puzzleService.deriveColumnHints(solution);
-  let grid = savedGrid ?? puzzleService.createEmptyGameState(solution[0].length, solution.length);
+  let grid =
+    savedGrid ??
+    puzzleService.createEmptyGameState(solution[0].length, solution.length);
 
   const mode = savedMode ?? GameMode.Assisted;
   const height = grid.length;
@@ -23,8 +25,10 @@ export function createInitialState(
   if (mode !== GameMode.Correction) {
     grid = grid.map((row, i) =>
       row.map((cell, j) =>
-        rowHints[i].length === 0 || columnHints[j].length === 0 ? CellState.CROSSED_OUT : cell
-      )
+        rowHints[i].length === 0 || columnHints[j].length === 0
+          ? CellState.CROSSED_OUT
+          : cell,
+      ),
     );
   }
 
@@ -37,13 +41,13 @@ export function createInitialState(
         const colFull =
           columnHints[j].length === 1 && columnHints[j][0].hint === height;
         return rowFull || colFull ? CellState.FILLED : cell;
-      })
+      }),
     );
   }
 
   // Always recompute used flags from current grid (e.g. when loading saved progress)
   const checkedRowHints = grid.map((row, i) =>
-    hintChecker.check(row, rowHints[i], solution[i])
+    hintChecker.check(row, rowHints[i], solution[i]),
   );
   const checkedColumnHints = grid[0].map((_, col) => {
     const column = grid.map((r) => r[col]);

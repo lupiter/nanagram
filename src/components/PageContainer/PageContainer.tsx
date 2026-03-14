@@ -12,7 +12,11 @@ export default function PageContainer({
   className,
   maxWidth = "md",
 }: PageContainerProps) {
-  const containerClass = clsx('page-container', `page-container-${maxWidth}`, className);
+  const containerClass = clsx(
+    "page-container",
+    `page-container-${maxWidth}`,
+    className,
+  );
 
   return <div className={containerClass}>{children}</div>;
 }

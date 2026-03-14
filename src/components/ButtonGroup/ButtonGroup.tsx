@@ -34,7 +34,7 @@ export default function ButtonGroup({
       "button-group-wrap": wrap,
       "button-group-column": column,
     },
-    className
+    className,
   );
 
   return <div className={classes}>{children}</div>;

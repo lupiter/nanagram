@@ -3,11 +3,11 @@
  * Decode a puzzle from a URL path segment and print as JSON.
  * Usage: npx tsx scripts/decode-puzzle-url.ts <encoded>
  */
-import { puzzleCodec } from '../src/services/PuzzleCodec';
+import { puzzleCodec } from "../src/services/PuzzleCodec";
 
-const encoded = process.argv[2] ?? '';
+const encoded = process.argv[2] ?? "";
 if (!encoded) {
-  console.error('Usage: npx tsx scripts/decode-puzzle-url.ts <encoded>');
+  console.error("Usage: npx tsx scripts/decode-puzzle-url.ts <encoded>");
   process.exit(1);
 }
 

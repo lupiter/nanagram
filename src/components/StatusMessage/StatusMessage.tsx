@@ -22,7 +22,7 @@ export default function StatusMessage({
     "status-message",
     `status-message-${variant}`,
     size !== "md" && `status-message-${size}`,
-    className
+    className,
   );
 
   return <div className={classes}>{children}</div>;

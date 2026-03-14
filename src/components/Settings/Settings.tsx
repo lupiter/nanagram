@@ -31,9 +31,13 @@ function getStoredPlayMode(): GameMode {
 
 export default function Settings({ onPlayModeChange }: SettingsProps) {
   const [themeBase, setThemeBase] = useState<ThemeBase>(getStoredThemeBase);
-  const [highContrast, setHighContrast] = useState<boolean>(getStoredThemeHighContrast);
+  const [highContrast, setHighContrast] = useState<boolean>(
+    getStoredThemeHighContrast,
+  );
   const [playMode, setPlayMode] = useState<GameMode>(getStoredPlayMode);
-  const [cellSize, setCellSize] = useState<CellSizeMultiplier>(getStoredCellSizeMultiplier);
+  const [cellSize, setCellSize] = useState<CellSizeMultiplier>(
+    getStoredCellSizeMultiplier,
+  );
 
   // Sync from storage when component mounts or becomes visible (e.g. modal opened)
   useEffect(() => {
@@ -61,7 +65,7 @@ export default function Settings({ onPlayModeChange }: SettingsProps) {
       localStorage.setItem(PLAY_MODE_STORAGE_KEY, value);
       onPlayModeChange?.(value);
     },
-    [onPlayModeChange]
+    [onPlayModeChange],
   );
 
   const handleCellSizeChange = useCallback((value: CellSizeMultiplier) => {

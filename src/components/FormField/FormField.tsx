@@ -16,7 +16,7 @@ export default function FormField({
   className,
 }: FormFieldProps) {
   return (
-    <div className={clsx('form-field', className)}>
+    <div className={clsx("form-field", className)}>
       <label className="form-field-label" htmlFor={htmlFor}>
         {label}
       </label>

@@ -42,14 +42,19 @@ export default function Modal({
   return (
     <dialog
       ref={dialogRef}
-      className={clsx('modal', className)}
+      className={clsx("modal", className)}
       onClick={handleBackdropClick}
       aria-labelledby="modal-title"
     >
       <div className="modal-container">
         <header className="modal-header">
           <h2 id="modal-title">{title}</h2>
-          <Button variant="secondary" square onClick={onClose} aria-label="Close">
+          <Button
+            variant="secondary"
+            square
+            onClick={onClose}
+            aria-label="Close"
+          >
             <Icons.Close />
           </Button>
         </header>
@@ -58,4 +63,3 @@ export default function Modal({
     </dialog>
   );
 }
-

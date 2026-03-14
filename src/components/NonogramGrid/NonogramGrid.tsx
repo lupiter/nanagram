@@ -17,25 +17,26 @@ export default function NonogramGrid({
   minColHintSlots,
 }: NonogramGridProps) {
   const hintDimensions = useMemo(() => {
-    const maxRowHints = rowHints.length > 0
-      ? Math.max(...rowHints.map((h) => h.length))
-      : 0;
-    const maxColHints = columnHints.length > 0
-      ? Math.max(...columnHints.map((h) => h.length))
-      : 0;
+    const maxRowHints =
+      rowHints.length > 0 ? Math.max(...rowHints.map((h) => h.length)) : 0;
+    const maxColHints =
+      columnHints.length > 0
+        ? Math.max(...columnHints.map((h) => h.length))
+        : 0;
     return { maxRowHints, maxColHints };
   }, [rowHints, columnHints]);
 
   const containerStyle = useMemo(
-    (): CSSProperties => ({
-      "--max-row-hints": String(
-        Math.max(1, hintDimensions.maxRowHints, minRowHintSlots ?? 0)
-      ),
-      "--max-col-hints": String(
-        Math.max(1, hintDimensions.maxColHints, minColHintSlots ?? 0)
-      ),
-    } as CSSProperties),
-    [hintDimensions, minRowHintSlots, minColHintSlots]
+    (): CSSProperties =>
+      ({
+        "--max-row-hints": String(
+          Math.max(1, hintDimensions.maxRowHints, minRowHintSlots ?? 0),
+        ),
+        "--max-col-hints": String(
+          Math.max(1, hintDimensions.maxColHints, minColHintSlots ?? 0),
+        ),
+      }) as CSSProperties,
+    [hintDimensions, minRowHintSlots, minColHintSlots],
   );
 
   return (
@@ -104,7 +105,7 @@ export default function NonogramGrid({
                         : ""
                     }
                     aria-label={`Cell at row ${String(
-                      rowIndex + 1
+                      rowIndex + 1,
                     )}, column ${String(colIndex + 1)}`}
                   />
                 </td>

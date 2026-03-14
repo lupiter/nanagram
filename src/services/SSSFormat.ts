@@ -1,6 +1,6 @@
 /**
  * SSSFormat - Handles Sketch, Share, Solve file format operations
- * 
+ *
  * SSS is a format for storing 10x15 puzzles with profile and puzzle collections.
  * Grid format: 150 characters (10 rows × 15 columns) of '0' and '1'
  */
@@ -15,7 +15,13 @@ import {
 import { CellState } from "../types/nonogram";
 
 // Re-export types for convenience
-export type { SSSProfile, SSSPuzzle, SSSFile, SSSPuzzleWithCreator, AddPuzzlesResult };
+export type {
+  SSSProfile,
+  SSSPuzzle,
+  SSSFile,
+  SSSPuzzleWithCreator,
+  AddPuzzlesResult,
+};
 
 export class SSSFormat {
   private static instance: SSSFormat;
@@ -23,7 +29,7 @@ export class SSSFormat {
   /** SSS puzzles are always 10x15 */
   readonly height = 10;
   readonly width = 15;
-  readonly gridSize = 150;  // 10 * 15
+  readonly gridSize = 150; // 10 * 15
 
   /** Get the singleton instance */
   static getInstance(): SSSFormat {
@@ -34,8 +40,8 @@ export class SSSFormat {
 
   /** Generate a random 16-character ID */
   generateId(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let result = '';
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let result = "";
     for (let i = 0; i < 16; i++) {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
@@ -44,7 +50,9 @@ export class SSSFormat {
 
   /** Convert a 2D grid to SSS grid string (binary string of 0s and 1s) */
   gridToString(grid: number[][]): string {
-    return grid.map(row => row.map(cell => cell === 1 ? '1' : '0').join('')).join('');
+    return grid
+      .map((row) => row.map((cell) => (cell === 1 ? "1" : "0")).join(""))
+      .join("");
   }
 
   /** Convert an SSS grid string to a 2D grid */
@@ -54,7 +62,7 @@ export class SSSFormat {
       const rowData: number[] = [];
       for (let col = 0; col < this.width; col++) {
         const char = gridString[row * this.width + col];
-        rowData.push(char === '1' ? 1 : 0);
+        rowData.push(char === "1" ? 1 : 0);
       }
       grid.push(rowData);
     }
@@ -71,17 +79,22 @@ export class SSSFormat {
   }
 
   /** Find or create a profile in an SSS file, returning updated file and profile ID */
-  private ensureProfile(file: SSSFile, profileName: string): { file: SSSFile; profileId: string } {
-    let profileId: string | undefined = file.profileList.find(id => file.profiles[id].name === profileName);
+  private ensureProfile(
+    file: SSSFile,
+    profileName: string,
+  ): { file: SSSFile; profileId: string } {
+    let profileId: string | undefined = file.profileList.find(
+      (id) => file.profiles[id].name === profileName,
+    );
 
     if (!profileId) {
       profileId = this.generateId();
       const newProfile: SSSProfile = {
         id: profileId,
         name: profileName,
-        avatar: '0'.repeat(100), // Empty 10x10 avatar
+        avatar: "0".repeat(100), // Empty 10x10 avatar
         created: [],
-        createdOn: new Date().toISOString().split('T')[0],
+        createdOn: new Date().toISOString().split("T")[0],
       };
       file = {
         ...file,
@@ -97,13 +110,16 @@ export class SSSFormat {
   addPuzzle(
     file: SSSFile,
     puzzle: { title: string; grid: number[][] },
-    profileName: string
+    profileName: string,
   ): SSSFile {
     const puzzleId = this.generateId();
     const gridString = this.gridToString(puzzle.grid);
 
     // Find or create profile
-    const { file: updatedFile, profileId } = this.ensureProfile(file, profileName);
+    const { file: updatedFile, profileId } = this.ensureProfile(
+      file,
+      profileName,
+    );
     file = updatedFile;
 
     // Add puzzle
@@ -132,7 +148,7 @@ export class SSSFormat {
     file: SSSFile,
     puzzles: { title: string; grid: (number | CellState)[][] }[],
     profileName: string,
-    deduplicate = true
+    deduplicate = true,
   ): AddPuzzlesResult {
     let result = { ...file };
     let added = 0;
@@ -186,21 +202,21 @@ export class SSSFormat {
 
   /** Validate an SSS file structure */
   validate(data: unknown): data is SSSFile {
-    if (typeof data !== 'object' || data === null) return false;
+    if (typeof data !== "object" || data === null) return false;
 
     const obj = data as Record<string, unknown>;
 
     if (!Array.isArray(obj.profileList)) return false;
-    if (typeof obj.profiles !== 'object' || obj.profiles === null) return false;
-    if (typeof obj.puzzles !== 'object' || obj.puzzles === null) return false;
+    if (typeof obj.profiles !== "object" || obj.profiles === null) return false;
+    if (typeof obj.puzzles !== "object" || obj.puzzles === null) return false;
 
     // Validate puzzles have required fields
     const puzzles = obj.puzzles as Record<string, unknown>;
     for (const key of Object.keys(puzzles)) {
       const puzzle = puzzles[key] as Record<string, unknown>;
-      if (typeof puzzle.id !== 'string') return false;
-      if (typeof puzzle.title !== 'string') return false;
-      if (typeof puzzle.grid !== 'string') return false;
+      if (typeof puzzle.id !== "string") return false;
+      if (typeof puzzle.title !== "string") return false;
+      if (typeof puzzle.grid !== "string") return false;
       // SSS puzzles are 10x15, so grid should be 150 chars
       if (puzzle.grid.length !== this.gridSize) return false;
     }
@@ -223,13 +239,13 @@ export class SSSFormat {
 
   /** Download an SSS file */
   download(file: SSSFile, filename: string): void {
-    const json = JSON.stringify(file, null, '\t');
-    const blob = new Blob([json], { type: 'application/json' });
+    const json = JSON.stringify(file, null, "\t");
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = filename.endsWith('.json') ? filename : `${filename}.json`;
+    a.download = filename.endsWith(".json") ? filename : `${filename}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

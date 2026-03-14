@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
 
 interface PageTitleContextValue {
   title: PageTitleState;
@@ -35,4 +41,3 @@ export function usePageTitle() {
   }
   return context;
 }
-

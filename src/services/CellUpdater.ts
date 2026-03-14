@@ -13,6 +13,7 @@ function findFilledBlocks(line: number[]): { start: number; length: number }[] {
   const blocks: { start: number; length: number }[] = [];
   let start = -1;
   for (let i = 0; i < line.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     if (line[i] === CellState.FILLED) {
       if (start === -1) start = i;
     } else if (start !== -1) {
@@ -31,7 +32,7 @@ function findFilledBlocks(line: number[]): { start: number; length: number }[] {
 function addBoundaryCrosses(
   line: number[],
   hints: Hint[],
-  setCell: (index: number, value: number) => void
+  setCell: (index: number, value: number) => void,
 ): void {
   if (hints.length === 0) return;
   const blocks = findFilledBlocks(line);
@@ -42,7 +43,12 @@ function addBoundaryCrosses(
     let sum = 0;
     for (let k = 1; k <= hints.length; k++) {
       sum += hints[hints.length - k].hint;
-      if (sum === last.length && last.start > 0 && line[last.start - 1] === CellState.EMPTY) {
+      if (
+        sum === last.length &&
+        last.start > 0 &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+        line[last.start - 1] === CellState.EMPTY
+      ) {
         setCell(last.start - 1, CellState.CROSSED_OUT);
         break;
       }
@@ -53,10 +59,11 @@ function addBoundaryCrosses(
   const first = blocks[0];
   if (first.start === 0) {
     let sum = 0;
-    for (let k = 0; k < hints.length; k++) {
-      sum += hints[k].hint;
+    for (const hint of hints) {
+      sum += hint.hint;
       if (sum === first.length) {
         const idx = first.length;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
         if (idx < line.length && line[idx] === CellState.EMPTY) {
           setCell(idx, CellState.CROSSED_OUT);
         }
@@ -81,10 +88,11 @@ export class CellUpdater {
 
   /** Update a cell and return the new state */
   update(options: UpdateCellOptions): UpdateCellResult {
-    const { grid, puzzle, row, col, toolToUse, mode, rowHints, columnHints } = options;
+    const { grid, puzzle, row, col, toolToUse, mode, rowHints, columnHints } =
+      options;
     let errorCell: [number, number] | null = null;
 
-    const newGrid = produce(grid, draft => {
+    const newGrid = produce(grid, (draft) => {
       const cell = draft[row][col];
 
       // Assisted and Correction: fix wrong fills (cell should be empty)
@@ -112,8 +120,18 @@ export class CellUpdater {
             draft[row][col] = CellState.EMPTY;
           } else {
             // Correct cross: allow un-cross only if row and column are not complete
-            const rowComplete = puzzleService.isRowOrColumnComplete(puzzle, draft, true, row);
-            const colComplete = puzzleService.isRowOrColumnComplete(puzzle, draft, false, col);
+            const rowComplete = puzzleService.isRowOrColumnComplete(
+              puzzle,
+              draft,
+              true,
+              row,
+            );
+            const colComplete = puzzleService.isRowOrColumnComplete(
+              puzzle,
+              draft,
+              false,
+              col,
+            );
             if (!rowComplete && !colComplete) {
               draft[row][col] = CellState.EMPTY;
             }
@@ -148,25 +166,27 @@ export class CellUpdater {
 
         // Auto-add boundary crosses: cross before block at end, or after block at start, when block matches clues
         const rowLine = draft[row] as number[];
-        addBoundaryCrosses(rowLine, rowHints[row], j => {
-          if (draft[row][j] === CellState.EMPTY) draft[row][j] = CellState.CROSSED_OUT;
+        addBoundaryCrosses(rowLine, rowHints[row], (j) => {
+          if (draft[row][j] === CellState.EMPTY)
+            draft[row][j] = CellState.CROSSED_OUT;
         });
-        const colLine = draft.map(r => r[col]) as number[];
-        addBoundaryCrosses(colLine, columnHints[col], i => {
-          if (draft[i][col] === CellState.EMPTY) draft[i][col] = CellState.CROSSED_OUT;
+        const colLine = draft.map((r) => r[col]) as number[];
+        addBoundaryCrosses(colLine, columnHints[col], (i) => {
+          if (draft[i][col] === CellState.EMPTY)
+            draft[i][col] = CellState.CROSSED_OUT;
         });
       }
     });
 
     // Update row hints
-    const newRowHints = produce(rowHints, draft => {
+    const newRowHints = produce(rowHints, (draft) => {
       draft[row] = hintChecker.check(newGrid[row], draft[row], puzzle[row]);
     });
 
     // Update column hints
-    const newColumnHints = produce(columnHints, draft => {
-      const column = newGrid.map(r => r[col]);
-      const answerColumn = puzzle.map(r => r[col]);
+    const newColumnHints = produce(columnHints, (draft) => {
+      const column = newGrid.map((r) => r[col]);
+      const answerColumn = puzzle.map((r) => r[col]);
       draft[col] = hintChecker.check(column, draft[col], answerColumn);
     });
 
@@ -174,7 +194,7 @@ export class CellUpdater {
       newGrid,
       newRowHints,
       newColumnHints,
-      errorCell
+      errorCell,
     };
   }
 }

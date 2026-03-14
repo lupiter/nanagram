@@ -28,7 +28,7 @@ export default function LinkCard({
     "link-card",
     size !== "lg" && `link-card-${size}`,
     { "link-card-column": column },
-    className
+    className,
   );
 
   return (

@@ -7,16 +7,21 @@ interface HintDisplayProps {
   isVertical?: boolean;
 }
 
-export default function HintDisplay({ hints, isVertical = true }: HintDisplayProps) {
+export default function HintDisplay({
+  hints,
+  isVertical = true,
+}: HintDisplayProps) {
   return (
-    <div className={clsx('hint-numbers', isVertical ? 'vertical' : 'horizontal')}>
-      {hints?.map((hint, i) => 
+    <div
+      className={clsx("hint-numbers", isVertical ? "vertical" : "horizontal")}
+    >
+      {hints?.map((hint, i) =>
         hint.used ? (
           <del key={i}>{hint.hint}</del>
         ) : (
           <span key={i}>{hint.hint}</span>
-        )
+        ),
       )}
     </div>
   );
-} 
+}

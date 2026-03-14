@@ -41,7 +41,7 @@ export default function VictoryPopup({
     if (randomAgainParams) {
       const { width, height, difficulty } = randomAgainParams;
       void navigate(
-        `/random?width=${encodeURIComponent(width)}&height=${encodeURIComponent(height)}&difficulty=${encodeURIComponent(difficulty)}`
+        `/random?width=${encodeURIComponent(width)}&height=${encodeURIComponent(height)}&difficulty=${encodeURIComponent(difficulty)}`,
       );
       onClose();
     }
@@ -56,7 +56,12 @@ export default function VictoryPopup({
   const showAnother = randomAgainParams ?? null;
 
   return (
-    <Modal isOpen={true} onClose={onClose} title="Congratulations" className="victory-modal">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title="Congratulations"
+      className="victory-modal"
+    >
       <div className="victory-content">
         <div className="solution-preview-container">
           <SolutionPreview solution={solution} />
@@ -67,12 +72,20 @@ export default function VictoryPopup({
             Home
           </Button>
           {showNext && (
-            <Button variant="primary" onClick={handleNextPuzzle} aria-label="Go to next puzzle">
+            <Button
+              variant="primary"
+              onClick={handleNextPuzzle}
+              aria-label="Go to next puzzle"
+            >
               Next Puzzle <Icons.ArrowRight />
             </Button>
           )}
           {showAnother && (
-            <Button variant="primary" onClick={handleAnotherPuzzle} aria-label="Generate another puzzle of same size">
+            <Button
+              variant="primary"
+              onClick={handleAnotherPuzzle}
+              aria-label="Generate another puzzle of same size"
+            >
               Another puzzle <Icons.ArrowRight />
             </Button>
           )}

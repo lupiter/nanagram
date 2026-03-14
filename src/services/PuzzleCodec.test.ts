@@ -5,32 +5,62 @@ describe("puzzleCodec", () => {
   // Helper to create an empty grid
   const createEmptyGrid = (size: number): PuzzleSolutionData =>
     Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => CellState.EMPTY)
+      Array.from({ length: size }, () => CellState.EMPTY),
     );
 
   // Helper to create a filled grid
   const createFilledGrid = (size: number): PuzzleSolutionData =>
     Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => CellState.FILLED)
+      Array.from({ length: size }, () => CellState.FILLED),
     );
 
   // Helper to create a checkerboard pattern
   const createCheckerboard = (size: number): PuzzleSolutionData =>
     Array.from({ length: size }, (_, row) =>
       Array.from({ length: size }, (_, col) =>
-        (row + col) % 2 === 0 ? CellState.FILLED : CellState.EMPTY
-      )
+        (row + col) % 2 === 0 ? CellState.FILLED : CellState.EMPTY,
+      ),
     );
 
   describe("round-trip encoding/decoding", () => {
     it("should encode and decode a simple 5x5 puzzle", () => {
       const name = "Heart";
       const solution: PuzzleSolutionData = [
-        [CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.EMPTY],
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
-        [CellState.EMPTY, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.EMPTY],
-        [CellState.EMPTY, CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.EMPTY],
+        [
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+        ],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
+        [
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.EMPTY,
+        ],
+        [
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.EMPTY,
+        ],
       ];
 
       const encoded = puzzleCodec.encode(name, solution);
@@ -236,4 +266,3 @@ describe("puzzleCodec", () => {
     });
   });
 });
-

@@ -1,6 +1,6 @@
 /**
  * PuzzleCodec - Encodes and decodes puzzles to/from URL-safe strings
- * 
+ *
  * Format: [height:1][width:1][difficulty:1][nameLen:2][name:XOR'd UTF-8][grid:bit-packed]
  */
 
@@ -56,7 +56,11 @@ export class PuzzleCodec {
   }
 
   /** Unpack bit-packed bytes into a 2D grid */
-  private unpackBitsToGrid(bytes: Uint8Array, height: number, width: number): PuzzleSolutionData {
+  private unpackBitsToGrid(
+    bytes: Uint8Array,
+    height: number,
+    width: number,
+  ): PuzzleSolutionData {
     const grid: PuzzleSolutionData = [];
 
     let bitIndex = 0;
@@ -111,7 +115,8 @@ export class PuzzleCodec {
     const gridBytes = this.packGridToBits(solution);
 
     // Build the byte array: height + width + difficulty + nameLen(2) + name + grid
-    const totalLength = 1 + 1 + 1 + 2 + obfuscatedName.length + gridBytes.length;
+    const totalLength =
+      1 + 1 + 1 + 2 + obfuscatedName.length + gridBytes.length;
     const bytes = new Uint8Array(totalLength);
 
     let offset = 0;

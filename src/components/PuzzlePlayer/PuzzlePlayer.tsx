@@ -31,7 +31,7 @@ interface PuzzlePlayerProps {
   nextPuzzle?: NextPuzzleInfo | null;
   randomAgainParams?: RandomAgainParams | null;
   /** When set, clicks on these cells (row,col keys) are ignored once (synthetic click after tap). */
-  dragJustEndedCellsRef?: React.MutableRefObject<Set<string> | null>;
+  dragJustEndedCellsRef?: React.RefObject<Set<string> | null>;
 }
 
 export default function PuzzlePlayer({
@@ -60,7 +60,7 @@ export default function PuzzlePlayer({
         return controller.updateCell(s, row, col);
       });
     },
-    [controller, setState, dragJustEndedCellsRef]
+    [controller, setState, dragJustEndedCellsRef],
   );
 
   const handleRightClick = useCallback(
@@ -68,7 +68,7 @@ export default function PuzzlePlayer({
       e.preventDefault();
       setState((s) => controller.handleRightClick(s, row, col));
     },
-    [controller, setState]
+    [controller, setState],
   );
 
   const handlePointerDown = useCallback(
@@ -77,21 +77,21 @@ export default function PuzzlePlayer({
       e.preventDefault(); // Prevent synthetic click (iPad Safari/Pencil fires it before our pointerup)
       setState((s) => controller.startDrag(s, row, col));
     },
-    [controller, setState]
+    [controller, setState],
   );
 
   const handlePointerEnter = useCallback(
     (row: number, col: number) => {
       setState((s) => controller.continueDrag(s, row, col));
     },
-    [controller, setState]
+    [controller, setState],
   );
 
   const handleToolChange = useCallback(
     (tool: CellState) => {
       setState((s) => controller.setTool(s, tool));
     },
-    [controller, setState]
+    [controller, setState],
   );
 
   const handleReset = useCallback(() => {
@@ -115,7 +115,7 @@ export default function PuzzlePlayer({
     (mode: GameMode) => {
       setState((s) => controller.setMode(s, mode));
     },
-    [controller, setState]
+    [controller, setState],
   );
 
   if (!puzzle) {
@@ -123,7 +123,9 @@ export default function PuzzlePlayer({
       <div className="puzzle-player">
         <h1>Invalid Puzzle</h1>
         <p>The puzzle data in the URL is invalid or corrupted.</p>
-        <Link to="/"><Icons.ArrowLeft /> Back to Home</Link>
+        <Link to="/">
+          <Icons.ArrowLeft /> Back to Home
+        </Link>
       </div>
     );
   }
@@ -138,12 +140,16 @@ export default function PuzzlePlayer({
           onUndo={handleUndo}
           onRedo={handleRedo}
           onReset={handleReset}
-          onSettingsClick={() => setSettingsOpen(true)}
+          onSettingsClick={() => {
+            setSettingsOpen(true);
+          }}
         />
       </div>
       <Modal
         isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
+        onClose={() => {
+          setSettingsOpen(false);
+        }}
         title="Settings"
       >
         <Settings onPlayModeChange={handleSettingsPlayModeChange} />

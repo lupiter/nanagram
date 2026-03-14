@@ -17,12 +17,17 @@ interface UsePuzzleGameProps {
 export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
   const controller = useMemo(
     () => new PuzzleController({ category, id, solution: puzzle.solution }),
-    [category, id, puzzle.solution]
+    [category, id, puzzle.solution],
   );
 
   const [state, setState] = useState<PuzzleState>(() => {
-    const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
-    const savedMode = localStorage.getItem(PLAY_MODE_STORAGE_KEY) as GameMode | null;
+    const savedGrid = puzzleLibrary.loadProgress(
+      category,
+      id,
+    ) as GameState | null;
+    const savedMode = localStorage.getItem(
+      PLAY_MODE_STORAGE_KEY,
+    ) as GameMode | null;
     return controller.createInitialState(savedGrid, savedMode);
   });
   const dragJustEndedCellsRef = useRef<Set<string> | null>(null);
@@ -31,8 +36,13 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
 
   // Reset state when puzzle changes
   useEffect(() => {
-    const savedGrid = puzzleLibrary.loadProgress(category, id) as GameState | null;
-    const savedMode = localStorage.getItem(PLAY_MODE_STORAGE_KEY) as GameMode | null;
+    const savedGrid = puzzleLibrary.loadProgress(
+      category,
+      id,
+    ) as GameState | null;
+    const savedMode = localStorage.getItem(
+      PLAY_MODE_STORAGE_KEY,
+    ) as GameMode | null;
     setState(controller.createInitialState(savedGrid, savedMode));
   }, [controller, category, id]);
 
@@ -60,9 +70,11 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     if (state.errorCell) {
       void errorSound.play();
       const timer = setTimeout(() => {
-        setState(s => controller.clearError(s));
+        setState((s) => controller.clearError(s));
       }, 200);
-      return () => { clearTimeout(timer); };
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, [state.errorCell, controller]);
 
@@ -79,13 +91,13 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       const s = stateRef.current;
       if (s.isDragging) {
         const cells = new Set<string>();
-        s.draggedCells.forEach((cols, r) =>
-          cols.forEach(c => cells.add(`${String(r)},${String(c)}`))
-        );
+        s.draggedCells.forEach((cols, r) => {
+          cols.forEach((c) => cells.add(`${String(r)},${String(c)}`));
+        });
         dragJustEndedCellsRef.current = cells;
       }
       requestAnimationFrame(() => {
-        setState(s => {
+        setState((s) => {
           if (s.isDragging) {
             return controller.endDrag(s);
           }
@@ -107,14 +119,16 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       if ((e.ctrlKey || e.metaKey) && e.key === "z") {
         e.preventDefault();
         if (e.shiftKey) {
-          setState(s => controller.redo(s));
+          setState((s) => controller.redo(s));
         } else {
-          setState(s => controller.undo(s));
+          setState((s) => controller.undo(s));
         }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => { window.removeEventListener("keydown", handleKeyDown); };
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [controller]);
 
   return { state, setState, controller, dragJustEndedCellsRef };

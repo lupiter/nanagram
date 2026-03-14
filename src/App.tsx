@@ -1,12 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { PageTitleProvider } from './hooks/usePageTitle';
-import Layout from './components/Layout/Layout';
-import Home from './pages/Home/Home';
-import Puzzle from './pages/Puzzle/Puzzle';
-import Designer from './pages/Designer/Designer';
-import RandomPuzzle from './pages/RandomPuzzle/RandomPuzzle';
-import Library from './pages/Library/Library';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PageTitleProvider } from "./hooks/usePageTitle";
+import Layout from "./components/Layout/Layout";
+import Home from "./pages/Home/Home";
+import Puzzle from "./pages/Puzzle/Puzzle";
+import Designer from "./pages/Designer/Designer";
+import RandomPuzzle from "./pages/RandomPuzzle/RandomPuzzle";
+import Library from "./pages/Library/Library";
+import "./App.css";
 
 function App() {
   return (

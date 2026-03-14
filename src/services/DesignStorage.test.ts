@@ -10,17 +10,23 @@ describe("DesignStorage", () => {
     storage = new DesignStorage();
     mockStorage = {};
 
-    jest.spyOn(Storage.prototype, "getItem").mockImplementation((key: string) => {
-      return mockStorage[key] ?? null;
-    });
+    jest
+      .spyOn(Storage.prototype, "getItem")
+      .mockImplementation((key: string) => {
+        return mockStorage[key] ?? null;
+      });
 
-    jest.spyOn(Storage.prototype, "setItem").mockImplementation((key: string, value: string) => {
-      mockStorage[key] = value;
-    });
+    jest
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation((key: string, value: string) => {
+        mockStorage[key] = value;
+      });
 
-    jest.spyOn(Storage.prototype, "removeItem").mockImplementation((key: string) => {
-      mockStorage[key] = undefined as unknown as string;
-    });
+    jest
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation((key: string) => {
+        mockStorage[key] = undefined as unknown as string;
+      });
   });
 
   afterEach(() => {
@@ -75,8 +81,20 @@ describe("DesignStorage", () => {
     });
 
     it("should return all saved designs", () => {
-      storage.save({ name: "Design 1", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
-      storage.save({ name: "Design 2", height: 3, width: 3, difficulty: 2, solution: createTestSolution() });
+      storage.save({
+        name: "Design 1",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
+      storage.save({
+        name: "Design 2",
+        height: 3,
+        width: 3,
+        difficulty: 2,
+        solution: createTestSolution(),
+      });
 
       const designs = storage.getAll();
 
@@ -86,7 +104,13 @@ describe("DesignStorage", () => {
 
   describe("getById", () => {
     it("should return a design by its id", () => {
-      const saved = storage.save({ name: "Find Me", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
+      const saved = storage.save({
+        name: "Find Me",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
 
       const found = storage.getById(saved.id);
 
@@ -103,7 +127,13 @@ describe("DesignStorage", () => {
 
   describe("delete", () => {
     it("should remove a design by id", () => {
-      const saved = storage.save({ name: "Delete Me", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
+      const saved = storage.save({
+        name: "Delete Me",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
 
       storage.delete(saved.id);
 
@@ -111,8 +141,20 @@ describe("DesignStorage", () => {
     });
 
     it("should not affect other designs", () => {
-      const design1 = storage.save({ name: "Keep", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
-      const design2 = storage.save({ name: "Delete", height: 3, width: 3, difficulty: 2, solution: createTestSolution() });
+      const design1 = storage.save({
+        name: "Keep",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
+      const design2 = storage.save({
+        name: "Delete",
+        height: 3,
+        width: 3,
+        difficulty: 2,
+        solution: createTestSolution(),
+      });
 
       storage.delete(design2.id);
 
@@ -123,7 +165,13 @@ describe("DesignStorage", () => {
 
   describe("update", () => {
     it("should update an existing design", () => {
-      const saved = storage.save({ name: "Original", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
+      const saved = storage.save({
+        name: "Original",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
 
       storage.update(saved.id, { name: "Updated" });
 
@@ -132,7 +180,13 @@ describe("DesignStorage", () => {
     });
 
     it("should preserve unchanged fields", () => {
-      const saved = storage.save({ name: "Original", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
+      const saved = storage.save({
+        name: "Original",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
 
       storage.update(saved.id, { difficulty: 5 });
 
@@ -145,7 +199,13 @@ describe("DesignStorage", () => {
   describe("findDuplicate", () => {
     it("should find a design with matching solution", () => {
       const solution = createTestSolution();
-      storage.save({ name: "Original", height: 3, width: 3, difficulty: 1, solution });
+      storage.save({
+        name: "Original",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution,
+      });
 
       const duplicate = storage.findDuplicate(solution);
 
@@ -155,7 +215,13 @@ describe("DesignStorage", () => {
 
     it("should return null when no duplicate exists", () => {
       const solution1 = createTestSolution();
-      storage.save({ name: "Original", height: 3, width: 3, difficulty: 1, solution: solution1 });
+      storage.save({
+        name: "Original",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: solution1,
+      });
 
       const differentSolution: PuzzleSolutionData = [
         [CellState.EMPTY, CellState.EMPTY, CellState.EMPTY],
@@ -171,8 +237,20 @@ describe("DesignStorage", () => {
 
   describe("exportAsJson", () => {
     it("should return a JSON string of all designs", () => {
-      storage.save({ name: "Export 1", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
-      storage.save({ name: "Export 2", height: 3, width: 3, difficulty: 2, solution: createTestSolution() });
+      storage.save({
+        name: "Export 1",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
+      storage.save({
+        name: "Export 2",
+        height: 3,
+        width: 3,
+        difficulty: 2,
+        solution: createTestSolution(),
+      });
 
       const json = storage.exportAsJson();
       const parsed = JSON.parse(json) as { designs: unknown[] };
@@ -183,7 +261,13 @@ describe("DesignStorage", () => {
 
   describe("parseExportedJson", () => {
     it("should parse valid exported JSON", () => {
-      storage.save({ name: "Test", height: 3, width: 3, difficulty: 1, solution: createTestSolution() });
+      storage.save({
+        name: "Test",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution: createTestSolution(),
+      });
       const json = storage.exportAsJson();
 
       const parsed = storage.parseExportedJson(json);
@@ -208,8 +292,24 @@ describe("DesignStorage", () => {
   describe("import", () => {
     it("should import designs and report counts", () => {
       const designs = [
-        { id: "1", name: "Import 1", height: 3, width: 3, difficulty: 1, solution: createTestSolution(), createdAt: new Date().toISOString() },
-        { id: "2", name: "Import 2", height: 3, width: 3, difficulty: 2, solution: createTestSolution(), createdAt: new Date().toISOString() },
+        {
+          id: "1",
+          name: "Import 1",
+          height: 3,
+          width: 3,
+          difficulty: 1,
+          solution: createTestSolution(),
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: "2",
+          name: "Import 2",
+          height: 3,
+          width: 3,
+          difficulty: 2,
+          solution: createTestSolution(),
+          createdAt: new Date().toISOString(),
+        },
       ];
 
       const result = storage.import(designs, false);
@@ -221,10 +321,24 @@ describe("DesignStorage", () => {
 
     it("should skip duplicates when deduplication is enabled", () => {
       const solution = createTestSolution();
-      storage.save({ name: "Existing", height: 3, width: 3, difficulty: 1, solution });
+      storage.save({
+        name: "Existing",
+        height: 3,
+        width: 3,
+        difficulty: 1,
+        solution,
+      });
 
       const designs = [
-        { id: "1", name: "Duplicate", height: 3, width: 3, difficulty: 1, solution, createdAt: new Date().toISOString() },
+        {
+          id: "1",
+          name: "Duplicate",
+          height: 3,
+          width: 3,
+          difficulty: 1,
+          solution,
+          createdAt: new Date().toISOString(),
+        },
       ];
 
       const result = storage.import(designs, true);

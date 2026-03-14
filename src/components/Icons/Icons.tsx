@@ -22,6 +22,8 @@ import editSvg from "./svg/edit.svg";
 import photoCornerSvg from "./svg/photo-corner.svg";
 import checkSvg from "./svg/check.svg";
 import settingsSvg from "./svg/settings.svg";
+import pauseSvg from "./svg/pause.svg";
+import playSvg from "./svg/play.svg";
 import "./Icons.css";
 
 interface IconProps {
@@ -181,18 +183,9 @@ export class Icons {
     );
   }
 
-  static EditSvg({
-    className,
-    x = 0,
-    y = 0,
-  }: IconSvgProps = {}) {
+  static EditSvg({ className, x = 0, y = 0 }: IconSvgProps = {}) {
     return (
-      <image
-        href={editSvg}
-        className={`icon ${className ?? ""}`}
-        x={x}
-        y={y}
-      />
+      <image href={editSvg} className={`icon ${className ?? ""}`} x={x} y={y} />
     );
   }
 
@@ -208,7 +201,11 @@ export class Icons {
 
   static Logo({ className, alt = "Nanagram" }: IconProps = {}) {
     return (
-      <img src="/logo.png" alt={alt} className={`icon icon-logo ${className ?? ""}`} />
+      <img
+        src="/logo.png"
+        alt={alt}
+        className={`icon icon-logo ${className ?? ""}`}
+      />
     );
   }
 
@@ -221,6 +218,18 @@ export class Icons {
   static Settings({ className, alt = "Settings" }: IconProps = {}) {
     return (
       <img src={settingsSvg} alt={alt} className={`icon ${className ?? ""}`} />
+    );
+  }
+
+  static Pause({ className, alt = "Pause" }: IconProps = {}) {
+    return (
+      <img src={pauseSvg} alt={alt} className={`icon ${className ?? ""}`} />
+    );
+  }
+
+  static Play({ className, alt = "Play" }: IconProps = {}) {
+    return (
+      <img src={playSvg} alt={alt} className={`icon ${className ?? ""}`} />
     );
   }
 }

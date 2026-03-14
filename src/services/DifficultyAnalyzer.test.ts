@@ -5,15 +5,45 @@ describe("DifficultyAnalyzer", () => {
   describe("getRating", () => {
     it("should return a difficulty rating between 1 and 5", () => {
       const solution: PuzzleSolutionData = [
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
       ];
 
       const rating = difficultyAnalyzer.getRating(solution);
-      
+
       expect(rating).toBeGreaterThanOrEqual(1);
       expect(rating).toBeLessThanOrEqual(5);
     });
@@ -26,7 +56,7 @@ describe("DifficultyAnalyzer", () => {
       ];
 
       const rating = difficultyAnalyzer.getRating(solution);
-      
+
       expect(rating).toBe(1);
     });
 
@@ -38,7 +68,7 @@ describe("DifficultyAnalyzer", () => {
       ];
 
       const rating = difficultyAnalyzer.getRating(solution);
-      
+
       expect(rating).toBe(1);
     });
 
@@ -50,7 +80,7 @@ describe("DifficultyAnalyzer", () => {
       ];
 
       const rating = difficultyAnalyzer.getRating(solution);
-      
+
       expect(rating).toBeGreaterThanOrEqual(1);
       expect(rating).toBeLessThanOrEqual(5);
     });
@@ -59,15 +89,45 @@ describe("DifficultyAnalyzer", () => {
   describe("analyze", () => {
     it("should return complete metrics", () => {
       const solution: PuzzleSolutionData = [
-        [CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.FILLED],
-        [CellState.EMPTY, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.EMPTY],
-        [CellState.FILLED, CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.FILLED],
-        [CellState.EMPTY, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.EMPTY],
-        [CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.FILLED],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.EMPTY,
+        ],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
+        [
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.EMPTY,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
       ];
 
       const metrics = difficultyAnalyzer.analyze(solution);
-      
+
       expect(metrics).toHaveProperty("difficulty");
       expect(metrics).toHaveProperty("firstPassCells");
       expect(metrics).toHaveProperty("totalCells");
@@ -85,21 +145,51 @@ describe("DifficultyAnalyzer", () => {
       ];
 
       const metrics = difficultyAnalyzer.analyze(solution);
-      
+
       expect(metrics.totalCells).toBe(9);
     });
 
     it("should have firstPassPercent between 0 and 100", () => {
       const solution: PuzzleSolutionData = [
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.FILLED, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY, CellState.FILLED],
-        [CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED, CellState.FILLED],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.EMPTY,
+          CellState.FILLED,
+        ],
+        [
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+          CellState.FILLED,
+        ],
       ];
 
       const metrics = difficultyAnalyzer.analyze(solution);
-      
+
       expect(metrics.firstPassPercent).toBeGreaterThanOrEqual(0);
       expect(metrics.firstPassPercent).toBeLessThanOrEqual(100);
     });
@@ -111,7 +201,7 @@ describe("DifficultyAnalyzer", () => {
       ];
 
       const metrics = difficultyAnalyzer.analyze(solution);
-      
+
       expect(metrics.iterations).toBeGreaterThanOrEqual(1);
     });
   });

@@ -8,14 +8,18 @@
 .nonogram-grid-container .hint-numbers.vertical {
   flex-direction: column;
   justify-content: flex-end;
-  min-height: calc(var(--max-col-hints, var(--hint-count-fallback)) * var(--hint-slot-height));
+  min-height: calc(
+    var(--max-col-hints, var(--hint-count-fallback)) * var(--hint-slot-height)
+  );
   text-align: center;
 }
 
 .nonogram-grid-container .hint-numbers.horizontal {
   flex-direction: row;
   justify-content: flex-end;
-  min-width: calc(var(--max-row-hints, var(--hint-count-fallback)) * var(--hint-slot-width));
+  min-width: calc(
+    var(--max-row-hints, var(--hint-count-fallback)) * var(--hint-slot-width)
+  );
   text-align: right;
   min-height: auto;
 }

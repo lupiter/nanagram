@@ -5,7 +5,7 @@ describe("SSSFormat", () => {
   describe("gridToString", () => {
     it("should convert a 10x15 grid to a 150-character string", () => {
       const grid: PuzzleSolutionData = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => CellState.FILLED)
+        Array.from({ length: 15 }, () => CellState.FILLED),
       );
 
       const result = sssFormat.gridToString(grid);
@@ -33,7 +33,11 @@ describe("SSSFormat", () => {
 
       expect(result.length).toBe(10);
       expect(result[0].length).toBe(15);
-      expect(result.flat().every((cell: number) => cell === (CellState.FILLED as number))).toBe(true);
+      expect(
+        result
+          .flat()
+          .every((cell: number) => cell === (CellState.FILLED as number)),
+      ).toBe(true);
     });
 
     it("should correctly parse 0s and 1s", () => {
@@ -42,17 +46,25 @@ describe("SSSFormat", () => {
 
       const result = sssFormat.stringToGrid(gridString);
 
-      expect(result[0].every((cell: number) => cell === (CellState.FILLED as number))).toBe(true);
-      expect(result[1].every((cell: number) => cell === (CellState.EMPTY as number))).toBe(true);
+      expect(
+        result[0].every(
+          (cell: number) => cell === (CellState.FILLED as number),
+        ),
+      ).toBe(true);
+      expect(
+        result[1].every((cell: number) => cell === (CellState.EMPTY as number)),
+      ).toBe(true);
     });
   });
 
   describe("round-trip conversion", () => {
     it("should preserve grid data through conversion", () => {
-      const original: PuzzleSolutionData = Array.from({ length: 10 }, (_, row) =>
-        Array.from({ length: 15 }, (_, col) =>
-          (row + col) % 2 === 0 ? CellState.FILLED : CellState.EMPTY
-        )
+      const original: PuzzleSolutionData = Array.from(
+        { length: 10 },
+        (_, row) =>
+          Array.from({ length: 15 }, (_, col) =>
+            (row + col) % 2 === 0 ? CellState.FILLED : CellState.EMPTY,
+          ),
       );
 
       const stringified = sssFormat.gridToString(original);
@@ -100,10 +112,14 @@ describe("SSSFormat", () => {
     it("should add a puzzle to an empty file", () => {
       const file = sssFormat.createEmptyFile();
       const grid: number[][] = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => 1)
+        Array.from({ length: 15 }, () => 1),
       );
 
-      const result = sssFormat.addPuzzle(file, { title: "Test", grid }, "TestCreator");
+      const result = sssFormat.addPuzzle(
+        file,
+        { title: "Test", grid },
+        "TestCreator",
+      );
 
       expect(Object.keys(result.puzzles).length).toBe(1);
       expect(Object.keys(result.profiles).length).toBe(1);
@@ -112,10 +128,14 @@ describe("SSSFormat", () => {
     it("should use the provided creator name", () => {
       const file = sssFormat.createEmptyFile();
       const grid: number[][] = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => 0)
+        Array.from({ length: 15 }, () => 0),
       );
 
-      const result = sssFormat.addPuzzle(file, { title: "Test", grid }, "MyName");
+      const result = sssFormat.addPuzzle(
+        file,
+        { title: "Test", grid },
+        "MyName",
+      );
 
       const profileId = Object.keys(result.profiles)[0];
       expect(result.profiles[profileId].name).toBe("MyName");
@@ -124,10 +144,14 @@ describe("SSSFormat", () => {
     it("should set the puzzle title", () => {
       const file = sssFormat.createEmptyFile();
       const grid: number[][] = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => 1)
+        Array.from({ length: 15 }, () => 1),
       );
 
-      const result = sssFormat.addPuzzle(file, { title: "My Puzzle", grid }, "Creator");
+      const result = sssFormat.addPuzzle(
+        file,
+        { title: "My Puzzle", grid },
+        "Creator",
+      );
 
       const puzzleId = Object.keys(result.puzzles)[0];
       expect(result.puzzles[puzzleId].title).toBe("My Puzzle");
@@ -146,7 +170,7 @@ describe("SSSFormat", () => {
     it("should return all puzzles with their creators", () => {
       let file = sssFormat.createEmptyFile();
       const grid: number[][] = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => 1)
+        Array.from({ length: 15 }, () => 1),
       );
 
       file = sssFormat.addPuzzle(file, { title: "Puzzle 1", grid }, "Creator1");
@@ -187,7 +211,7 @@ describe("SSSFormat", () => {
     it("should add multiple puzzles at once", () => {
       const file = sssFormat.createEmptyFile();
       const grid: PuzzleSolutionData = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => CellState.FILLED)
+        Array.from({ length: 15 }, () => CellState.FILLED),
       );
 
       const puzzles = [
@@ -206,14 +230,23 @@ describe("SSSFormat", () => {
     it("should skip duplicates when deduplication is enabled", () => {
       let file = sssFormat.createEmptyFile();
       const grid: PuzzleSolutionData = Array.from({ length: 10 }, () =>
-        Array.from({ length: 15 }, () => CellState.FILLED)
+        Array.from({ length: 15 }, () => CellState.FILLED),
       );
 
       // Add one puzzle first
-      file = sssFormat.addPuzzle(file, { title: "Existing", grid: grid.map(r => r.map(c => c as number)) }, "Creator");
+      file = sssFormat.addPuzzle(
+        file,
+        { title: "Existing", grid: grid.map((r) => r.map((c) => c as number)) },
+        "Creator",
+      );
 
       // Try to add the same grid again
-      const result = sssFormat.addPuzzles(file, [{ title: "Duplicate", grid }], "Creator", true);
+      const result = sssFormat.addPuzzles(
+        file,
+        [{ title: "Duplicate", grid }],
+        "Creator",
+        true,
+      );
 
       expect(result.added).toBe(0);
       expect(result.skipped).toBe(1);

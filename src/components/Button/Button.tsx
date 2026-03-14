@@ -43,7 +43,7 @@ export default function Button({
     "btn",
     `btn-${variant}`,
     { "btn-square": square },
-    className
+    className,
   );
 
   // Router Link

@@ -16,6 +16,7 @@ interface DesignerControlsProps {
   saveStatus?: SaveStatus;
   shareStatus?: CopyStatus;
   exportStatus?: CopyStatus;
+  autoCheckEnabled: boolean;
   onNameChange: (name: string) => void;
   onClear: () => void;
   onExport: () => void;
@@ -23,6 +24,7 @@ interface DesignerControlsProps {
   onSave: () => void;
   onDownloadSSS?: () => void;
   onUploadSSS?: (file: File) => void;
+  onToggleAutoCheck: () => void;
 }
 
 export default function DesignerControls({
@@ -34,6 +36,7 @@ export default function DesignerControls({
   saveStatus = "idle",
   shareStatus = "idle",
   exportStatus = "idle",
+  autoCheckEnabled,
   onNameChange,
   onClear,
   onExport,
@@ -41,6 +44,7 @@ export default function DesignerControls({
   onSave,
   onDownloadSSS,
   onUploadSSS,
+  onToggleAutoCheck,
 }: DesignerControlsProps) {
   // Determine save button appearance based on status
   const getSaveButtonContent = () => {
@@ -55,7 +59,11 @@ export default function DesignerControls({
     }
   };
 
-  const getSaveButtonVariant = (): "default" | "primary" | "secondary" | "danger" => {
+  const getSaveButtonVariant = ():
+    | "default"
+    | "primary"
+    | "secondary"
+    | "danger" => {
     switch (saveStatus) {
       case "saved":
       case "updated":
@@ -86,13 +94,20 @@ export default function DesignerControls({
           type="text"
           id="puzzle-name"
           value={puzzleName}
-          onChange={(e) => { onNameChange(e.target.value); }}
+          onChange={(e) => {
+            onNameChange(e.target.value);
+          }}
           placeholder="Enter puzzle name"
         />
       </FormField>
 
       <ButtonGroup gap={1}>
-        <Button variant="danger" onClick={onClear} aria-label="clear" title="Clear puzzle">
+        <Button
+          variant="danger"
+          onClick={onClear}
+          aria-label="clear"
+          title="Clear puzzle"
+        >
           <Icons.Trash />
         </Button>
         {showDevTools && (
@@ -100,16 +115,25 @@ export default function DesignerControls({
             variant={exportStatus === "copied" ? "primary" : "default"}
             onClick={onExport}
             disabled={!hasFilledCells || exportStatus !== "idle"}
-            title={exportStatus === "copied" ? "Copied!" : "Copy puzzle code to clipboard"}
+            title={
+              exportStatus === "copied"
+                ? "Copied!"
+                : "Copy puzzle code to clipboard"
+            }
           >
-            {exportStatus === "copied" ? <Icons.Check /> : <Icons.Copy />} Copy Code
+            {exportStatus === "copied" ? <Icons.Check /> : <Icons.Copy />} Copy
+            Code
           </Button>
         )}
         {isSketchFormat && onDownloadSSS && (
           <Button
             onClick={onDownloadSSS}
             disabled={!hasUniqueSolution}
-            title={hasUniqueSolution ? "Download as Sketch, Share, Solve file" : "Puzzle must have a unique solution to download"}
+            title={
+              hasUniqueSolution
+                ? "Download as Sketch, Share, Solve file"
+                : "Puzzle must have a unique solution to download"
+            }
           >
             <Icons.Download />
           </Button>
@@ -118,11 +142,22 @@ export default function DesignerControls({
           <FileUploadButton
             onFileSelect={onUploadSSS}
             disabled={!hasUniqueSolution}
-            title={hasUniqueSolution ? "Add puzzle to existing Sketch, Share, Solve file" : "Puzzle must have a unique solution to upload"}
+            title={
+              hasUniqueSolution
+                ? "Add puzzle to existing Sketch, Share, Solve file"
+                : "Puzzle must have a unique solution to upload"
+            }
           >
             <Icons.Upload />
           </FileUploadButton>
         )}
+        <Button
+          variant={autoCheckEnabled ? "primary" : "default"}
+          onClick={onToggleAutoCheck}
+          title={autoCheckEnabled ? "Pause checking" : "Resume checking"}
+        >
+          {autoCheckEnabled ? <Icons.Pause /> : <Icons.Play />}
+        </Button>
         <Button
           variant={getSaveButtonVariant()}
           onClick={onSave}
@@ -135,7 +170,13 @@ export default function DesignerControls({
           variant="primary"
           onClick={onShare}
           disabled={!hasUniqueSolution || shareStatus !== "idle"}
-          title={shareStatus === "copied" ? "Link copied!" : (hasUniqueSolution ? "Copy shareable link to clipboard" : "Puzzle must have a unique solution to share")}
+          title={
+            shareStatus === "copied"
+              ? "Link copied!"
+              : hasUniqueSolution
+                ? "Copy shareable link to clipboard"
+                : "Puzzle must have a unique solution to share"
+          }
         >
           {shareStatus === "copied" ? <Icons.Check /> : <Icons.Link />}
         </Button>

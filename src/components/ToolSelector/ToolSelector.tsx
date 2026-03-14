@@ -7,15 +7,26 @@ interface ToolSelectorProps {
   onToolChange: (tool: CellState) => void;
 }
 
-export default function ToolSelector({ tool, onToolChange }: ToolSelectorProps) {
+export default function ToolSelector({
+  tool,
+  onToolChange,
+}: ToolSelectorProps) {
   return (
     <div className="controls">
       <ToggleGroup
         value={tool}
         onChange={onToolChange}
         options={[
-          { value: CellState.FILLED, label: <Icons.FilledSquare />, ariaLabel: "Fill" },
-          { value: CellState.CROSSED_OUT, label: <Icons.CrossMark />, ariaLabel: "Cross" },
+          {
+            value: CellState.FILLED,
+            label: <Icons.FilledSquare />,
+            ariaLabel: "Fill",
+          },
+          {
+            value: CellState.CROSSED_OUT,
+            label: <Icons.CrossMark />,
+            ariaLabel: "Cross",
+          },
         ]}
         name="tool"
         title="Tool"
@@ -23,4 +34,3 @@ export default function ToolSelector({ tool, onToolChange }: ToolSelectorProps) 
     </div>
   );
 }
-

@@ -6,7 +6,10 @@ interface ModeSelectorProps {
   onModeChange: (mode: GameMode) => void;
 }
 
-export default function ModeSelector({ mode, onModeChange }: ModeSelectorProps) {
+export default function ModeSelector({
+  mode,
+  onModeChange,
+}: ModeSelectorProps) {
   return (
     <div className="controls">
       <ToggleGroup
@@ -23,4 +26,3 @@ export default function ModeSelector({ mode, onModeChange }: ModeSelectorProps) 
     </div>
   );
 }
-
