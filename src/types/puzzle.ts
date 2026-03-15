@@ -107,9 +107,9 @@ export interface NonogramGridProps {
   rowHints: Hint[][];
   columnHints: Hint[][];
   onCellClick: (row: number, col: number) => void;
-  onCellRightClick?: (row: number, col: number, e: React.MouseEvent) => void;
-  onCellPointerDown?: (row: number, col: number, e: React.PointerEvent) => void;
-  onCellPointerEnter?: (row: number, col: number) => void;
+  onCellRightClick: (row: number, col: number, e: React.MouseEvent) => void;
+  onCellPointerDown: (row: number, col: number, e: React.PointerEvent) => void;
+  onCellPointerEnter: (row: number, col: number) => void;
   errorCell?: [number, number] | null;
   /** When set (e.g. in designer), reserves at least this many slots so layout does not reflow as clues change. */
   minRowHintSlots?: number;

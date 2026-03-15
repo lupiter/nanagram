@@ -1,6 +1,6 @@
 import { useMemo, type CSSProperties } from "react";
-import { CellState } from "../../types/nonogram";
 import { NonogramGridProps } from "../../types/puzzle";
+import NonogramCell from "../NonogramCell/NonogramCell";
 import HintDisplay from "../HintDisplay/HintDisplay";
 import "./NonogramGrid.css";
 
@@ -59,59 +59,17 @@ export default function NonogramGrid({
                 <HintDisplay hints={rowHints[rowIndex]} isVertical={false} />
               </th>
               {row.map((cell, colIndex) => (
-                <td
+                <NonogramCell
                   key={`${String(rowIndex)}-${String(colIndex)}`}
-                  role="gridcell"
-                  onPointerEnter={
-                    onCellPointerEnter
-                      ? () => {
-                          onCellPointerEnter(rowIndex, colIndex);
-                        }
-                      : undefined
-                  }
-                >
-                  <input
-                    type="checkbox"
-                    id={`cell-${String(rowIndex)}-${String(colIndex)}`}
-                    checked={cell === (CellState.FILLED as number)}
-                    onChange={() => {
-                      onCellClick(rowIndex, colIndex);
-                    }}
-                    onContextMenu={
-                      onCellRightClick
-                        ? (e) => {
-                            onCellRightClick(rowIndex, colIndex, e);
-                          }
-                        : undefined
-                    }
-                    onPointerDown={
-                      onCellPointerDown
-                        ? (e) => {
-                            onCellPointerDown(rowIndex, colIndex, e);
-                          }
-                        : undefined
-                    }
-                    ref={(input) => {
-                      if (input) {
-                        input.indeterminate =
-                          cell === (CellState.EMPTY as number);
-                        input.addEventListener("ongesturestart", (e) => {
-                          e.preventDefault();
-                        });
-                      }
-                    }}
-                    className={
-                      errorCell &&
-                      errorCell[0] === rowIndex &&
-                      errorCell[1] === colIndex
-                        ? "shake"
-                        : ""
-                    }
-                    aria-label={`Cell at row ${String(
-                      rowIndex + 1,
-                    )}, column ${String(colIndex + 1)}`}
-                  />
-                </td>
+                  cell={cell}
+                  rowIndex={rowIndex}
+                  colIndex={colIndex}
+                  onCellClick={onCellClick}
+                  onCellRightClick={onCellRightClick}
+                  onCellPointerDown={onCellPointerDown}
+                  onCellPointerEnter={onCellPointerEnter}
+                  errorCell={errorCell}
+                />
               ))}
             </tr>
           ))}

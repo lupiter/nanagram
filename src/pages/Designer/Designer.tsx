@@ -84,6 +84,7 @@ export default function Designer() {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
       const key = `${String(row)},${String(col)}`;
+      console.log(`clicked cell: ${key}`);
       if (dragJustEndedCellsRef.current?.has(key)) {
         dragJustEndedCellsRef.current.delete(key);
         if (dragJustEndedCellsRef.current.size === 0) {
@@ -104,7 +105,6 @@ export default function Designer() {
   const handlePointerDown = useCallback(
     (row: number, col: number, e: React.PointerEvent) => {
       if (e.button === 2) return; // Ignore right click
-      e.preventDefault(); // Prevent synthetic click (iPad Safari/Pencil fires it before our pointerup)
       setState((s) => controller.startDrag(s, row, col));
     },
     [controller, setState],
@@ -308,10 +308,11 @@ export default function Designer() {
           rowHints={state.rowHints}
           columnHints={state.columnHints}
           onCellClick={handleCellClick}
+          onCellRightClick={handleCellClick}
           onCellPointerDown={handlePointerDown}
           onCellPointerEnter={handlePointerEnter}
-          minRowHintSlots={state.width}
-          minColHintSlots={state.height}
+          minRowHintSlots={state.width / 2}
+          minColHintSlots={state.height / 2}
         />
       </div>
 

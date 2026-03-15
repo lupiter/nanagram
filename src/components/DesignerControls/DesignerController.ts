@@ -1,5 +1,9 @@
 import { produce } from "immer";
-import { CellState, PuzzleSolutionData } from "../../types/nonogram";
+import {
+  CellState,
+  PuzzleSolutionData,
+  SolutionCell,
+} from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
 import { puzzleCodec } from "../../services/PuzzleCodec";
 import { difficultyAnalyzer } from "../../services/DifficultyAnalyzer";
@@ -36,18 +40,17 @@ export class DesignerController {
   }
 
   startDrag(state: DesignerState, row: number, col: number): DesignerState {
-    const currentCell = state.grid[row][col];
-    const dragMode =
-      currentCell === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
+    const flipped = (cell: CellState): SolutionCell =>
+      cell === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
 
     return produce(state, (draft) => {
-      draft.grid[row][col] = dragMode;
+      draft.grid[row][col] = flipped(draft.grid[row][col]);
       draft.rowHints = puzzleService.deriveRowHints(draft.grid);
       draft.columnHints = puzzleService.deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
       draft.difficulty = null;
       draft.isDragging = true;
-      draft.dragMode = dragMode;
+      draft.dragMode = flipped(draft.grid[row][col]);
       draft.draggedCells = new Map([[row, new Set([col])]]);
     });
   }
