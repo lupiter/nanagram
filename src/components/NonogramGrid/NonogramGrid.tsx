@@ -95,6 +95,9 @@ export default function NonogramGrid({
                       if (input) {
                         input.indeterminate =
                           cell === (CellState.EMPTY as number);
+                        input.addEventListener("ongesturestart", (e) => {
+                          e.preventDefault();
+                        });
                       }
                     }}
                     className={
