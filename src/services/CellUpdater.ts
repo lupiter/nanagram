@@ -111,29 +111,16 @@ export class CellUpdater {
           // No-op: keep cell filled
         } else if (
           (mode === GameMode.Assisted || mode === GameMode.Correction) &&
-          cell === CellState.CROSSED_OUT &&
-          toolToUse === CellState.CROSSED_OUT
+          cell === CellState.CROSSED_OUT
         ) {
-          // Assisted mode: always allow un-cross if the cross is wrong (solution says filled)
-          const solutionCell = puzzle[row][col];
-          if (solutionCell === CellState.FILLED) {
+          if (toolToUse === CellState.CROSSED_OUT || toolToUse === CellState.EMPTY) {
             draft[row][col] = CellState.EMPTY;
-          } else {
-            // Correct cross: allow un-cross only if row and column are not complete
-            const rowComplete = puzzleService.isRowOrColumnComplete(
-              puzzle,
-              draft,
-              true,
-              row,
-            );
-            const colComplete = puzzleService.isRowOrColumnComplete(
-              puzzle,
-              draft,
-              false,
-              col,
-            );
-            if (!rowComplete && !colComplete) {
-              draft[row][col] = CellState.EMPTY;
+          } else if (toolToUse === CellState.FILLED) {
+            if (puzzle[row][col] === CellState.FILLED) {
+              draft[row][col] = CellState.FILLED;
+            } else {
+              errorCell = [row, col];
+              draft[row][col] = CellState.CROSSED_OUT;
             }
           }
         } else if (cell === CellState.EMPTY || cell === toolToUse) {
@@ -148,6 +135,7 @@ export class CellUpdater {
         if (puzzleService.isRowOrColumnComplete(puzzle, draft, true, row)) {
           // Auto-cross out remaining empty cells in the row
           for (let i = 0; i < draft[row].length; i++) {
+            if (i === col) continue; // Skip the cell we just updated
             if (draft[row][i] === CellState.EMPTY) {
               draft[row][i] = CellState.CROSSED_OUT;
             }
@@ -158,6 +146,7 @@ export class CellUpdater {
         if (puzzleService.isRowOrColumnComplete(puzzle, draft, false, col)) {
           // Auto-cross out remaining empty cells in the column
           for (const [i, rowData] of draft.entries()) {
+            if (i === row) continue; // Skip the cell we just updated
             if (rowData[col] === CellState.EMPTY) {
               draft[i][col] = CellState.CROSSED_OUT;
             }
@@ -167,11 +156,13 @@ export class CellUpdater {
         // Auto-add boundary crosses: cross before block at end, or after block at start, when block matches clues
         const rowLine = draft[row] as number[];
         addBoundaryCrosses(rowLine, rowHints[row], (j) => {
+          if (j === col) return; // Skip the cell we just updated
           if (draft[row][j] === CellState.EMPTY)
             draft[row][j] = CellState.CROSSED_OUT;
         });
         const colLine = draft.map((r) => r[col]) as number[];
         addBoundaryCrosses(colLine, columnHints[col], (i) => {
+          if (i === row) return; // Skip the cell we just updated
           if (draft[i][col] === CellState.EMPTY)
             draft[i][col] = CellState.CROSSED_OUT;
         });
