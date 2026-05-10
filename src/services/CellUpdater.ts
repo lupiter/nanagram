@@ -113,9 +113,12 @@ export class CellUpdater {
           (mode === GameMode.Assisted || mode === GameMode.Correction) &&
           cell === CellState.CROSSED_OUT
         ) {
-          if (toolToUse === CellState.CROSSED_OUT || toolToUse === CellState.EMPTY) {
+          if (
+            toolToUse === CellState.CROSSED_OUT ||
+            toolToUse === CellState.EMPTY
+          ) {
             draft[row][col] = CellState.EMPTY;
-          } else if (toolToUse === CellState.FILLED) {
+          } else {
             if (puzzle[row][col] === CellState.FILLED) {
               draft[row][col] = CellState.FILLED;
             } else {

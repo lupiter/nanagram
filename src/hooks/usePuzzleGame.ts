@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { GameMode } from "../types/puzzle";
+import { GameMode, PuzzleStatus } from "../types/puzzle";
 import { GameState } from "../types/nonogram";
 import { PuzzleDefinition } from "../types/nonogram";
 import { PuzzleState } from "../components/NonogramGrid/PuzzleState";
@@ -55,22 +55,23 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
 
   // Check solution and handle victory/progress saving
   useEffect(() => {
-    const { isSolved, justSolved } = controller.checkSolution(state);
-    if (justSolved) {
-      setState(controller.markSolved(state));
+    if (state.status === PuzzleStatus.Solved) {
       puzzleLibrary.markCompleted(category, id);
       puzzleLibrary.clearProgress(category, id);
-    } else if (!isSolved && controller.hasContent(state)) {
+    } else if (
+      state.status === PuzzleStatus.Playing &&
+      controller.hasContent(state)
+    ) {
       puzzleLibrary.saveProgress(category, id, state.grid);
     }
-  }, [state.grid, controller, category, id, state.isSolved]);
+  }, [state.grid, state.status, controller, category, id]);
 
   // Play error sound and clear error after animation
   useEffect(() => {
     if (state.errorCell) {
       void errorSound.play();
       const timer = setTimeout(() => {
-        setState((s) => controller.clearError(s));
+        setState((s) => controller.dispatch(s, { type: "CLEAR_ERROR" }));
       }, 200);
       return () => {
         clearTimeout(timer);
@@ -89,7 +90,7 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
   useEffect(() => {
     const handleGlobalPointerUp = () => {
       const s = stateRef.current;
-      if (s.isDragging) {
+      if (s.draggedCells.size > 0) {
         const cells = new Set<string>();
         s.draggedCells.forEach((cols, r) => {
           cols.forEach((c) => cells.add(`${String(r)},${String(c)}`));
@@ -98,8 +99,8 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       }
       requestAnimationFrame(() => {
         setState((s) => {
-          if (s.isDragging) {
-            return controller.endDrag(s);
+          if (s.status === PuzzleStatus.Dragging) {
+            return controller.dispatch(s, { type: "DRAG_ENDED" });
           }
           return s;
         });
@@ -119,9 +120,9 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       if ((e.ctrlKey || e.metaKey) && e.key === "z") {
         e.preventDefault();
         if (e.shiftKey) {
-          setState((s) => controller.redo(s));
+          setState((s) => controller.dispatch(s, { type: "REDO_REQUESTED" }));
         } else {
-          setState((s) => controller.undo(s));
+          setState((s) => controller.dispatch(s, { type: "UNDO_REQUESTED" }));
         }
       }
     };

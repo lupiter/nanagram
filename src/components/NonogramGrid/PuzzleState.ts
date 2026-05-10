@@ -1,4 +1,9 @@
-import { GameMode, HistoryEntry, PuzzleState } from "../../types/puzzle";
+import {
+  GameMode,
+  HistoryEntry,
+  PuzzleState,
+  PuzzleStatus,
+} from "../../types/puzzle";
 import { GameState, CellState, PuzzleSolutionData } from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
 import { hintChecker } from "../../services/HintChecker";
@@ -61,13 +66,11 @@ export function createInitialState(
     columnHints: checkedColumnHints,
     tool: CellState.FILLED,
     mode: savedMode ?? GameMode.Assisted,
-    isSolved: false,
-    showVictory: false,
+    status: PuzzleStatus.Playing,
     errorCell: null,
     history: [],
     historyIndex: -1,
     isUndoRedoAction: false,
-    isDragging: false,
     dragTool: null,
     draggedCells: new Map(),
   };

@@ -5,6 +5,32 @@ import {
   GameState,
 } from "./nonogram";
 
+export enum PuzzleStatus {
+  Idle = "idle",
+  Playing = "playing",
+  Dragging = "dragging",
+  Solved = "solved",
+  Error = "error",
+}
+
+export type PuzzleEvent =
+  | {
+      type: "CELL_CLICKED";
+      row: number;
+      col: number;
+      toolOverride?: NonogramCellState;
+    }
+  | { type: "DRAG_STARTED"; row: number; col: number }
+  | { type: "DRAG_CONTINUED"; row: number; col: number }
+  | { type: "DRAG_ENDED" }
+  | { type: "UNDO_REQUESTED" }
+  | { type: "REDO_REQUESTED" }
+  | { type: "RESET_REQUESTED" }
+  | { type: "CLEAR_ERROR" }
+  | { type: "TOOL_CHANGED"; tool: NonogramCellState }
+  | { type: "MODE_CHANGED"; mode: GameMode }
+  | { type: "CLEAR_VICTORY" };
+
 export enum GameMode {
   Free = "free",
   Assisted = "assisted",
@@ -86,8 +112,7 @@ export interface PuzzleState {
   mode: GameMode;
 
   // Puzzle status
-  isSolved: boolean;
-  showVictory: boolean;
+  status: PuzzleStatus;
   errorCell: [number, number] | null;
 
   // History for undo/redo
@@ -96,7 +121,6 @@ export interface PuzzleState {
   isUndoRedoAction: boolean;
 
   // Drag state
-  isDragging: boolean;
   dragTool: NonogramCellState | null;
   draggedCells: Map<number, Set<number>>;
 }

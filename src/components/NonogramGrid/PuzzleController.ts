@@ -1,12 +1,15 @@
 import { produce } from "immer";
-import { GameMode, PuzzleContext } from "../../types/puzzle";
+import {
+  GameMode,
+  PuzzleContext,
+  PuzzleEvent,
+  PuzzleStatus,
+  HistoryEntry,
+} from "../../types/puzzle";
 import { GameState, CellState } from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
 import { cellUpdater } from "../../services/CellUpdater";
-import { PuzzleState, HistoryEntry, createInitialState } from "./PuzzleState";
-
-// Re-export for convenience
-export type { PuzzleContext };
+import { PuzzleState, createInitialState } from "./PuzzleState";
 
 /**
  * Controller for puzzle game logic.
@@ -25,6 +28,89 @@ export class PuzzleController {
     savedMode?: GameMode | null,
   ): PuzzleState {
     return createInitialState(this.context.solution, savedGrid, savedMode);
+  }
+
+  dispatch(state: PuzzleState, event: PuzzleEvent): PuzzleState {
+    switch (event.type) {
+      case "CELL_CLICKED": {
+        if (state.status === PuzzleStatus.Solved) return state;
+
+        let newState = this.updateCell(
+          state,
+          event.row,
+          event.col,
+          event.toolOverride,
+        );
+
+        if (newState.errorCell) {
+          newState = produce(newState, (draft) => {
+            draft.status = PuzzleStatus.Error;
+          });
+        } else if (state.status === PuzzleStatus.Error) {
+          newState = produce(newState, (draft) => {
+            draft.status = PuzzleStatus.Playing;
+          });
+        }
+
+        const { justSolved } = this.checkSolution(newState);
+        if (justSolved) {
+          newState = this.markSolved(newState);
+          newState = produce(newState, (draft) => {
+            draft.status = PuzzleStatus.Solved;
+          });
+        }
+
+        return newState;
+      }
+
+      case "DRAG_STARTED": {
+        if (state.status !== PuzzleStatus.Playing) return state;
+        return this.startDrag(state, event.row, event.col);
+      }
+
+      case "DRAG_CONTINUED": {
+        if (state.status !== PuzzleStatus.Dragging) return state;
+        return this.continueDrag(state, event.row, event.col);
+      }
+
+      case "DRAG_ENDED": {
+        if (state.status !== PuzzleStatus.Dragging) return state;
+        return this.endDrag(state);
+      }
+
+      case "UNDO_REQUESTED": {
+        if (!this.canUndo(state)) return state;
+        return this.undo(state);
+      }
+
+      case "REDO_REQUESTED": {
+        if (!this.canRedo(state)) return state;
+        return this.redo(state);
+      }
+
+      case "RESET_REQUESTED": {
+        return this.reset(state);
+      }
+
+      case "MODE_CHANGED": {
+        return this.setMode(state, event.mode);
+      }
+
+      case "TOOL_CHANGED": {
+        return this.setTool(state, event.tool);
+      }
+
+      case "CLEAR_ERROR": {
+        return this.clearError(state);
+      }
+
+      case "CLEAR_VICTORY": {
+        return this.setShowVictory(state, false);
+      }
+
+      default:
+        return state;
+    }
   }
 
   // --- Cell Updates ---
@@ -89,7 +175,9 @@ export class PuzzleController {
 
   setShowVictory(state: PuzzleState, show: boolean): PuzzleState {
     return produce(state, (draft) => {
-      draft.showVictory = show;
+      if (!show && draft.status === PuzzleStatus.Solved) {
+        draft.status = PuzzleStatus.Playing;
+      }
     });
   }
 
@@ -101,14 +189,13 @@ export class PuzzleController {
       this.context.solution,
       state.grid,
     );
-    const justSolved = isSolved && !state.isSolved;
+    const justSolved = isSolved && state.status !== PuzzleStatus.Solved;
     return { isSolved, justSolved };
   }
 
   markSolved(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
-      draft.isSolved = true;
-      draft.showVictory = true;
+      draft.status = PuzzleStatus.Solved;
     });
   }
 
@@ -132,12 +219,11 @@ export class PuzzleController {
       draft.columnHints = puzzleService.deriveColumnHints(
         this.context.solution,
       );
-      draft.isSolved = false;
-      draft.showVictory = false;
       draft.history = [];
       draft.historyIndex = -1;
       draft.errorCell = null;
       draft.isUndoRedoAction = false;
+      draft.status = PuzzleStatus.Playing;
     });
   }
 
@@ -204,7 +290,7 @@ export class PuzzleController {
 
   startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
     const stateWithDrag = produce(state, (draft) => {
-      draft.isDragging = true;
+      draft.status = PuzzleStatus.Dragging;
       draft.dragTool = state.tool;
       draft.draggedCells = new Map([[row, new Set([col])]]);
     });
@@ -214,7 +300,7 @@ export class PuzzleController {
   }
 
   continueDrag(state: PuzzleState, row: number, col: number): PuzzleState {
-    if (!state.isDragging || state.dragTool === null) {
+    if (state.status !== PuzzleStatus.Dragging || state.dragTool === null) {
       return state;
     }
 
@@ -233,7 +319,7 @@ export class PuzzleController {
 
   endDrag(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
-      draft.isDragging = false;
+      draft.status = PuzzleStatus.Playing;
       draft.dragTool = null;
       draft.draggedCells = new Map();
     });
