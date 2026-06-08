@@ -7,9 +7,6 @@
 import { PuzzleSolutionData } from "../types/nonogram";
 import { SavedDesign, ImportResult } from "../types/design";
 
-// Re-export types for convenience
-export type { SavedDesign, ImportResult };
-
 export class DesignStorage {
   private static instance: DesignStorage;
   private readonly storageKey = "nonogram-designs";

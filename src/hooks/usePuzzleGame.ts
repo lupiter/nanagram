@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { GameMode, PuzzleStatus } from "../types/puzzle";
-import { GameState } from "../types/nonogram";
-import { PuzzleDefinition } from "../types/nonogram";
-import { PuzzleState } from "../components/NonogramGrid/PuzzleState";
+import { GameMode, PuzzleStatus, PuzzleState } from "../types/puzzle";
+import { GameState, PuzzleDefinition } from "../types/nonogram";
 import { PuzzleController } from "../components/NonogramGrid/PuzzleController";
 import { puzzleLibrary } from "../services/PuzzleLibrary";
 import { errorSound } from "../services/ErrorSound";

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { GameMode, PuzzleStatus } from "../../types/puzzle";
+import { GameMode, PuzzleStatus, PuzzleState } from "../../types/puzzle";
 import { CellState, PuzzleDefinition } from "../../types/nonogram";
 import { PuzzleController } from "../NonogramGrid/PuzzleController";
 import ToolSelector from "../ToolSelector/ToolSelector";
@@ -10,7 +10,6 @@ import NonogramGrid from "../NonogramGrid/NonogramGrid";
 import Modal from "../Modal/Modal";
 import Settings from "../Settings/Settings";
 import { Icons } from "../Icons/Icons";
-import { PuzzleState } from "../NonogramGrid/PuzzleState";
 import "./PuzzlePlayer.css";
 
 interface NextPuzzleInfo {

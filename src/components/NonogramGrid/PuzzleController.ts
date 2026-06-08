@@ -5,17 +5,13 @@ import {
   PuzzleEvent,
   PuzzleStatus,
   HistoryEntry,
+  PuzzleState,
 } from "../../types/puzzle";
 import { GameState, CellState } from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
 import { cellUpdater } from "../../services/CellUpdater";
-import { PuzzleState, createInitialState } from "./PuzzleState";
+import { createInitialState } from "./PuzzleState";
 
-/**
- * Controller for puzzle game logic.
- * All methods are pure - they take state and return new state.
- * Uses Immer for immutable updates with minimal boilerplate.
- */
 export class PuzzleController {
   private context: PuzzleContext;
 
@@ -115,7 +111,7 @@ export class PuzzleController {
 
   // --- Cell Updates ---
 
-  updateCell(
+  private updateCell(
     state: PuzzleState,
     row: number,
     col: number,
@@ -123,7 +119,7 @@ export class PuzzleController {
   ): PuzzleState {
     const result = cellUpdater.update({
       grid: state.grid,
-      puzzle: this.context.solution,
+      solution: this.context.solution,
       row,
       col,
       toolToUse: toolOverride ?? state.tool,
@@ -149,23 +145,15 @@ export class PuzzleController {
     });
   }
 
-  handleRightClick(state: PuzzleState, row: number, col: number): PuzzleState {
-    const oppositeTool =
-      state.tool === CellState.FILLED
-        ? CellState.CROSSED_OUT
-        : CellState.FILLED;
-    return this.updateCell(state, row, col, oppositeTool);
-  }
-
   // --- Tool & Mode ---
 
-  setTool(state: PuzzleState, tool: CellState): PuzzleState {
+  private setTool(state: PuzzleState, tool: CellState): PuzzleState {
     return produce(state, (draft) => {
       draft.tool = tool;
     });
   }
 
-  setMode(state: PuzzleState, mode: GameMode): PuzzleState {
+  private setMode(state: PuzzleState, mode: GameMode): PuzzleState {
     return produce(state, (draft) => {
       draft.mode = mode;
     });
@@ -173,7 +161,7 @@ export class PuzzleController {
 
   // --- Victory ---
 
-  setShowVictory(state: PuzzleState, show: boolean): PuzzleState {
+  private setShowVictory(state: PuzzleState, show: boolean): PuzzleState {
     return produce(state, (draft) => {
       if (!show && draft.status === PuzzleStatus.Solved) {
         draft.status = PuzzleStatus.Playing;
@@ -181,7 +169,7 @@ export class PuzzleController {
     });
   }
 
-  checkSolution(state: PuzzleState): {
+  private checkSolution(state: PuzzleState): {
     isSolved: boolean;
     justSolved: boolean;
   } {
@@ -193,7 +181,7 @@ export class PuzzleController {
     return { isSolved, justSolved };
   }
 
-  markSolved(state: PuzzleState): PuzzleState {
+  private markSolved(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
       draft.status = PuzzleStatus.Solved;
     });
@@ -201,7 +189,7 @@ export class PuzzleController {
 
   // --- Error ---
 
-  clearError(state: PuzzleState): PuzzleState {
+  private clearError(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
       draft.errorCell = null;
     });
@@ -209,7 +197,7 @@ export class PuzzleController {
 
   // --- Reset ---
 
-  reset(state: PuzzleState): PuzzleState {
+  private reset(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
       draft.grid = puzzleService.createEmptyGameState(
         this.context.solution[0].length,
@@ -237,7 +225,7 @@ export class PuzzleController {
     return state.historyIndex < state.history.length - 1;
   }
 
-  undo(state: PuzzleState): PuzzleState {
+  private undo(state: PuzzleState): PuzzleState {
     if (state.historyIndex > 0) {
       const prevEntry = state.history[state.historyIndex - 1];
       return produce(state, (draft) => {
@@ -264,7 +252,7 @@ export class PuzzleController {
     return state;
   }
 
-  redo(state: PuzzleState): PuzzleState {
+  private redo(state: PuzzleState): PuzzleState {
     if (state.historyIndex < state.history.length - 1) {
       const nextEntry = state.history[state.historyIndex + 1];
       return produce(state, (draft) => {
@@ -288,7 +276,7 @@ export class PuzzleController {
     return draggedCells.get(row)?.has(col) ?? false;
   }
 
-  startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
+  private startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
     const stateWithDrag = produce(state, (draft) => {
       draft.status = PuzzleStatus.Dragging;
       draft.dragTool = state.tool;
@@ -299,7 +287,11 @@ export class PuzzleController {
     return this.updateCell(stateWithDrag, row, col, state.tool);
   }
 
-  continueDrag(state: PuzzleState, row: number, col: number): PuzzleState {
+  private continueDrag(
+    state: PuzzleState,
+    row: number,
+    col: number,
+  ): PuzzleState {
     if (state.status !== PuzzleStatus.Dragging || state.dragTool === null) {
       return state;
     }
@@ -317,7 +309,7 @@ export class PuzzleController {
     return this.updateCell(stateWithDrag, row, col, state.dragTool);
   }
 
-  endDrag(state: PuzzleState): PuzzleState {
+  private endDrag(state: PuzzleState): PuzzleState {
     return produce(state, (draft) => {
       draft.status = PuzzleStatus.Playing;
       draft.dragTool = null;

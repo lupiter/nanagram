@@ -14,15 +14,6 @@ import {
 } from "../types/sss";
 import { CellState } from "../types/nonogram";
 
-// Re-export types for convenience
-export type {
-  SSSProfile,
-  SSSPuzzle,
-  SSSFile,
-  SSSPuzzleWithCreator,
-  AddPuzzlesResult,
-};
-
 export class SSSFormat {
   private static instance: SSSFormat;
 

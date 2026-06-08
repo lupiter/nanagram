@@ -7,9 +7,6 @@
 import { CellState, PuzzleSolutionData, SolutionCell } from "../types/nonogram";
 import { DecodedPuzzle } from "../types/puzzle";
 
-// Re-export types for convenience
-export type { DecodedPuzzle };
-
 export class PuzzleCodec {
   private static instance: PuzzleCodec;
 

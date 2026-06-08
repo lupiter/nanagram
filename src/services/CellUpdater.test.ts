@@ -33,7 +33,7 @@ describe("updateCell", () => {
     overrides: Partial<UpdateCellOptions> = {},
   ): UpdateCellOptions => ({
     grid: createEmptyGrid(3, 3),
-    puzzle: createSolutionGrid(3, 3),
+    solution: createSolutionGrid(3, 3),
     row: 1,
     col: 1,
     toolToUse: NonogramCellState.FILLED,
@@ -61,7 +61,7 @@ describe("updateCell", () => {
     expect(result.errorCell).toEqual([1, 1]);
   });
 
-  it("should cross out invalid cell in correction mode (fix wrong fill only)", () => {
+  it("should cross out invalid cell in correction mode)", () => {
     const result = cellUpdater.update(
       createDefaultOptions({
         mode: GameMode.Correction,
@@ -73,8 +73,8 @@ describe("updateCell", () => {
   });
 
   it("should not auto-cross remaining cells in completed row in correction mode", () => {
-    const puzzle = createSolutionGrid(3, 3);
-    puzzle[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
+    const solution = createSolutionGrid(3, 3);
+    solution[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
     const grid = createEmptyGrid(3, 3);
     grid[1][0] = NonogramCellState.FILLED;
     grid[1][1] = NonogramCellState.FILLED;
@@ -82,7 +82,7 @@ describe("updateCell", () => {
     const result = cellUpdater.update(
       createDefaultOptions({
         grid,
-        puzzle,
+        solution,
         row: 1,
         col: 2,
         mode: GameMode.Correction,
@@ -106,6 +106,7 @@ describe("updateCell", () => {
     const result = cellUpdater.update(
       createDefaultOptions({
         grid,
+        toolToUse: NonogramCellState.EMPTY,
       }),
     );
 
@@ -114,9 +115,9 @@ describe("updateCell", () => {
   });
 
   it("should auto-cross out remaining cells in completed row", () => {
-    // Create a puzzle where middle row should be all filled
-    const puzzle = createSolutionGrid(3, 3);
-    puzzle[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
+    // Create a solution where middle row should be all filled
+    const solution = createSolutionGrid(3, 3);
+    solution[1] = Array.from({ length: 3 }, () => NonogramCellState.FILLED);
 
     // Create a grid where we're about to fill the last cell in middle row
     const grid = createEmptyGrid(3, 3);
@@ -126,7 +127,7 @@ describe("updateCell", () => {
     const result = cellUpdater.update(
       createDefaultOptions({
         grid,
-        puzzle,
+        solution,
         row: 1,
         col: 2,
         mode: GameMode.Assisted,

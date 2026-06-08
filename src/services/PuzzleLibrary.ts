@@ -12,9 +12,6 @@ import puzzles10x15 from "../puzzles/10x15";
 import puzzles15x15 from "../puzzles/15x15";
 import puzzles20x20 from "../puzzles/20x20";
 
-// Re-export types for convenience
-export type { PuzzleLocation };
-
 export class PuzzleLibrary {
   private static instance: PuzzleLibrary;
 

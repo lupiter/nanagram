@@ -71,7 +71,7 @@ export interface DifficultyMetrics {
 /** Options for updating a cell */
 export interface UpdateCellOptions {
   grid: GameState;
-  puzzle: PuzzleSolutionData;
+  solution: PuzzleSolutionData;
   row: number;
   col: number;
   toolToUse: NonogramCellState;
