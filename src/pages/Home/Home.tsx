@@ -36,7 +36,6 @@ export default function Home() {
     setTitle({
       title: "Nanagram",
       icon: <Icons.Logo />,
-      actions: <HeaderActions />,
     });
     setCompletedPuzzles(puzzleLibrary.getCompletedPuzzles());
     setSavedDesigns(designStorage.getAll());
@@ -59,53 +58,9 @@ export default function Home() {
     return completedPuzzles.has(`${category}-${String(index + 1)}`);
   };
 
-  // Helper to render a user design card
-  const renderDesignCard = (design: SavedDesign) => {
-    const encoded = puzzleCodec.encode(
-      design.name,
-      design.solution,
-      design.difficulty,
-    );
-    const isNonSquare = design.height !== design.width;
-    const designerSize = isNonSquare
-      ? `${String(design.height)}x${String(design.width)}`
-      : String(design.height);
-
-    return (
-      <div key={design.id} className="design-item user-design">
-        <Link
-          to={`/designer/${designerSize}?edit=${design.id}`}
-          className="edit-badge"
-          title="Edit design"
-        >
-          <svg viewBox="0 0 44 44">
-            <path
-              d="M0,4 0,0 4,4 z"
-              className="corner-under-top corner-under"
-            />
-            <path d="M0,0 44,0 44,44 z" className="corner-over" />
-            <path
-              d="M44,44 40,44 40,40 z"
-              className="corner-under-bottom corner-under"
-            />
-            <Icons.EditSvg x={24} y={4} />
-          </svg>
-        </Link>
-        <Link
-          to={`/play/${encoded}`}
-          className="puzzle-link completed"
-          title={`Play: ${design.name}`}
-        >
-          <SolutionPreview solution={design.solution} maxSize={100} />
-          <span className="puzzle-name">{design.name}</span>
-          <DifficultyStars difficulty={design.difficulty} size="small" />
-        </Link>
-      </div>
-    );
-  };
-
   return (
     <div className="home">
+      <HeaderActions />
       <div className="puzzle-categories">
         {Object.entries(puzzleLibrary.puzzleMap).map(([category, puzzles]) => {
           // Extract size from category (e.g., "5x5" -> 5, "10x15" -> "10x15")
@@ -157,7 +112,7 @@ export default function Home() {
                   );
                 })}
                 {/* User designs for this category */}
-                {userDesigns.map(renderDesignCard)}
+                {userDesigns.map(DesignCard)}
                 <Link
                   to={designerPath}
                   className="puzzle-link designer-link"
@@ -178,3 +133,49 @@ export default function Home() {
     </div>
   );
 }
+
+
+// Helper to render a user design card
+const DesignCard = (design: SavedDesign) => {
+  const encoded = puzzleCodec.encode(
+    design.name,
+    design.solution,
+    design.difficulty,
+  );
+  const isNonSquare = design.height !== design.width;
+  const designerSize = isNonSquare
+    ? `${String(design.height)}x${String(design.width)}`
+    : String(design.height);
+
+  return (
+    <div key={design.id} className="design-item user-design">
+      <Link
+        to={`/designer/${designerSize}?edit=${design.id}`}
+        className="edit-badge"
+        title="Edit design"
+      >
+        <svg viewBox="0 0 44 44">
+          <path
+            d="M0,4 0,0 4,4 z"
+            className="corner-under-top corner-under"
+          />
+          <path d="M0,0 44,0 44,44 z" className="corner-over" />
+          <path
+            d="M44,44 40,44 40,40 z"
+            className="corner-under-bottom corner-under"
+          />
+          <Icons.EditSvg x={24} y={4} />
+        </svg>
+      </Link>
+      <Link
+        to={`/play/${encoded}`}
+        className="puzzle-link completed"
+        title={`Play: ${design.name}`}
+      >
+        <SolutionPreview solution={design.solution} maxSize={100} />
+        <span className="puzzle-name">{design.name}</span>
+        <DifficultyStars difficulty={design.difficulty} size="small" />
+      </Link>
+    </div>
+  );
+};
