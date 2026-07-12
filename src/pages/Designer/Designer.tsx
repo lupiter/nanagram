@@ -8,8 +8,10 @@ import SolutionStatus from "../../components/SolutionStatus/SolutionStatus";
 import DesignerInfo from "../../components/DesignerInfo/DesignerInfo";
 import PageContainer from "../../components/PageContainer/PageContainer";
 import { CellState } from "../../types/nonogram";
-import { sssFormat, SSSFile } from "../../services/SSSFormat";
-import { designStorage, SavedDesign } from "../../services/DesignStorage";
+import { sssFormat } from "../../services/SSSFormat";
+import { designStorage } from "../../services/DesignStorage";
+import { SavedDesign } from "../../types/design";
+import { SSSFile } from "../../types/sss";
 import "./Designer.css";
 
 const VALID_SIZES = [5, 10, 15, 20, 25];

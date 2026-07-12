@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { GameMode, PuzzleState } from "../../types/puzzle";
+import { GameMode, PuzzleStatus, PuzzleState } from "../../types/puzzle";
 import { CellState, PuzzleDefinition } from "../../types/nonogram";
 import { PuzzleController } from "../NonogramGrid/PuzzleController";
 import ToolSelector from "../ToolSelector/ToolSelector";
@@ -53,12 +53,9 @@ export default function PuzzlePlayer({
         }
         return;
       }
-      setState((s) => {
-        if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
-          return s;
-        }
-        return controller.updateCell(s, row, col);
-      });
+      setState((s) =>
+        controller.dispatch(s, { type: "CELL_CLICKED", row, col }),
+      );
     },
     [controller, setState, dragJustEndedCellsRef],
   );
@@ -66,7 +63,18 @@ export default function PuzzlePlayer({
   const handleRightClick = useCallback(
     (row: number, col: number, e: React.MouseEvent) => {
       e.preventDefault();
-      setState((s) => controller.handleRightClick(s, row, col));
+      const oppositeTool =
+        state.tool === CellState.FILLED
+          ? CellState.CROSSED_OUT
+          : CellState.FILLED;
+      setState((s) =>
+        controller.dispatch(s, {
+          type: "CELL_CLICKED",
+          row,
+          col,
+          toolOverride: oppositeTool,
+        }),
+      );
     },
     [controller, setState],
   );
@@ -75,45 +83,49 @@ export default function PuzzlePlayer({
     (row: number, col: number, e: React.PointerEvent) => {
       if (e.button === 2) return;
       e.preventDefault(); // Prevent synthetic click (iPad Safari/Pencil fires it before our pointerup)
-      setState((s) => controller.startDrag(s, row, col));
+      setState((s) =>
+        controller.dispatch(s, { type: "DRAG_STARTED", row, col }),
+      );
     },
     [controller, setState],
   );
 
   const handlePointerEnter = useCallback(
     (row: number, col: number) => {
-      setState((s) => controller.continueDrag(s, row, col));
+      setState((s) =>
+        controller.dispatch(s, { type: "DRAG_CONTINUED", row, col }),
+      );
     },
     [controller, setState],
   );
 
   const handleToolChange = useCallback(
     (tool: CellState) => {
-      setState((s) => controller.setTool(s, tool));
+      setState((s) => controller.dispatch(s, { type: "TOOL_CHANGED", tool }));
     },
     [controller, setState],
   );
 
   const handleReset = useCallback(() => {
-    setState((s) => controller.reset(s));
+    setState((s) => controller.dispatch(s, { type: "RESET_REQUESTED" }));
   }, [controller, setState]);
 
   const handleUndo = useCallback(() => {
-    setState((s) => controller.undo(s));
+    setState((s) => controller.dispatch(s, { type: "UNDO_REQUESTED" }));
   }, [controller, setState]);
 
   const handleRedo = useCallback(() => {
-    setState((s) => controller.redo(s));
+    setState((s) => controller.dispatch(s, { type: "REDO_REQUESTED" }));
   }, [controller, setState]);
 
   const handleCloseVictory = useCallback(() => {
-    setState((s) => controller.setShowVictory(s, false));
+    setState((s) => controller.dispatch(s, { type: "CLEAR_VICTORY" }));
   }, [controller, setState]);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const handleSettingsPlayModeChange = useCallback(
     (mode: GameMode) => {
-      setState((s) => controller.setMode(s, mode));
+      setState((s) => controller.dispatch(s, { type: "MODE_CHANGED", mode }));
     },
     [controller, setState],
   );
@@ -164,7 +176,7 @@ export default function PuzzlePlayer({
         onCellPointerEnter={handlePointerEnter}
         errorCell={state.errorCell}
       />
-      {state.showVictory && (
+      {state.status === PuzzleStatus.Solved && (
         <VictoryPopup
           onClose={handleCloseVictory}
           nextPuzzle={nextPuzzle}

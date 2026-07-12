@@ -10,9 +10,6 @@ import { GeneratedPuzzle } from "../types/puzzle";
 import { puzzleService } from "./Puzzle";
 import { difficultyAnalyzer } from "./DifficultyAnalyzer";
 
-// Re-export types for convenience
-export type { GeneratedPuzzle };
-
 export class PuzzleGenerator {
   private static instance: PuzzleGenerator;
 

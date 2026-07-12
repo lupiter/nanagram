@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import {
-  DesignerState,
-  createInitialDesignerState,
-} from "../components/DesignerControls/DesignerState";
+import { createInitialDesignerState } from "../components/DesignerControls/DesignerState";
+import { DesignerState } from "../types/design";
+
 import { DesignerController } from "../components/DesignerControls/DesignerController";
 import { puzzleService } from "../services/Puzzle";
 

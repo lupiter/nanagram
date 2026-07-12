@@ -7,8 +7,8 @@ import {
 import { puzzleService } from "../../services/Puzzle";
 import { puzzleCodec } from "../../services/PuzzleCodec";
 import { difficultyAnalyzer } from "../../services/DifficultyAnalyzer";
-import { DesignerState, createEmptySolutionGrid } from "./DesignerState";
-import { SavedDesign } from "../../types/design";
+import { createEmptySolutionGrid } from "./DesignerState";
+import { SavedDesign, DesignerState } from "../../types/design";
 
 /**
  * Controller for puzzle designer logic.

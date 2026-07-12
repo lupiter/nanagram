@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import { designStorage, SavedDesign } from "../../services/DesignStorage";
+import { designStorage } from "../../services/DesignStorage";
 import { sssFormat } from "../../services/SSSFormat";
 import { difficultyAnalyzer } from "../../services/DifficultyAnalyzer";
+import { SavedDesign } from "../../types/design";
 import Button from "../../components/Button/Button";
 import ButtonGroup from "../../components/ButtonGroup/ButtonGroup";
 import FileUploadButton from "../../components/FileUploadButton/FileUploadButton";

@@ -6,9 +6,6 @@ import {
 import { DesignerState } from "../../types/design";
 import { puzzleService } from "../../services/Puzzle";
 
-// Re-export for convenience
-export type { DesignerState };
-
 /** Creates an empty solution grid (all cells empty) */
 export function createEmptySolutionGrid(
   height: number,
