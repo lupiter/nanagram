@@ -53,6 +53,8 @@ nav h1 {
 nav h4 {
   margin: 0;
   font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
 }
 
 nav a {
@@ -62,8 +64,6 @@ nav a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--size-touch-target);
-  min-height: var(--size-touch-target);
   padding: var(--space-1);
 }
 

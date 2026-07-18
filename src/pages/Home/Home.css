@@ -24,7 +24,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  justify-content: center;
+  justify-content: left;
 }
 
 .puzzle-link {

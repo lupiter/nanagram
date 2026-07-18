@@ -48,8 +48,8 @@ export class PuzzleController {
           });
         }
 
-        const { justSolved } = this.checkSolution(newState);
-        if (justSolved) {
+        const { isSolved } = this.checkSolution(newState);
+        if (isSolved) {
           newState = this.markSolved(newState);
           newState = produce(newState, (draft) => {
             draft.status = PuzzleStatus.Solved;
