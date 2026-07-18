@@ -10,13 +10,12 @@ import SolutionPreview from "../../components/SolutionPreview/SolutionPreview";
 import DifficultyStars from "../../components/DifficultyStars/DifficultyStars";
 import { Icons } from "../../components/Icons/Icons";
 import Button from "../../components/Button/Button";
-import ButtonGroup from "../../components/ButtonGroup/ButtonGroup";
 
 function HeaderActions() {
   return (
-      <Link to="/manage" title="Settings & Data" aria-label="Settings & Data">
-        <Icons.Settings />
-      </Link>
+    <Link to="/manage" title="Settings & Data" aria-label="Settings & Data">
+      <Icons.Settings />
+    </Link>
   );
 }
 
@@ -60,12 +59,19 @@ export default function Home() {
     <div className="home">
       <div className="puzzle-categories">
         <div className="puzzle-category">
-          <Button to="/random" title="Random Puzzle" square className="puzzle-link">
-            <span className="puzzle-number"><Icons.Dice /></span>
+          <Button
+            to="/random"
+            title="Random Puzzle"
+            square
+            className="puzzle-link"
+          >
+            <span className="puzzle-number">
+              <Icons.Dice />
+            </span>
             <span className="puzzle-name">Random</span>
           </Button>
         </div>
-        
+
         {Object.entries(puzzleLibrary.puzzleMap).map(([category, puzzles]) => {
           // Extract size from category (e.g., "5x5" -> 5, "10x15" -> "10x15")
           const parts = category.split("x");
