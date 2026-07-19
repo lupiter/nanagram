@@ -176,6 +176,7 @@ export class HintChecker {
       // Mark only when we can determine which hint this block is:
       // (1) uniquely by room/preceding (validIndices.length === 1), or
       // (2) pinned to an edge: no empty cells to one side, so we know we're the Nth block (N = precedingBlocks.length).
+      // (3) sealed: bounded by CROSSED_OUT or edges on both sides.
       let hintIndexToMark: number | null = null;
       if (validIndices.length === 1) {
         hintIndexToMark = validIndices[0];
@@ -198,16 +199,27 @@ export class HintChecker {
           }
         }
       }
+
+      // Apply the new "sealed" requirement: a hint is only used if it's bounded
+      // on both sides by either a CROSSED_OUT cell or the grid edge.
       if (hintIndexToMark != null && !newHints[hintIndexToMark].used) {
-        const answerSequence = answerSequences[hintIndexToMark] as
-          | { start: number; length: number }
-          | undefined;
-        if (
-          answerSequence != null &&
-          seq.start === answerSequence.start &&
-          seq.length === answerSequence.length
-        ) {
-          newHints[hintIndexToMark].used = true;
+        const isSealedLeft =
+          seq.start === 0 || cells[seq.start - 1] === CellState.CROSSED_OUT;
+        const isSealedRight =
+          seq.start + seq.length === gridSize ||
+          cells[seq.start + seq.length] === CellState.CROSSED_OUT;
+
+        if (isSealedLeft && isSealedRight) {
+          const answerSequence = answerSequences[hintIndexToMark] as
+            | { start: number; length: number }
+            | undefined;
+          if (
+            answerSequence != null &&
+            seq.start === answerSequence.start &&
+            seq.length === answerSequence.length
+          ) {
+            newHints[hintIndexToMark].used = true;
+          }
         }
       }
     }

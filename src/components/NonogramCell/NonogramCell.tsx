@@ -26,8 +26,8 @@ export default function NonogramCell({
   }, [cell, ref]);
 
   return (
-    <td 
-      key={`${String(rowIndex)}-${String(colIndex)}`} 
+    <td
+      key={`${String(rowIndex)}-${String(colIndex)}`}
       role="gridcell"
       style={{ userSelect: "none", WebkitUserSelect: "none" }}
     >
