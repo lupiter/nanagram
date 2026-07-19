@@ -34,10 +34,7 @@ export default function Designer() {
   const [searchParams] = useSearchParams();
   const showDevTools = searchParams.get("dev") === "true";
   const editId = searchParams.get("edit");
-  const { state, setState, controller, dragJustEndedCellsRef } = useDesigner(
-    size,
-    width,
-  );
+  const { state, setState, controller } = useDesigner(size, width);
   const { setTitle } = usePageTitle();
 
   // State for SSS file operations
@@ -87,34 +84,9 @@ export default function Designer() {
     (row: number, col: number) => {
       const key = `${String(row)},${String(col)}`;
       console.log(`clicked cell: ${key}`);
-      if (dragJustEndedCellsRef.current?.has(key)) {
-        dragJustEndedCellsRef.current.delete(key);
-        if (dragJustEndedCellsRef.current.size === 0) {
-          dragJustEndedCellsRef.current = null;
-        }
-        return;
-      }
       setState((s) => {
-        if (s.isDragging && (s.draggedCells.get(row)?.has(col) ?? false)) {
-          return s;
-        }
         return controller.toggleCell(s, row, col);
       });
-    },
-    [controller, setState, dragJustEndedCellsRef],
-  );
-
-  const handlePointerDown = useCallback(
-    (row: number, col: number, e: React.PointerEvent) => {
-      if (e.button === 2) return; // Ignore right click
-      setState((s) => controller.startDrag(s, row, col));
-    },
-    [controller, setState],
-  );
-
-  const handlePointerEnter = useCallback(
-    (row: number, col: number) => {
-      setState((s) => controller.continueDrag(s, row, col));
     },
     [controller, setState],
   );
@@ -311,8 +283,6 @@ export default function Designer() {
           columnHints={state.columnHints}
           onCellClick={handleCellClick}
           onCellRightClick={handleCellClick}
-          onCellPointerDown={handlePointerDown}
-          onCellPointerEnter={handlePointerEnter}
           minRowHintSlots={state.width / 2}
           minColHintSlots={state.height / 2}
         />

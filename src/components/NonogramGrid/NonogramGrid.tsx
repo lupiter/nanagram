@@ -10,8 +10,6 @@ export default function NonogramGrid({
   columnHints,
   onCellClick,
   onCellRightClick,
-  onCellPointerDown,
-  onCellPointerEnter,
   errorCell,
   minRowHintSlots,
   minColHintSlots,
@@ -66,8 +64,6 @@ export default function NonogramGrid({
                   colIndex={colIndex}
                   onCellClick={onCellClick}
                   onCellRightClick={onCellRightClick}
-                  onCellPointerDown={onCellPointerDown}
-                  onCellPointerEnter={onCellPointerEnter}
                   errorCell={errorCell}
                 />
               ))}

@@ -55,7 +55,5 @@ export function createInitialState(
     history: [],
     historyIndex: -1,
     isUndoRedoAction: false,
-    dragTool: null,
-    draggedCells: new Map(),
   };
 }

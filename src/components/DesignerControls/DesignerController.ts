@@ -1,9 +1,5 @@
 import { produce } from "immer";
-import {
-  CellState,
-  PuzzleSolutionData,
-  SolutionCell,
-} from "../../types/nonogram";
+import { CellState, PuzzleSolutionData } from "../../types/nonogram";
 import { puzzleService } from "../../services/Puzzle";
 import { puzzleCodec } from "../../services/PuzzleCodec";
 import { difficultyAnalyzer } from "../../services/DifficultyAnalyzer";
@@ -30,71 +26,14 @@ export class DesignerController {
     });
   }
 
-  // Drag operations
-  private hasDraggedCell(
-    draggedCells: Map<number, Set<number>>,
-    row: number,
-    col: number,
-  ): boolean {
-    return draggedCells.get(row)?.has(col) ?? false;
-  }
-
-  startDrag(state: DesignerState, row: number, col: number): DesignerState {
-    const flipped = (cell: CellState): SolutionCell =>
-      cell === CellState.FILLED ? CellState.EMPTY : CellState.FILLED;
-
-    return produce(state, (draft) => {
-      draft.grid[row][col] = flipped(draft.grid[row][col]);
-      draft.rowHints = puzzleService.deriveRowHints(draft.grid);
-      draft.columnHints = puzzleService.deriveColumnHints(draft.grid);
-      draft.hasUniqueSolution = null;
-      draft.difficulty = null;
-      draft.isDragging = true;
-      draft.dragMode = flipped(draft.grid[row][col]);
-      draft.draggedCells = new Map([[row, new Set([col])]]);
-    });
-  }
-
-  continueDrag(state: DesignerState, row: number, col: number): DesignerState {
-    if (!state.isDragging || state.dragMode === null) {
-      return state;
-    }
-
-    if (this.hasDraggedCell(state.draggedCells, row, col)) {
-      return state;
-    }
-
-    const dragMode = state.dragMode;
-    return produce(state, (draft) => {
-      draft.grid[row][col] = dragMode;
-      draft.rowHints = puzzleService.deriveRowHints(draft.grid);
-      draft.columnHints = puzzleService.deriveColumnHints(draft.grid);
-      draft.hasUniqueSolution = null;
-      draft.difficulty = null;
-
-      // Update draggedCells Map
-      const rowSet = draft.draggedCells.get(row) ?? new Set<number>();
-      rowSet.add(col);
-      draft.draggedCells.set(row, rowSet);
-    });
-  }
-
-  endDrag(state: DesignerState): DesignerState {
-    return produce(state, (draft) => {
-      draft.isDragging = false;
-      draft.dragMode = null;
-      draft.draggedCells = new Map();
-    });
-  }
-
   setSize(state: DesignerState, height: number, width: number): DesignerState {
     const grid = createEmptySolutionGrid(height, width);
     return produce(state, (draft) => {
       draft.height = height;
       draft.width = width;
       draft.grid = grid;
-      draft.rowHints = puzzleService.deriveRowHints(grid);
-      draft.columnHints = puzzleService.deriveColumnHints(grid);
+      draft.rowHints = puzzleService.deriveRowHints(draft.grid);
+      draft.columnHints = puzzleService.deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
       draft.difficulty = null;
     });
@@ -110,8 +49,8 @@ export class DesignerController {
     const grid = createEmptySolutionGrid(state.height, state.width);
     return produce(state, (draft) => {
       draft.grid = grid;
-      draft.rowHints = puzzleService.deriveRowHints(grid);
-      draft.columnHints = puzzleService.deriveColumnHints(grid);
+      draft.rowHints = puzzleService.deriveRowHints(draft.grid);
+      draft.columnHints = puzzleService.deriveColumnHints(draft.grid);
       draft.hasUniqueSolution = null;
       draft.difficulty = null;
     });

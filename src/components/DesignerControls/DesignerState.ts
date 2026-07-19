@@ -31,9 +31,6 @@ export function createInitialDesignerState(
     isChecking: false,
     hasUniqueSolution: null,
     difficulty: null,
-    isDragging: false,
-    dragMode: null,
-    draggedCells: new Map(),
     autoCheckEnabled: true,
   };
 }

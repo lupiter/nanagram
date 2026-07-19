@@ -8,7 +8,6 @@ import {
 export enum PuzzleStatus {
   Idle = "idle",
   Playing = "playing",
-  Dragging = "dragging",
   Solved = "solved",
   Error = "error",
 }
@@ -20,9 +19,6 @@ export type PuzzleEvent =
       col: number;
       toolOverride?: NonogramCellState;
     }
-  | { type: "DRAG_STARTED"; row: number; col: number }
-  | { type: "DRAG_CONTINUED"; row: number; col: number }
-  | { type: "DRAG_ENDED" }
   | { type: "UNDO_REQUESTED" }
   | { type: "REDO_REQUESTED" }
   | { type: "RESET_REQUESTED" }
@@ -119,10 +115,6 @@ export interface PuzzleState {
   history: HistoryEntry[];
   historyIndex: number;
   isUndoRedoAction: boolean;
-
-  // Drag state
-  dragTool: NonogramCellState | null;
-  draggedCells: Map<number, Set<number>>;
 }
 
 /** Props for the NonogramGrid component */
@@ -132,8 +124,6 @@ export interface NonogramGridProps {
   columnHints: Hint[][];
   onCellClick: (row: number, col: number) => void;
   onCellRightClick: (row: number, col: number, e: React.MouseEvent) => void;
-  onCellPointerDown: (row: number, col: number, e: React.PointerEvent) => void;
-  onCellPointerEnter: (row: number, col: number) => void;
   errorCell?: [number, number] | null;
   /** When set (e.g. in designer), reserves at least this many slots so layout does not reflow as clues change. */
   minRowHintSlots?: number;

@@ -2,7 +2,7 @@
  * Types for user-created puzzle designs
  */
 
-import { PuzzleSolutionData, Hint, SolutionCell } from "./nonogram";
+import { PuzzleSolutionData, Hint } from "./nonogram";
 
 /** A saved user design */
 export interface SavedDesign {
@@ -32,8 +32,5 @@ export interface DesignerState {
   isChecking: boolean;
   hasUniqueSolution: boolean | null;
   difficulty: number | null;
-  isDragging: boolean;
-  dragMode: SolutionCell | null;
-  draggedCells: Map<number, Set<number>>;
   autoCheckEnabled: boolean;
 }

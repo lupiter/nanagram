@@ -30,8 +30,6 @@ interface PuzzlePlayerProps {
   controller: PuzzleController;
   nextPuzzle?: NextPuzzleInfo | null;
   randomAgainParams?: RandomAgainParams | null;
-  /** When set, clicks on these cells (row,col keys) are ignored once (synthetic click after tap). */
-  dragJustEndedCellsRef?: React.RefObject<Set<string> | null>;
 }
 
 export default function PuzzlePlayer({
@@ -41,23 +39,14 @@ export default function PuzzlePlayer({
   controller,
   nextPuzzle = null,
   randomAgainParams = null,
-  dragJustEndedCellsRef,
 }: PuzzlePlayerProps) {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
-      const key = `${String(row)},${String(col)}`;
-      if (dragJustEndedCellsRef?.current?.has(key)) {
-        dragJustEndedCellsRef.current.delete(key);
-        if (dragJustEndedCellsRef.current.size === 0) {
-          dragJustEndedCellsRef.current = null;
-        }
-        return;
-      }
       setState((s) =>
         controller.dispatch(s, { type: "CELL_CLICKED", row, col }),
       );
     },
-    [controller, setState, dragJustEndedCellsRef],
+    [controller, setState],
   );
 
   const handleRightClick = useCallback(
@@ -74,26 +63,6 @@ export default function PuzzlePlayer({
           col,
           toolOverride: oppositeTool,
         }),
-      );
-    },
-    [controller, setState],
-  );
-
-  const handlePointerDown = useCallback(
-    (row: number, col: number, e: React.PointerEvent) => {
-      if (e.button === 2) return;
-      e.preventDefault(); // Prevent synthetic click (iPad Safari/Pencil fires it before our pointerup)
-      setState((s) =>
-        controller.dispatch(s, { type: "DRAG_STARTED", row, col }),
-      );
-    },
-    [controller, setState],
-  );
-
-  const handlePointerEnter = useCallback(
-    (row: number, col: number) => {
-      setState((s) =>
-        controller.dispatch(s, { type: "DRAG_CONTINUED", row, col }),
       );
     },
     [controller, setState],
@@ -172,8 +141,6 @@ export default function PuzzlePlayer({
         columnHints={state.columnHints}
         onCellClick={handleCellClick}
         onCellRightClick={handleRightClick}
-        onCellPointerDown={handlePointerDown}
-        onCellPointerEnter={handlePointerEnter}
         errorCell={state.errorCell}
       />
       {state.status === PuzzleStatus.Solved && (

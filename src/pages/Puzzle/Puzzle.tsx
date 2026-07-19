@@ -92,7 +92,7 @@ export default function Puzzle() {
   // For encoded puzzles, use the puzzleKey (which includes a hash of the encoded data)
   const trackingId = source === "library" && id ? id : puzzleKey;
 
-  const { state, setState, controller, dragJustEndedCellsRef } = usePuzzleGame({
+  const { state, setState, controller } = usePuzzleGame({
     category: category ?? "play",
     id: trackingId,
     puzzle: puzzle ?? {
@@ -146,7 +146,6 @@ export default function Puzzle() {
       controller={controller}
       nextPuzzle={nextPuzzle}
       randomAgainParams={randomAgainParams}
-      dragJustEndedCellsRef={dragJustEndedCellsRef}
     />
   );
 }

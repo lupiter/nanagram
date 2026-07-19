@@ -1,14 +1,12 @@
 import { useRef, useEffect } from "react";
 import { CellState } from "../../types/nonogram";
 
-export default function NonogramGrid({
+export default function NonogramCell({
   cell,
   rowIndex,
   colIndex,
   onCellClick,
   onCellRightClick,
-  onCellPointerDown,
-  onCellPointerEnter,
   errorCell,
 }: {
   cell: CellState;
@@ -16,40 +14,25 @@ export default function NonogramGrid({
   colIndex: number;
   onCellClick: (row: number, col: number) => void;
   onCellRightClick: (row: number, col: number, e: React.MouseEvent) => void;
-  onCellPointerDown: (row: number, col: number, e: React.PointerEvent) => void;
-  onCellPointerEnter: (row: number, col: number) => void;
   errorCell?: [number, number] | null;
 }) {
-  const onGestureStart = (e: Event) => {
-    e.preventDefault();
-  };
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (ref.current) {
       ref.current.indeterminate = cell === CellState.EMPTY;
       ref.current.checked = cell === CellState.FILLED;
-      ref.current.addEventListener("gesturestart", onGestureStart);
     }
   }, [cell, ref]);
 
   return (
-    <td
-      key={`${String(rowIndex)}-${String(colIndex)}`}
-      role="gridcell"
-      onPointerEnter={() => {
-        onCellPointerEnter(rowIndex, colIndex);
-      }}
-    >
+    <td key={`${String(rowIndex)}-${String(colIndex)}`} role="gridcell">
       <input
         type="checkbox"
         id={`cell-${String(rowIndex)}-${String(colIndex)}`}
         checked={cell === CellState.FILLED}
         onChange={() => {
           onCellClick(rowIndex, colIndex);
-        }}
-        onPointerDown={(e) => {
-          onCellPointerDown(rowIndex, colIndex, e);
         }}
         onContextMenu={(e) => {
           onCellRightClick(rowIndex, colIndex, e);

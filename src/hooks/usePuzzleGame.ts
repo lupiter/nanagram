@@ -28,7 +28,6 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     ) as GameMode | null;
     return controller.createInitialState(savedGrid, savedMode);
   });
-  const dragJustEndedCellsRef = useRef<Set<string> | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -82,36 +81,6 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     localStorage.setItem(PLAY_MODE_STORAGE_KEY, state.mode);
   }, [state.mode]);
 
-  // Global pointer up/cancel handler for drag (works for mouse and touch).
-  // Set dragJustEndedCellsRef synchronously so the synthetic click on iPad Safari
-  // (which can fire before rAF) is ignored.
-  useEffect(() => {
-    const handleGlobalPointerUp = () => {
-      const s = stateRef.current;
-      if (s.draggedCells.size > 0) {
-        const cells = new Set<string>();
-        s.draggedCells.forEach((cols, r) => {
-          cols.forEach((c) => cells.add(`${String(r)},${String(c)}`));
-        });
-        dragJustEndedCellsRef.current = cells;
-      }
-      requestAnimationFrame(() => {
-        setState((s) => {
-          if (s.status === PuzzleStatus.Dragging) {
-            return controller.dispatch(s, { type: "DRAG_ENDED" });
-          }
-          return s;
-        });
-      });
-    };
-    window.addEventListener("pointerup", handleGlobalPointerUp);
-    window.addEventListener("pointercancel", handleGlobalPointerUp);
-    return () => {
-      window.removeEventListener("pointerup", handleGlobalPointerUp);
-      window.removeEventListener("pointercancel", handleGlobalPointerUp);
-    };
-  }, [controller]);
-
   // Keyboard shortcuts - registered once, uses ref for latest state
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -130,5 +99,5 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     };
   }, [controller]);
 
-  return { state, setState, controller, dragJustEndedCellsRef };
+  return { state, setState, controller };
 }

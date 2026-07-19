@@ -59,21 +59,6 @@ export class PuzzleController {
         return newState;
       }
 
-      case "DRAG_STARTED": {
-        if (state.status !== PuzzleStatus.Playing) return state;
-        return this.startDrag(state, event.row, event.col);
-      }
-
-      case "DRAG_CONTINUED": {
-        if (state.status !== PuzzleStatus.Dragging) return state;
-        return this.continueDrag(state, event.row, event.col);
-      }
-
-      case "DRAG_ENDED": {
-        if (state.status !== PuzzleStatus.Dragging) return state;
-        return this.endDrag(state);
-      }
-
       case "UNDO_REQUESTED": {
         if (!this.canUndo(state)) return state;
         return this.undo(state);
@@ -264,57 +249,6 @@ export class PuzzleController {
       });
     }
     return state;
-  }
-
-  // --- Drag ---
-
-  private hasDraggedCell(
-    draggedCells: Map<number, Set<number>>,
-    row: number,
-    col: number,
-  ): boolean {
-    return draggedCells.get(row)?.has(col) ?? false;
-  }
-
-  private startDrag(state: PuzzleState, row: number, col: number): PuzzleState {
-    const stateWithDrag = produce(state, (draft) => {
-      draft.status = PuzzleStatus.Dragging;
-      draft.dragTool = state.tool;
-      draft.draggedCells = new Map([[row, new Set([col])]]);
-    });
-
-    // Update the first cell
-    return this.updateCell(stateWithDrag, row, col, state.tool);
-  }
-
-  private continueDrag(
-    state: PuzzleState,
-    row: number,
-    col: number,
-  ): PuzzleState {
-    if (state.status !== PuzzleStatus.Dragging || state.dragTool === null) {
-      return state;
-    }
-
-    if (this.hasDraggedCell(state.draggedCells, row, col)) {
-      return state;
-    }
-
-    const stateWithDrag = produce(state, (draft) => {
-      const rowSet = draft.draggedCells.get(row) ?? new Set<number>();
-      rowSet.add(col);
-      draft.draggedCells.set(row, rowSet);
-    });
-
-    return this.updateCell(stateWithDrag, row, col, state.dragTool);
-  }
-
-  private endDrag(state: PuzzleState): PuzzleState {
-    return produce(state, (draft) => {
-      draft.status = PuzzleStatus.Playing;
-      draft.dragTool = null;
-      draft.draggedCells = new Map();
-    });
   }
 
   // --- Helpers ---
