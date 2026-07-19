@@ -26,7 +26,11 @@ export default function NonogramCell({
   }, [cell, ref]);
 
   return (
-    <td key={`${String(rowIndex)}-${String(colIndex)}`} role="gridcell">
+    <td 
+      key={`${String(rowIndex)}-${String(colIndex)}`} 
+      role="gridcell"
+      style={{ userSelect: "none", WebkitUserSelect: "none" }}
+    >
       <input
         type="checkbox"
         id={`cell-${String(rowIndex)}-${String(colIndex)}`}
