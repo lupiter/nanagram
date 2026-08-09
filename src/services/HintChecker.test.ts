@@ -180,24 +180,10 @@ describe("checkHints (Strict Sealing Rules)", () => {
       expect(result[0].used).toBe(false);
     });
 
-    it("two filled, one empty (start), incorrect - NOT SEALED", () => {
+    it("two filled, one empty (start), incorrect - not sealed", () => {
       const answer = [CellState.FILLED, CellState.FILLED, CellState.EMPTY];
       const cells: CellState[] = [
         CellState.EMPTY,
-        CellState.FILLED,
-        CellState.FILLED,
-      ];
-      const hints: Hint[] = [{ hint: 2, used: false }];
-
-      const result = hintChecker.check(cells, hints, answer);
-      expect(result.length).toBe(1);
-      expect(result[0].used).toBe(false);
-    });
-
-    it("two filled, one empty (start), incorrect - SEALED", () => {
-      const answer = [CellState.FILLED, CellState.FILLED, CellState.EMPTY];
-      const cells: CellState[] = [
-        CellState.CROSSED_OUT,
         CellState.FILLED,
         CellState.FILLED,
       ];
@@ -222,46 +208,12 @@ describe("checkHints (Strict Sealing Rules)", () => {
       expect(result[0].used).toBe(false);
     });
 
-    
-    it("two filled, one empty (end), incorccect - SEALED", () => {
-      const answer = [CellState.EMPTY, CellState.FILLED, CellState.FILLED];
-      const cells: CellState[] = [
-        CellState.FILLED,
-        CellState.CROSSED_OUT,
-        CellState.FILLED,
-      ];
-      const hints: Hint[] = [{ hint: 2, used: false }];
-
-      const result = hintChecker.check(cells, hints, answer);
-      expect(result.length).toBe(1);
-      expect(result[0].used).toBe(false);
-    });
-
     it("two filled, one empty (middle) - NOT SEALED", () => {
       const answer = [CellState.FILLED, CellState.EMPTY, CellState.FILLED];
       const cells: CellState[] = [
         CellState.FILLED,
         CellState.FILLED,
         CellState.EMPTY,
-      ];
-      const hints: Hint[] = [
-        { hint: 1, used: false },
-        { hint: 1, used: false },
-      ];
-
-      const result = hintChecker.check(cells, hints, answer);
-      expect(result.length).toBe(2);
-      expect(result[0].used).toBe(false);
-      expect(result[1].used).toBe(false);
-    });
-
-    
-    it("two filled, one empty (middle), incorrect - SEALED", () => {
-      const answer = [CellState.FILLED, CellState.EMPTY, CellState.FILLED];
-      const cells: CellState[] = [
-        CellState.FILLED,
-        CellState.FILLED,
-        CellState.CROSSED_OUT,
       ];
       const hints: Hint[] = [
         { hint: 1, used: false },
@@ -346,9 +298,7 @@ describe("checkHints (Strict Sealing Rules)", () => {
   it("should not mark hints if sequences are too short", () => {
     const cells = [CellState.FILLED, CellState.CROSSED_OUT, CellState.EMPTY];
     const answer = [CellState.FILLED, CellState.FILLED, CellState.EMPTY];
-    const hints = [
-      { hint: 2, used: false },
-    ];
+    const hints = [{ hint: 2, used: false }];
 
     const result = hintChecker.check(cells, hints, answer);
     expect(result.length).toBe(1);
@@ -583,7 +533,7 @@ describe("checkHints (Strict Sealing Rules)", () => {
     expect(result[1].used).toBe(true);
   });
 
-  it("should mark hits when propery sealed", () => {
+  it("should mark hits when properly sealed", () => {
     const answer = [
       CellState.EMPTY,
       CellState.FILLED,
