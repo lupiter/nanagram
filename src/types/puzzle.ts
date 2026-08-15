@@ -23,6 +23,7 @@ export type PuzzleEvent =
   | { type: "REDO_REQUESTED" }
   | { type: "RESET_REQUESTED" }
   | { type: "CLEAR_ERROR" }
+  | { type: "SET_ERROR_CELL"; row: number; col: number }
   | { type: "TOOL_CHANGED"; tool: NonogramCellState }
   | { type: "MODE_CHANGED"; mode: GameMode }
   | { type: "CLEAR_VICTORY" };

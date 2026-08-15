@@ -9,6 +9,9 @@ import VictoryPopup from "../VictoryPopup/VictoryPopup";
 import NonogramGrid from "../NonogramGrid/NonogramGrid";
 import Modal from "../Modal/Modal";
 import Settings from "../Settings/Settings";
+import SavedIndicator from "../SavedIndicator/SavedIndicator";
+import ErrorStats from "../ErrorStats/ErrorStats";
+import { errorTracker } from "../../services/ErrorTracker";
 import { Icons } from "../Icons/Icons";
 import "./PuzzlePlayer.css";
 
@@ -30,6 +33,8 @@ interface PuzzlePlayerProps {
   controller: PuzzleController;
   nextPuzzle?: NextPuzzleInfo | null;
   randomAgainParams?: RandomAgainParams | null;
+  category: string;
+  id: string;
 }
 
 export default function PuzzlePlayer({
@@ -39,6 +44,8 @@ export default function PuzzlePlayer({
   controller,
   nextPuzzle = null,
   randomAgainParams = null,
+  category,
+  id,
 }: PuzzlePlayerProps) {
   const handleCellClick = useCallback(
     (row: number, col: number) => {
@@ -135,6 +142,14 @@ export default function PuzzlePlayer({
       >
         <Settings onPlayModeChange={handleSettingsPlayModeChange} />
       </Modal>
+      <ErrorStats
+        errors={errorTracker.detectErrors(
+          state.grid,
+          state.rowHints as any,
+          state.columnHints as any,
+          puzzle.solution,
+        )}
+      />
       <NonogramGrid
         grid={state.grid}
         rowHints={state.rowHints}
@@ -152,6 +167,7 @@ export default function PuzzlePlayer({
           solution={puzzle.solution}
         />
       )}
+      <SavedIndicator category={category} id={id} />
     </div>
   );
 }

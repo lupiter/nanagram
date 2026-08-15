@@ -146,6 +146,8 @@ export default function Puzzle() {
       controller={controller}
       nextPuzzle={nextPuzzle}
       randomAgainParams={randomAgainParams}
+      category={category ?? "play"}
+      id={id ?? ""}
     />
   );
 }

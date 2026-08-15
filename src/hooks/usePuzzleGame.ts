@@ -4,6 +4,8 @@ import { GameState, PuzzleDefinition } from "../types/nonogram";
 import { PuzzleController } from "../components/NonogramGrid/PuzzleController";
 import { puzzleLibrary } from "../services/PuzzleLibrary";
 import { errorSound } from "../services/ErrorSound";
+import { autoSave } from "../services/AutoSave";
+import { errorTracker, ErrorType } from "../services/ErrorTracker";
 import { PLAY_MODE_STORAGE_KEY } from "../themeStorage";
 
 interface UsePuzzleGameProps {
@@ -55,11 +57,13 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
     if (state.status === PuzzleStatus.Solved) {
       puzzleLibrary.markCompleted(category, id);
       puzzleLibrary.clearProgress(category, id);
+      autoSave.clearAutoSave(category, id);
     } else if (
       state.status === PuzzleStatus.Playing &&
       controller.hasContent(state)
     ) {
-      puzzleLibrary.saveProgress(category, id, state.grid);
+      // Use auto-save for periodic saving
+      autoSave.queueAutoSave(category, id, state.grid);
     }
   }, [state.grid, state.status, controller, category, id]);
 
@@ -75,6 +79,40 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
       };
     }
   }, [state.errorCell, controller]);
+
+  // Periodically detect errors (every 2 seconds while playing)
+  useEffect(() => {
+    if (state.status !== PuzzleStatus.Playing) return;
+
+    const intervalId = setInterval(() => {
+      const errors = errorTracker.detectErrors(
+        state.grid,
+        state.rowHints as any,
+        state.columnHints as any,
+        puzzle.solution,
+      );
+
+      // Only set errors if there are any
+      if (errors.length > 0) {
+        setState((s) => {
+          // Find the first error and set error cell
+          const firstError = errors[0];
+          if (firstError.type === ErrorType.CELL) {
+            return controller.dispatch(s, {
+              type: "SET_ERROR_CELL",
+              row: firstError.row,
+              col: firstError.col,
+            });
+          }
+          return s;
+        });
+      }
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [state.grid, state.status, state.rowHints, state.columnHints, controller, puzzle.solution]);
 
   // Save mode to localStorage when it changes
   useEffect(() => {

@@ -85,6 +85,12 @@ export class PuzzleController {
         return this.clearError(state);
       }
 
+      case "SET_ERROR_CELL": {
+        return produce(state, (draft) => {
+          draft.errorCell = [event.row, event.col];
+        });
+      }
+
       case "CLEAR_VICTORY": {
         return this.setShowVictory(state, false);
       }
