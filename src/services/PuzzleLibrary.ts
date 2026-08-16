@@ -12,6 +12,9 @@ import puzzles10x15 from "../puzzles/10x15";
 import puzzles15x15 from "../puzzles/15x15";
 import puzzles20x20 from "../puzzles/20x20";
 
+/** Current save version */
+const CURRENT_VERSION = 1;
+
 export class PuzzleLibrary {
   private static instance: PuzzleLibrary;
 
@@ -138,11 +141,16 @@ export class PuzzleLibrary {
     return `${this.progressKeyPrefix}${category}-${id}`;
   }
 
-  /** Save puzzle progress */
+  /** Save puzzle progress with version */
   saveProgress(category: string, id: string, grid: number[][]): void {
+    const data = {
+      version: CURRENT_VERSION,
+      grid,
+      timestamp: Date.now(),
+    };
     localStorage.setItem(
       this.getProgressKey(category, id),
-      JSON.stringify(grid),
+      JSON.stringify(data),
     );
   }
 
@@ -151,7 +159,21 @@ export class PuzzleLibrary {
     const stored = localStorage.getItem(this.getProgressKey(category, id));
     if (!stored) return null;
     try {
-      return JSON.parse(stored) as number[][];
+      const data = JSON.parse(stored) as {
+        version: number;
+        grid: number[][];
+        timestamp: number;
+      };
+
+      // Validate version
+      if (data.version !== CURRENT_VERSION) {
+        console.warn(
+          `Progress version mismatch for ${category}-${id}: expected ${CURRENT_VERSION}, got ${data.version}. Skipping load.`,
+        );
+        return null;
+      }
+
+      return data.grid;
     } catch {
       return null;
     }

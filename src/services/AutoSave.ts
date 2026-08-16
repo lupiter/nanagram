@@ -9,6 +9,7 @@ export class AutoSave {
   private static instance: AutoSave;
 
   private readonly progressKeyPrefix = "nonogram-auto-save-";
+  private readonly CURRENT_VERSION = 1;
   private saveTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private saveDelayMs = 500; // Delay before auto-save (prevent excessive saves)
 
@@ -52,7 +53,12 @@ export class AutoSave {
   ): void {
     const key = `${this.progressKeyPrefix}${_category}-${_id}`;
     try {
-      localStorage.setItem(key, JSON.stringify(grid));
+      const data = {
+        version: this.CURRENT_VERSION,
+        grid,
+        timestamp: Date.now(),
+      };
+      localStorage.setItem(key, JSON.stringify(data));
       console.log(`Auto-saved progress for ${_category}-${_id}`);
       onSaved?.();
     } catch (error) {
@@ -66,7 +72,21 @@ export class AutoSave {
     try {
       const stored = localStorage.getItem(key);
       if (!stored) return null;
-      return JSON.parse(stored) as number[][];
+      const data = JSON.parse(stored) as {
+        version: number;
+        grid: number[][];
+        timestamp: number;
+      };
+
+      // Validate version
+      if (data.version !== this.CURRENT_VERSION) {
+        console.warn(
+          `Auto-save version mismatch for ${category}-${id}: expected ${this.CURRENT_VERSION}, got ${data.version}. Skipping load.`,
+        );
+        return null;
+      }
+
+      return data.grid;
     } catch (error) {
       console.error("Failed to load auto-saved progress:", error);
       return null;
