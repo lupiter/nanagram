@@ -21,13 +21,11 @@ export class HintChecker {
         cells[i] === CellState.FILLED &&
         answerCells[i] !== CellState.FILLED
       ) {
-        console.log("early exit, wrong");
         return hints;
       }
     }
     // If all answers are correct, mark used hints and return
     if (cells.every((cell, i) => cell === answerCells[i])) {
-      console.log("early exit, finished");
       return hints.map((hint) => ({ ...hint, used: true }));
     }
 
@@ -37,15 +35,6 @@ export class HintChecker {
     let currentHintSize = 0;
     let usedHint = true;
     for (let i = 0; i < answerCells.length; i++) {
-      console.log(
-        i,
-        answerCells[i],
-        cells[i],
-        resolvedHints,
-        currentHintSize,
-        usedHint,
-        sealed,
-      );
       if (answerCells[i] === CellState.FILLED) {
         currentHintSize++;
         usedHint = usedHint && cells[i] === CellState.FILLED && sealed;

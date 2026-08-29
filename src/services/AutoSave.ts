@@ -59,7 +59,6 @@ export class AutoSave {
         timestamp: Date.now(),
       };
       localStorage.setItem(key, JSON.stringify(data));
-      console.log(`Auto-saved progress for ${_category}-${_id}`);
       onSaved?.();
     } catch (error) {
       console.error("Failed to auto-save progress:", error);
@@ -131,7 +130,6 @@ export class AutoSave {
 
         if (timestamp < cutoffDate) {
           localStorage.removeItem(key);
-          console.log(`Cleaned up old auto-save: ${key}`);
         }
       } catch (error) {
         console.error("Failed to clean up auto-save:", error);
