@@ -82,7 +82,6 @@ export default function Designer() {
 
   const handleCellClick = useCallback(
     (row: number, col: number) => {
-      const key = `${String(row)},${String(col)}`;
       setState((s) => {
         return controller.toggleCell(s, row, col);
       });

@@ -103,42 +103,43 @@ export class ErrorTracker {
     const clue = requiredHints[clueIndex];
     if (clue === undefined) return true; // No more clues to check
 
-    let currentRun = 0;
+    // Quick check: if we don't have enough total filled cells, it's impossible
+    const totalFilled = rowOrCol.filter((cell) => cell === CellState.FILLED).length;
+    if (totalFilled < clue) {
+      return false;
+    }
 
+    // Quick check: if we've exceeded the clue value anywhere, it's impossible
+    let currentRun = 0;
     for (let i = 0; i < rowOrCol.length; i++) {
       const cell = rowOrCol[i];
-
       if (cell === CellState.FILLED) {
         currentRun++;
-        // If we exceed the clue value, we can't satisfy this clue
         if (currentRun > clue) {
-          return false;
+          return false; // Exceeded the required count
         }
       } else {
-        // Hit an empty cell
+        // Hit an empty cell - if we've found exactly the clue, we're done
         if (currentRun === clue) {
-          // We found exactly the clue value
           return true;
-        } else if (currentRun > clue) {
-          // We found more than the clue value
-          return false;
-        } else {
-          // currentRun < clue, continue looking
-          currentRun = 0;
         }
+        currentRun = 0;
       }
     }
 
     // Check trailing run
     if (currentRun === clue) {
-      // We found exactly the clue value at the end
       return true;
-    } else if (currentRun > clue) {
-      return false;
-    } else {
-      // currentRun < clue, not enough filled cells
+    }
+
+    // If we've filled more than the clue but not exactly, it's impossible
+    if (currentRun > clue) {
       return false;
     }
+
+    // Otherwise, we haven't yet reached the clue value - this is a valid state
+    // We can't conclude it's unsatisfied yet because we haven't filled enough cells
+    return true;
   }
 
   /** Detect all Clue Errors in a grid */
@@ -148,6 +149,14 @@ export class ErrorTracker {
     columnHints: number[][],
   ): ClueError[] {
     const errors: ClueError[] = [];
+
+    // Quick check: if grid is empty (no filled or crossed-out cells), skip detection
+    const hasMarkedCells = grid.some((row) =>
+      row.some((cell) => cell === CellState.FILLED || cell === CellState.CROSSED_OUT),
+    );
+    if (!hasMarkedCells) {
+      return errors;
+    }
 
     // Check row clues
     for (let row = 0; row < grid.length; row++) {
@@ -218,6 +227,14 @@ export class ErrorTracker {
   ): CompletionError[] {
     const errors: CompletionError[] = [];
 
+    // Quick check: if grid is empty (no marked cells), skip detection
+    const hasMarkedCells = grid.some((row) =>
+      row.some((cell) => cell === CellState.FILLED || cell === CellState.CROSSED_OUT),
+    );
+    if (!hasMarkedCells) {
+      return errors;
+    }
+
     if (!this.canPuzzleBeCompleted(grid, solution)) {
       errors.push({
         type: ErrorType.COMPLETION,
@@ -250,15 +267,28 @@ export class ErrorTracker {
             expected: expectedState,
             reason: "Filled cell where solution expects empty",
           });
-        } else if (cellState === CellState.CROSSED_OUT && expectedState === CellState.FILLED) {
-          errors.push({
-            type: ErrorType.CELL,
-            row,
-            col,
-            current: cellState,
-            expected: expectedState,
-            reason: "Crossed-out cell where solution expects filled",
-          });
+        } else if (cellState === CellState.CROSSED_OUT) {
+          // Check if crossed-out cell is in the wrong position
+          if (expectedState === CellState.FILLED) {
+            errors.push({
+              type: ErrorType.CELL,
+              row,
+              col,
+              current: cellState,
+              expected: expectedState,
+              reason: "Crossed-out cell where solution expects filled",
+            });
+          } else if (expectedState === CellState.EMPTY) {
+            // Crossed-out cell where solution expects empty
+            errors.push({
+              type: ErrorType.CELL,
+              row,
+              col,
+              current: cellState,
+              expected: expectedState,
+              reason: "Crossed-out cell where solution expects empty",
+            });
+          }
         }
       }
     }

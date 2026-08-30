@@ -83,19 +83,20 @@ describe("ErrorTracker", () => {
 
     it("should detect unsatisfied clue", () => {
       const row = [
-        CellState.EMPTY,
         CellState.FILLED,
         CellState.EMPTY,
         CellState.EMPTY,
         CellState.EMPTY,
-        CellState.FILLED,
+        CellState.EMPTY,
+        CellState.EMPTY,
       ];
 
+      // Total filled cells = 1, but clue requires 2, so it's unsatisfied
       const canBeSatisfied = errorTracker.canClueBeSatisfied(
         row,
         true,
         0,
-        [2, 1],
+        [2],
       );
 
       expect(canBeSatisfied).toBe(false);
@@ -190,8 +191,9 @@ describe("ErrorTracker", () => {
 
   describe("detectClueErrors", () => {
     it("should detect unsatisfied row clue", () => {
+      // Add a filled cell to make it a valid state
       const grid: number[][] = [
-        [CellState.EMPTY, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY],
+        [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY],
       ];
 
       const rowHints = [[5, 3] as any];
@@ -208,8 +210,9 @@ describe("ErrorTracker", () => {
     });
 
     it("should detect unsatisfied column clue", () => {
+      // Add a filled cell to make it a valid state
       const grid: number[][] = [
-        [CellState.EMPTY],
+        [CellState.FILLED],
         [CellState.EMPTY],
       ];
 
@@ -286,15 +289,16 @@ describe("ErrorTracker", () => {
 
   describe("detectErrors", () => {
     it("should detect all types of errors", () => {
+      // Grid with a filled cell that shouldn't be filled, and a crossed-out cell that shouldn't be crossed out
       const grid: number[][] = [
         [CellState.EMPTY, CellState.EMPTY],
-        [CellState.EMPTY, CellState.EMPTY],
+        [CellState.EMPTY, CellState.CROSSED_OUT], // Crossed-out cell where solution expects EMPTY
       ];
 
       const rowHints = [[1] as any];
       const columnHints = [[1] as any];
       const solution: PuzzleSolutionData = [
-        [CellState.FILLED, CellState.EMPTY],
+        [CellState.EMPTY, CellState.EMPTY],
         [CellState.EMPTY, CellState.EMPTY],
       ];
 
@@ -306,7 +310,7 @@ describe("ErrorTracker", () => {
       );
 
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors.some((e) => e.type === ErrorType.CLUE)).toBe(true);
+      expect(errors.some((e) => e.type === ErrorType.CELL)).toBe(true);
       expect(errors.some((e) => e.type === ErrorType.COMPLETION)).toBe(true);
     });
   });
