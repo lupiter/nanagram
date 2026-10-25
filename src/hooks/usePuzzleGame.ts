@@ -84,11 +84,14 @@ export function usePuzzleGame({ category, id, puzzle }: UsePuzzleGameProps) {
   useEffect(() => {
     if (state.status !== PuzzleStatus.Playing) return;
 
+    // Only detect errors if the player has started playing (has made at least one marking)
+    if (!controller.hasContent(state)) return;
+
     const intervalId = setInterval(() => {
       const errors = errorTracker.detectErrors(
         state.grid,
-        state.rowHints as any,
-        state.columnHints as any,
+        state.rowHints,
+        state.columnHints,
         puzzle.solution,
       );
 

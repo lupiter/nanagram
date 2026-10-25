@@ -80,7 +80,7 @@ export class AutoSave {
       // Validate version
       if (data.version !== this.CURRENT_VERSION) {
         console.warn(
-          `Auto-save version mismatch for ${category}-${id}: expected ${this.CURRENT_VERSION}, got ${data.version}. Skipping load.`,
+          `Auto-save version mismatch for ${category}-${id}: expected ${this.CURRENT_VERSION.toString()}, got ${data.version.toString()}. Skipping load.`,
         );
         return null;
       }
@@ -125,8 +125,8 @@ export class AutoSave {
         const stored = localStorage.getItem(key);
         if (!stored) return;
 
-        const data = JSON.parse(stored);
-        const timestamp = data.timestamp || 0;
+        const data = JSON.parse(stored) as { timestamp?: number };
+        const timestamp = data.timestamp ?? 0;
 
         if (timestamp < cutoffDate) {
           localStorage.removeItem(key);

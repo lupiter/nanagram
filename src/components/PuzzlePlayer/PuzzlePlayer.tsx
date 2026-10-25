@@ -145,8 +145,8 @@ export default function PuzzlePlayer({
       <ErrorStats
         errors={errorTracker.detectErrors(
           state.grid,
-          state.rowHints as any,
-          state.columnHints as any,
+          state.rowHints,
+          state.columnHints,
           puzzle.solution,
         )}
       />

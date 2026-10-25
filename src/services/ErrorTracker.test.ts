@@ -6,7 +6,7 @@ import {
   CellError,
   errorTracker,
 } from "./ErrorTracker";
-import { CellState, PuzzleSolutionData } from "../types/nonogram";
+import { CellState, PuzzleSolutionData, Hint } from "../types/nonogram";
 
 describe("ErrorTracker", () => {
   describe("calculateClueRequirements", () => {
@@ -20,7 +20,7 @@ describe("ErrorTracker", () => {
         CellState.EMPTY,
       ];
 
-      const result = errorTracker.calculateClueRequirements(row, true);
+      const result = errorTracker.calculateClueRequirements(row);
 
       expect(result.maxRequired).toBe(2);
       expect(result.satisfied).toBe(2);
@@ -35,25 +35,25 @@ describe("ErrorTracker", () => {
         CellState.FILLED,
       ];
 
-      const result = errorTracker.calculateClueRequirements(column, false);
+      const result = errorTracker.calculateClueRequirements(column);
 
       expect(result.maxRequired).toBe(2);
       expect(result.satisfied).toBe(2);
     });
 
     it("should handle empty row", () => {
-      const row = Array(10).fill(CellState.EMPTY);
+      const row: CellState[] = Array<CellState>(10).fill(CellState.EMPTY);
 
-      const result = errorTracker.calculateClueRequirements(row, true);
+      const result = errorTracker.calculateClueRequirements(row);
 
       expect(result.maxRequired).toBe(0);
       expect(result.satisfied).toBe(0);
     });
 
     it("should handle fully filled row", () => {
-      const row = Array(10).fill(CellState.FILLED);
+      const row: CellState[] = Array<CellState>(10).fill(CellState.FILLED);
 
-      const result = errorTracker.calculateClueRequirements(row, true);
+      const result = errorTracker.calculateClueRequirements(row);
 
       expect(result.maxRequired).toBe(10);
       expect(result.satisfied).toBe(1);
@@ -73,7 +73,6 @@ describe("ErrorTracker", () => {
 
       const canBeSatisfied = errorTracker.canClueBeSatisfied(
         row,
-        true,
         0,
         [2, 1],
       );
@@ -94,7 +93,6 @@ describe("ErrorTracker", () => {
       // Total filled cells = 1, but clue requires 2, so it's unsatisfied
       const canBeSatisfied = errorTracker.canClueBeSatisfied(
         row,
-        true,
         0,
         [2],
       );
@@ -118,7 +116,6 @@ describe("ErrorTracker", () => {
 
       const canBeSatisfied = errorTracker.canClueBeSatisfied(
         row,
-        true,
         0,
         [2, 1, 3, 1],
       );
@@ -129,7 +126,7 @@ describe("ErrorTracker", () => {
 
   describe("detectCellErrors", () => {
     it("should detect filled cell where solution expects empty", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED, CellState.EMPTY],
         [CellState.EMPTY, CellState.FILLED],
       ];
@@ -139,7 +136,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.EMPTY],
       ];
 
-      const errors = errorTracker.detectCellErrors(grid, solution);
+      const errors: CellError[] = errorTracker.detectCellErrors(grid, solution);
 
       expect(errors.length).toBe(2);
       expect(errors[0]).toMatchObject({
@@ -151,7 +148,7 @@ describe("ErrorTracker", () => {
     });
 
     it("should detect crossed-out cell where solution expects filled", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.CROSSED_OUT, CellState.EMPTY],
         [CellState.EMPTY, CellState.CROSSED_OUT],
       ];
@@ -161,7 +158,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.FILLED],
       ];
 
-      const errors = errorTracker.detectCellErrors(grid, solution);
+      const errors: CellError[] = errorTracker.detectCellErrors(grid, solution);
 
       expect(errors.length).toBe(2);
       expect(errors[0]).toMatchObject({
@@ -173,7 +170,7 @@ describe("ErrorTracker", () => {
     });
 
     it("should not report errors for correct cells", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED, CellState.EMPTY],
         [CellState.EMPTY, CellState.FILLED],
       ];
@@ -183,7 +180,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.FILLED],
       ];
 
-      const errors = errorTracker.detectCellErrors(grid, solution);
+      const errors: CellError[] = errorTracker.detectCellErrors(grid, solution);
 
       expect(errors.length).toBe(0);
     });
@@ -192,14 +189,14 @@ describe("ErrorTracker", () => {
   describe("detectClueErrors", () => {
     it("should detect unsatisfied row clue", () => {
       // Add a filled cell to make it a valid state
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED, CellState.EMPTY, CellState.EMPTY, CellState.EMPTY],
       ];
 
-      const rowHints = [[5, 3] as any];
-      const columnHints = [] as any;
+      const rowHints: Hint[][] = [[{ hint: 5, used: false }, { hint: 3, used: false }]];
+      const columnHints: Hint[][] = [];
 
-      const errors = errorTracker.detectClueErrors(grid, rowHints, columnHints);
+      const errors: ClueError[] = errorTracker.detectClueErrors(grid, rowHints, columnHints);
 
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject({
@@ -211,15 +208,15 @@ describe("ErrorTracker", () => {
 
     it("should detect unsatisfied column clue", () => {
       // Add a filled cell to make it a valid state
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED],
         [CellState.EMPTY],
       ];
 
-      const rowHints = [] as any;
-      const columnHints = [[2, 1] as any];
+      const rowHints: Hint[][] = [];
+      const columnHints: Hint[][] = [[{ hint: 2, used: false }, { hint: 1, used: false }]];
 
-      const errors = errorTracker.detectClueErrors(grid, rowHints, columnHints);
+      const errors: ClueError[] = errorTracker.detectClueErrors(grid, rowHints, columnHints);
 
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject({
@@ -232,7 +229,7 @@ describe("ErrorTracker", () => {
 
   describe("detectCompletionErrors", () => {
     it("should detect puzzle that cannot be completed", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED, CellState.EMPTY],
         [CellState.EMPTY, CellState.EMPTY],
       ];
@@ -242,7 +239,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.EMPTY],
       ];
 
-      const errors = errorTracker.detectCompletionErrors(grid, solution);
+      const errors: CompletionError[] = errorTracker.detectCompletionErrors(grid, solution);
 
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject({
@@ -252,7 +249,7 @@ describe("ErrorTracker", () => {
     });
 
     it("should detect crossed-out cell in solution", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.CROSSED_OUT, CellState.EMPTY],
         [CellState.EMPTY, CellState.EMPTY],
       ];
@@ -262,7 +259,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.EMPTY],
       ];
 
-      const errors = errorTracker.detectCompletionErrors(grid, solution);
+      const errors: CompletionError[] = errorTracker.detectCompletionErrors(grid, solution);
 
       expect(errors.length).toBe(1);
       expect(errors[0]).toMatchObject({
@@ -271,7 +268,7 @@ describe("ErrorTracker", () => {
     });
 
     it("should not report errors for completable puzzle", () => {
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.FILLED, CellState.EMPTY],
         [CellState.EMPTY, CellState.FILLED],
       ];
@@ -281,7 +278,7 @@ describe("ErrorTracker", () => {
         [CellState.EMPTY, CellState.FILLED],
       ];
 
-      const errors = errorTracker.detectCompletionErrors(grid, solution);
+      const errors: CompletionError[] = errorTracker.detectCompletionErrors(grid, solution);
 
       expect(errors.length).toBe(0);
     });
@@ -290,13 +287,13 @@ describe("ErrorTracker", () => {
   describe("detectErrors", () => {
     it("should detect all types of errors", () => {
       // Grid with a filled cell that shouldn't be filled, and a crossed-out cell that shouldn't be crossed out
-      const grid: number[][] = [
+      const grid: CellState[][] = [
         [CellState.EMPTY, CellState.EMPTY],
         [CellState.EMPTY, CellState.CROSSED_OUT], // Crossed-out cell where solution expects EMPTY
       ];
 
-      const rowHints = [[1] as any];
-      const columnHints = [[1] as any];
+      const rowHints: Hint[][] = [[{ hint: 1, used: false }]];
+      const columnHints: Hint[][] = [[{ hint: 1, used: false }]];
       const solution: PuzzleSolutionData = [
         [CellState.EMPTY, CellState.EMPTY],
         [CellState.EMPTY, CellState.EMPTY],
@@ -310,8 +307,8 @@ describe("ErrorTracker", () => {
       );
 
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors.some((e) => e.type === ErrorType.CELL)).toBe(true);
-      expect(errors.some((e) => e.type === ErrorType.COMPLETION)).toBe(true);
+      expect(errors.some((e) => (e as { type: ErrorType }).type === ErrorType.CELL)).toBe(true);
+      expect(errors.some((e) => (e as { type: ErrorType }).type === ErrorType.COMPLETION)).toBe(true);
     });
   });
 

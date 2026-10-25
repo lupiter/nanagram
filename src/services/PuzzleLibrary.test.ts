@@ -31,12 +31,14 @@ describe("PuzzleLibrary - Version Tracking", () => {
       );
       expect(stored).not.toBeNull();
 
-      const data = JSON.parse(stored!);
-      expect(data).toHaveProperty("version");
-      expect(data.version).toBe(1);
-      expect(data).toHaveProperty("grid");
-      expect(data.grid).toEqual(grid);
-      expect(data).toHaveProperty("timestamp");
+          if (stored) {
+            const data = JSON.parse(stored) as { version: number; grid: number[][]; timestamp: number };
+            expect(data.version).toBe(1);
+            expect(data.grid).toEqual(grid);
+            expect(data).toHaveProperty("timestamp");
+          } else {
+            throw new Error("Stored data not found");
+          }
     });
   });
 
@@ -170,7 +172,7 @@ describe("PuzzleLibrary - Version Tracking", () => {
 
   describe("getProgressKey", () => {
     it("should generate correct key format", () => {
-      const key = puzzleLibrary["getProgressKey"](testCategory, testId);
+      const key = puzzleLibrary.getProgressKey(testCategory, testId);
 
       expect(key).toBe(`nonogram-progress-${testCategory}-${testId}`);
     });

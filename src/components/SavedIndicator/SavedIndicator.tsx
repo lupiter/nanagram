@@ -17,7 +17,7 @@ export default function SavedIndicator({ category, id }: SavedIndicatorProps) {
     const savedAutoSave = localStorage.getItem(autoSaveKey);
     if (savedAutoSave) {
       setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
+      setTimeout(() => { setSaved(false); }, 2000);
     }
   }, [category, id]);
 

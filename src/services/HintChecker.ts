@@ -1,18 +1,20 @@
-import { CellState, Hint } from "../types/nonogram";
-
 /**
  * HintChecker - Singleton for checking hint completion
  */
+import { CellState, Hint } from "../types/nonogram";
+
 export class HintChecker {
-  private static instance: HintChecker;
+  private static instance: HintChecker | undefined;
 
   static getInstance(): HintChecker {
-    HintChecker.instance ??= new HintChecker();
+    if (!HintChecker.instance) {
+      HintChecker.instance = new HintChecker();
+    }
     return HintChecker.instance;
   }
 
   /** Check hints against current cell state and mark used hints.
-   * Recomputes from scratch. A block is marked if it matches an answer sequence
+   * Recomputs from scratch. A block is marked if it matches an answer sequence
    * and is sealed (bounded by CROSSED_OUT or grid edges). */
   check(cells: CellState[], hints: Hint[], answerCells: CellState[]): Hint[] {
     // If any of the answers are wrong, just return the original hints

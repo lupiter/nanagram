@@ -1,6 +1,12 @@
 import { describe, it, expect, afterEach } from "@jest/globals";
 import { AutoSave } from "./AutoSave";
 
+interface AutoSaveData {
+  version: number;
+  grid: number[][];
+  timestamp: number;
+}
+
 describe("AutoSave - Version Tracking", () => {
   let autoSave: AutoSave;
   const testCategory = "10x10";
@@ -34,12 +40,14 @@ describe("AutoSave - Version Tracking", () => {
           );
           expect(saved).not.toBeNull();
 
-          const data = JSON.parse(saved!);
-          expect(data).toHaveProperty("version");
-          expect(data.version).toBe(1);
-          expect(data).toHaveProperty("grid");
-          expect(data.grid).toEqual(grid);
-          expect(data).toHaveProperty("timestamp");
+          if (saved) {
+            const data = JSON.parse(saved) as AutoSaveData;
+            expect(data.version).toBe(1);
+            expect(data.grid).toEqual(grid);
+            expect(data).toHaveProperty("timestamp");
+          } else {
+            throw new Error("Saved data not found");
+          }
           resolve();
         }, 600);
       });
@@ -59,8 +67,12 @@ describe("AutoSave - Version Tracking", () => {
           const saved = localStorage.getItem(
             `nonogram-auto-save-${testCategory}-${testId}`,
           );
-          const parsed = JSON.parse(saved!);
-          expect(parsed.grid).toEqual(grid2);
+          if (saved) {
+            const parsed = JSON.parse(saved) as AutoSaveData;
+            expect(parsed.grid).toEqual(grid2);
+          } else {
+            throw new Error("Saved data not found");
+          }
           resolve();
         }, 600);
       });

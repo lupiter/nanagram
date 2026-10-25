@@ -137,7 +137,7 @@ export class PuzzleLibrary {
   // --- Progress Persistence ---
 
   /** Get the localStorage key for a puzzle's progress */
-  private getProgressKey(category: string, id: string): string {
+  getProgressKey(category: string, id: string): string {
     return `${this.progressKeyPrefix}${category}-${id}`;
   }
 
@@ -168,7 +168,7 @@ export class PuzzleLibrary {
       // Validate version
       if (data.version !== CURRENT_VERSION) {
         console.warn(
-          `Progress version mismatch for ${category}-${id}: expected ${CURRENT_VERSION}, got ${data.version}. Skipping load.`,
+          `Progress version mismatch for ${category}-${id}: expected ${CURRENT_VERSION.toString()}, got ${data.version.toString()}. Skipping load.`,
         );
         return null;
       }
